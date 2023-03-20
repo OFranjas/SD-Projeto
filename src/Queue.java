@@ -27,7 +27,8 @@ public class Queue {
 
     public void recebe_urls() {
 
-        // 1. Criar thread para receber do Downloader de uma Classe para receber os urls do
+        // 1. Criar thread para receber do Downloader de uma Classe para receber os urls
+        // do
         // Downloader
         // Para prevenir o Caso em que haja mais do que um a querer aceder a queue
 
@@ -44,5 +45,7 @@ public class Queue {
         queue.add("ola");
 
         // 1. Aceitar um Downloader
+
+        return 0;
     }
 }
