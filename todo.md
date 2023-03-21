@@ -1,12 +1,12 @@
 # Fila
 
-- [ ] Histórico de URLs visitadas
-- [ ] Enviar URLs para os Downloaders
+- [x] Histórico de URLs visitadas
+- [x] Enviar URLs para os Downloaders
 - [ ] Ze tá a dar hate aos ports :(
 
 # Downloader
 
-- [ ] Receber URLs da fila
+- [x] Receber URLs da fila
 - [ ] Enviar multicast para o IndexStorageBarrel
 
 # Barrels

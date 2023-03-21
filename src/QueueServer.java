@@ -8,35 +8,85 @@ public class QueueServer extends Thread {
 
     private Queue queue;
 
-    private ServerSocket recebeServerSocket;
+    private ServerSocket serverSocket;
 
     public QueueServer(Queue queue, int port) throws IOException {
         this.queue = queue;
         this.Port = port;
-        recebeServerSocket = new ServerSocket(Port);
+        serverSocket = new ServerSocket(Port);
+
+        // System.out.println("QueueServer created with port " + Port);
     }
 
     private void recebe_urls() throws IOException {
 
-        // Return if the
+        try {
 
-        Socket socket = recebeServerSocket.accept();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        String command = reader.readLine();
-        if (command.startsWith("ADD_URL")) {
+            Socket socket = serverSocket.accept();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            String command = reader.readLine();
+            if (command.startsWith("ADD_URL")) {
 
-            String url = command.substring(8);
+                String url = command.substring(8);
 
-            // TODO Verificar se a URL já existiu no histórico
+                synchronized (queue) {
 
-            queue.add(url);
-            System.out.println("URL adicionada à queue: " + url);
+                    // TODO Verificar se a URL já existiu no histórico
+                    if (queue.exists(url)) {
+                        System.out.println("URL já existe no histórico: " + url);
+                        return;
+                    }
+
+                    queue.add(url);
+                    System.out.println("URL adicionada à queue: " + url);
+
+                }
+
+            }
+
+            socket.close();
+        } catch (IOException e) {
+            System.out.println("Exception in QueueServer.recebe_urls: " + e);
         }
 
-        socket.close();
     }
 
     public void envia_urls() throws IOException {
+
+        try {
+
+            synchronized (queue) {
+
+                // Send the url in the queue to a Downloader
+                if (!queue.isEmpty()) {
+
+                    Socket socket = serverSocket.accept();
+                    PrintWriter writer = new PrintWriter(socket.getOutputStream());
+                    writer.println("GET_URL " + queue.get(0));
+                    writer.flush();
+                    System.out.println("QueueServer: Enviando url " + queue.get(0) + " para o Downloader com Port "
+                            + Port);
+
+                    // If the Downloader has downloaded the page, remove the url from the queue
+
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                    String command = reader.readLine();
+                    if (command.startsWith("REMOVE_URL")) {
+
+                        String url = command.substring(11);
+                        queue.remove(url);
+                        System.out.println("URL removida da queue: " + url);
+                    }
+
+                    socket.close();
+
+                }
+
+            }
+
+        } catch (IOException e) {
+            System.out.println("Exception in QueueServer.envia_urls: " + e);
+        }
 
     }
 
@@ -51,42 +101,39 @@ public class QueueServer extends Thread {
 
     public void run() {
 
+        // System.out.println("QueueServer running on port " + Port);
+
+        // printQueue();
+
         while (true) {
 
-            if (this.Port == 8080) {
+            if (this.Port % 2 == 0) {
                 try {
 
                     // System.out.println("QueueServer running");
                     recebe_urls();
 
-                    printQueue();
-
-                    sleep(1000);
+                    // printQueue();
 
                 } catch (IOException e) {
                     System.out.println("Exception in QueueServer.run: " + e);
-                } catch (InterruptedException e) {
-                    System.out.println("Exception in QueueServer.run: " + e);
                 }
-            } else if (this.Port == 8081) {
+            } else if (this.Port % 2 != 0) {
 
                 try {
 
                     // System.out.println("QueueServer2 running");
-                    sleep(1000);
+
                     envia_urls();
 
-                    printQueue();
+                    // printQueue();
 
                 } catch (IOException e) {
-                    System.out.println("Exception in QueueServer.run: " + e);
-                } catch (InterruptedException e) {
                     System.out.println("Exception in QueueServer.run: " + e);
                 }
             } else {
                 System.out.println("Porta inválida");
             }
-
         }
 
     }

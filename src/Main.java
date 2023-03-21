@@ -4,16 +4,18 @@ import java.util.ArrayList;
 
 public class Main {
 
+    private static int num_threads = 1;
+
     public static void main(String[] args) {
 
         try {
 
             // Start the Queue
-            Queue queue = new Queue();
+            Queue queue = new Queue(num_threads);
             queue.start();
 
             // Start the Downloaders Threads
-            Downloader downloader = new Downloader(1);
+            Downloader downloader = new Downloader(num_threads);
             downloader.start();
 
             // Start the IndexStorageBarrels Threads
