@@ -3,9 +3,10 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import java.io.IOException;
-import java.util.StringTokenizer;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.net.Socket;
+import java.util.*;
+import java.net.*;
+import java.io.*;
 
 // Trabalha em paralelo (para aumentar o desempenho)
 // Um URL -> Um Downloader
@@ -13,13 +14,27 @@ import java.util.HashSet;
 // Segue uma fila de URL para escalonar futuras páginas a visitar
 // Atualizam o index através de Multi
 
-public class Downloader extends Thread {
+public class Downloader implements Runnable {
 
-    public Downloader() {
+    private int num_threads;
+
+    private Thread thread;
+
+    private String url;
+
+    private static HashMap<String, HashSet<String>> index = new HashMap<String, HashSet<String>>();
+
+    private static ArrayList<String> found = new ArrayList<String>();
+
+    public Downloader(int num_threads) {
+
+        this.num_threads = num_threads;
+
+        // System.out.println("Downloader created");
+
     }
 
-    public static HashMap<String, HashSet<String>> index = new HashMap<String, HashSet<String>>();
-
+    // Download the page and read its words
     public static void download(String url) throws IOException {
 
         Document doc = Jsoup.connect(url).get();
@@ -51,10 +66,10 @@ public class Downloader extends Thread {
             // String linkText = link.text();
 
             // Recursively read the link
-            download(linkHref);
+            // download(linkHref);
 
-            // Add links to the link queue, not repeating any links
-
+            // Add links to the link array
+            found.add(linkHref);
         }
 
     }
@@ -69,18 +84,96 @@ public class Downloader extends Thread {
 
     }
 
-    // Arranque da thread
-    public void run() {
-
-        // Dentro de um while(true)
+    // Get a URL from the queue
+    public String getURL() throws IOException {
 
         // Ir buscar o url à queue
 
-        // Fazer o download do url
+        return null;
+
+    }
+
+    // Adds a URL to the queue
+    public void adicionaURL(String url) throws IOException {
+
+        // Adicionar à queue
+        Socket socket = new Socket("localhost", 8080);
+        OutputStream output = socket.getOutputStream();
+        PrintWriter writer = new PrintWriter(output);
+        writer.println("ADD_URL " + url);
+        writer.flush();
+        socket.close();
+    }
+
+    public void enviaIndex() throws IOException {
 
         // Enviar o index para o IndexStorageBarrel
 
-        // Se houver urls encontrados, adicionar à queue
+    }
+
+    // Thread running method
+    public void run() {
+
+        // System.out.println("Downloader running");
+
+        while (true) {
+
+            // Ir buscar o url à queue
+            // try {
+            // url = getURL();
+            // } catch (IOException e) {
+            // System.out.println("Exception in Downloader.getURL: " + e);
+            // }
+
+            url = "http://127.0.0.1:5500/Test_Site/site.html";
+
+            // Fazer o download do url
+            try {
+                download(url);
+            } catch (IOException e) {
+                System.out.println("Exception in Downloader.download: " + e);
+            }
+
+            // Show index
+            // try {
+            //     printIndex();
+            // } catch (IOException e) {
+            //     System.out.println("Exception in Downloader.printIndex: " + e);
+            // }
+
+            // Enviar o index para o IndexStorageBarrel - Multicast
+            try {
+                enviaIndex();
+            } catch (IOException e) {
+                System.out.println("Exception in Downloader.enviaIndex: " + e);
+            }
+
+            // Se houver urls encontrados, adicionar à queue
+            if (found.size() > 0) {
+                for (String url : found) {
+                    // Adicionar à queue
+                    try {
+                        adicionaURL(url);
+                    } catch (IOException e) {
+                        System.out.println("Exception in Downloader.adicionaURL with url - " + url + ": " + e);
+                    }
+                }
+            }
+
+            break;
+        }
+
+    }
+
+    // Start the threads
+    public void start() {
+
+        // Criar threads e inicia-las
+        for (int i = 0; i < num_threads; i++) {
+            thread = new Thread(this);
+            thread.start();
+            // System.out.println("Downloader " + i + " started");
+        }
 
     }
 

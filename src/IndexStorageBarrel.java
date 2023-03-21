@@ -128,6 +128,7 @@ public class IndexStorageBarrel implements Runnable {
 
         WriteTxtFile();
 
+        
         // Se o Search Module pedir, envia o index -> RMI
 
 
@@ -138,6 +139,15 @@ public class IndexStorageBarrel implements Runnable {
         for (int i = 0; i < num_threads; i++) {
             thread = new Thread(this); 
             thread.start(); //send i to the thread for id of storage barrel
+        }
+
+    }
+
+    public void start() {
+
+        for (int i = 0; i < num_threads; i++) {
+            thread = new Thread(this);
+            thread.start();
         }
 
     }

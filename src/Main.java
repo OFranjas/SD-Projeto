@@ -4,23 +4,17 @@ import java.util.ArrayList;
 
 public class Main {
 
-    private final static int NUM_DOWNLOADERS = 5;
-    private final static int NUM_INDEXSTORAGEBARRELS = 5;
-
     public static void main(String[] args) {
 
         try {
 
             // Start the Queue
             Queue queue = new Queue();
+            queue.start();
 
             // Start the Downloaders Threads
-            ArrayList<Downloader> downloaders = new ArrayList<Downloader>();
-            for (int i = 0; i < NUM_DOWNLOADERS; i++) {
-                Downloader downloader = new Downloader();
-                downloaders.add(downloader);
-                downloader.start();
-            }
+            Downloader downloader = new Downloader(1);
+            downloader.start();
 
             // Start the IndexStorageBarrels Threads
 
