@@ -10,9 +10,10 @@ public class Main {
 
             // Start the Queue
             Queue queue = new Queue();
+            queue.start();
 
             // Start the Downloaders Threads
-            Downloader downloader = new Downloader();
+            Downloader downloader = new Downloader(1);
             downloader.start();
 
             // Start the IndexStorageBarrels Threads

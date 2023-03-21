@@ -3,10 +3,10 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import java.io.IOException;
-import java.util.StringTokenizer;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.net.Socket;
+import java.util.*;
+import java.net.*;
+import java.io.*;
 
 // Trabalha em paralelo (para aumentar o desempenho)
 // Um URL -> Um Downloader
@@ -16,7 +16,7 @@ import java.util.HashSet;
 
 public class Downloader implements Runnable {
 
-    private static int num_threads = 1;
+    private int num_threads;
 
     private Thread thread;
 
@@ -26,10 +26,15 @@ public class Downloader implements Runnable {
 
     private static ArrayList<String> found = new ArrayList<String>();
 
-    public Downloader() {
+    public Downloader(int num_threads) {
+
+        this.num_threads = num_threads;
+
+        // System.out.println("Downloader created");
 
     }
 
+    // Download the page and read its words
     public static void download(String url) throws IOException {
 
         Document doc = Jsoup.connect(url).get();
@@ -65,7 +70,6 @@ public class Downloader implements Runnable {
 
             // Add links to the link array
             found.add(linkHref);
-
         }
 
     }
@@ -80,6 +84,7 @@ public class Downloader implements Runnable {
 
     }
 
+    // Get a URL from the queue
     public String getURL() throws IOException {
 
         // Ir buscar o url à queue
@@ -88,13 +93,25 @@ public class Downloader implements Runnable {
 
     }
 
-    public void adicionaURL(String url) {
+    // Adds a URL to the queue
+    public void adicionaURL(String url) throws IOException {
 
         // Adicionar à queue
+        Socket socket = new Socket("localhost", 8080);
+        OutputStream output = socket.getOutputStream();
+        PrintWriter writer = new PrintWriter(output);
+        writer.println("ADD_URL " + url);
+        writer.flush();
+        socket.close();
+    }
+
+    public void enviaIndex() throws IOException {
+
+        // Enviar o index para o IndexStorageBarrel
 
     }
 
-    // Arranque da thread
+    // Thread running method
     public void run() {
 
         // System.out.println("Downloader running");
@@ -118,20 +135,28 @@ public class Downloader implements Runnable {
             }
 
             // Show index
-            try {
-                printIndex();
-            } catch (IOException e) {
-                System.out.println("Exception in Downloader.printIndex: " + e);
-            }
+            // try {
+            //     printIndex();
+            // } catch (IOException e) {
+            //     System.out.println("Exception in Downloader.printIndex: " + e);
+            // }
 
-            // Enviar o index para o IndexStorageBarrel
+            // Enviar o index para o IndexStorageBarrel - Multicast
+            try {
+                enviaIndex();
+            } catch (IOException e) {
+                System.out.println("Exception in Downloader.enviaIndex: " + e);
+            }
 
             // Se houver urls encontrados, adicionar à queue
             if (found.size() > 0) {
                 for (String url : found) {
                     // Adicionar à queue
-                    adicionaURL(url);
-
+                    try {
+                        adicionaURL(url);
+                    } catch (IOException e) {
+                        System.out.println("Exception in Downloader.adicionaURL with url - " + url + ": " + e);
+                    }
                 }
             }
 
@@ -140,6 +165,7 @@ public class Downloader implements Runnable {
 
     }
 
+    // Start the threads
     public void start() {
 
         // Criar threads e inicia-las

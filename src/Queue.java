@@ -1,20 +1,30 @@
-import java.util.ArrayList;
-
+import java.io.BufferedReader;
+import java.net.ServerSocket;
+import java.util.*;
+import java.net.*;
+import java.io.*;
 import javax.management.Query;
 
 public class Queue {
 
-    private ArrayList<String> queue = new ArrayList<String>();
+    private ArrayList<String> queue;
+
+    // TODO Criar histórioco de URLs
+
+    private Thread thread;
 
     public Queue() {
+
+        queue = new ArrayList<String>();
+
     }
 
     public void add(String url) {
         queue.add(url);
     }
 
-    public String get() {
-        return queue.remove(0);
+    public String get(int i) {
+        return queue.remove(i);
     }
 
     public boolean isEmpty() {
@@ -25,27 +35,19 @@ public class Queue {
         return queue.size();
     }
 
-    public void recebe_urls() {
+    public void start() {
 
-        // 1. Criar thread para receber do Downloader de uma Classe para receber os urls
-        // do
-        // Downloader
-        // Para prevenir o Caso em que haja mais do que um a querer aceder a queue
+        try {
+            QueueServer recebeServer = new QueueServer(this, 8080);
+            thread = new Thread(recebeServer);
+            thread.start();
 
-        // 2. Adicionar o url à queue
-        // Supostamente as threads criadas antes vão retornar os urls para adicionar
-    }
+            QueueServer mandaServer = new QueueServer(this, 8081);
+            thread = new Thread(mandaServer);
+            thread.start();
+        } catch (IOException e) {
+            System.out.println("Exception in Queue.start: " + e);
+        }
 
-    public void envia_urls() {
-
-    }
-
-    public static int main(String[] args) {
-        Queue queue = new Queue();
-        queue.add("ola");
-
-        // 1. Aceitar um Downloader
-
-        return 0;
     }
 }
