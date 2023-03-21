@@ -14,12 +14,13 @@ import java.io.IOException;
 
 public class IndexStorageBarrel implements Runnable {
 
-
     private static int num_threads = 1;
     private Thread thread;
-    private HashMap<String, HashSet<String>> index; // Tem o que ja tem no ficheiro de texto, receber o que o downloader tem e adicionar ao que ja tem
+    private HashMap<String, HashSet<String>> index; // Tem o que ja tem no ficheiro de texto, receber o que o downloader
+                                                    // tem e adicionar ao que ja tem
     private int id;
-    private HashMap<String, HashSet<String>> downloader; //isto nunca pode existir, deve ser recebido por tcp/udp vindo do downloader
+    private HashMap<String, HashSet<String>> downloader; // isto nunca pode existir, deve ser recebido por tcp/udp vindo
+                                                         // do downloader
 
     public IndexStorageBarrel(int id) {
         index = new HashMap<String, HashSet<String>>();
@@ -41,41 +42,40 @@ public class IndexStorageBarrel implements Runnable {
     public int getId() {
         return id;
     }
-    
-    public void CreateTxtFile() { //funcao para criar ficheiro de texto com o id do storage barrel
- 
+
+    public void CreateTxtFile() { // funcao para criar ficheiro de texto com o id do storage barrel
+
         // Create a file named "IndexStorageBarrelid.txt"
 
-        try{
-            File file = new File("IndexStorageBarrel" + id + ".txt"); //bate ???
+        try {
+            File file = new File("IndexStorageBarrel" + id + ".txt"); // bate ???
 
-            //check if file exist
+            // check if file exist
 
-            if (file.createNewFile()){
-        
+            if (file.createNewFile()) {
+
                 System.out.println("File is created!");
 
-            }else {
-            
+            } else {
+
                 System.out.println("File already exists.");
             }
-            
-        }
-        catch(IOException e){
+
+        } catch (IOException e) {
             System.out.println("Error");
             e.printStackTrace();
         }
-        
+
     }
 
-    public void WriteTxtFile(){ // funcao para escrever no ficheiro de texto
+    public void WriteTxtFile() { // funcao para escrever no ficheiro de texto
         // Read the file
 
-        try{
+        try {
             FileWriter myWriter = new FileWriter("IndexStorageBarrel" + id + ".txt");
-            
+
             // go trough the index and write it to the file word url line by line
-            
+
             for (String key : index.keySet()) {
 
                 myWriter.write(key + " " + index.get(key) + "\n");
@@ -83,23 +83,22 @@ public class IndexStorageBarrel implements Runnable {
 
             myWriter.close();
 
-        } catch(IOException e){
+        } catch (IOException e) {
             System.out.println("Error");
             e.printStackTrace();
         }
     }
 
-    public void CompareIndexWithDownloader(){ //function to compare the index with downloader
-
+    public void CompareIndexWithDownloader() { // function to compare the index with downloader
 
         // go trough the index and compare it with the downloader
 
         for (String key : index.keySet()) {
-           
 
             if (downloader.containsKey(key)) {
 
-                // if the word is in the downloader, and the url is not in the index, add the url to the index
+                // if the word is in the downloader, and the url is not in the index, add the
+                // url to the index
                 for (String url : downloader.get(key)) {
                     if (!index.get(key).contains(url)) {
                         index.get(key).add(url);
@@ -116,30 +115,19 @@ public class IndexStorageBarrel implements Runnable {
     }
 
     public void run() {
- 
+
         // Recebe index de um Downloader
         CreateTxtFile();
 
         // Editar index com as novas cenas
-        
+
         CompareIndexWithDownloader();
 
         // Guarda o index num ficheiro de texto
 
         WriteTxtFile();
 
-        
         // Se o Search Module pedir, envia o index -> RMI
-
-
-    }
-
-    public void start() {
-
-        for (int i = 0; i < num_threads; i++) {
-            thread = new Thread(this); 
-            thread.start(); //send i to the thread for id of storage barrel
-        }
 
     }
 
@@ -147,7 +135,7 @@ public class IndexStorageBarrel implements Runnable {
 
         for (int i = 0; i < num_threads; i++) {
             thread = new Thread(this);
-            thread.start();
+            thread.start(); // send i to the thread for id of storage barrel
         }
 
     }
