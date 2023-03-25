@@ -107,7 +107,8 @@ public class QueueThread extends Thread {
 
     public void run() {
 
-        // System.out.println("QueueServer running on port " + Port);
+        if (debug)
+            System.out.println("QueueServer running on port " + Port);
 
         // printQueue();
 
