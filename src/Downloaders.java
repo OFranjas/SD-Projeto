@@ -14,7 +14,7 @@ import java.io.*;
 // Segue uma fila de URL para escalonar futuras páginas a visitar
 // Atualizam o index através de Multi
 
-public class Downloader {
+public class Downloaders {
 
     private int num_threads;
 
@@ -22,7 +22,7 @@ public class Downloader {
 
     private DownloaderThread thread;
 
-    public Downloader(int num_threads) {
+    public Downloaders(int num_threads) {
 
         this.num_threads = num_threads;
 

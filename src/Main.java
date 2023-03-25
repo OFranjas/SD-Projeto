@@ -15,10 +15,12 @@ public class Main {
             queue.start();
 
             // Start the Downloaders Threads
-            Downloader downloader = new Downloader(num_threads);
+            Downloaders downloader = new Downloaders(num_threads);
             downloader.start();
 
             // Start the IndexStorageBarrels Threads
+            IndexStorageBarrels indexStorageBarrel = new IndexStorageBarrels(num_threads);
+            indexStorageBarrel.start();
 
             // Start the Search Module Thread
             // RMISearchModule searchModule = new RMISearchModule();

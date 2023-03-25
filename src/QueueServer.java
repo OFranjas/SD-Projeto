@@ -64,8 +64,7 @@ public class QueueServer extends Thread {
                     PrintWriter writer = new PrintWriter(socket.getOutputStream());
                     writer.println("GET_URL " + queue.get(0));
                     writer.flush();
-                    System.out.println("QueueServer: Enviando url " + queue.get(0) + " para o Downloader com Port "
-                            + Port);
+                    System.out.println("QueueServer Thread: Enviando url " + queue.get(0));
 
                     // If the Downloader has downloaded the page, remove the url from the queue
 
@@ -105,9 +104,9 @@ public class QueueServer extends Thread {
 
         // printQueue();
 
-        while (true) {
+        if (this.Port % 2 == 0) {
 
-            if (this.Port % 2 == 0) {
+            while (true) {
                 try {
 
                     // System.out.println("QueueServer running");
@@ -118,7 +117,10 @@ public class QueueServer extends Thread {
                 } catch (IOException e) {
                     System.out.println("Exception in QueueServer.run: " + e);
                 }
-            } else if (this.Port % 2 != 0) {
+            }
+        } else if (this.Port % 2 != 0) {
+
+            while (true) {
 
                 try {
 
@@ -131,9 +133,10 @@ public class QueueServer extends Thread {
                 } catch (IOException e) {
                     System.out.println("Exception in QueueServer.run: " + e);
                 }
-            } else {
-                System.out.println("Porta inválida");
+
             }
+        } else {
+            System.out.println("Porta inválida");
         }
 
     }

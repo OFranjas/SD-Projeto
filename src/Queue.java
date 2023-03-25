@@ -65,6 +65,8 @@ public class Queue {
 
         try {
 
+            // TODO -> Mudar ports para 8000s e 9000s
+
             for (int i = 0; i < num_threads; i++) {
 
                 QueueServer recebeServer = new QueueServer(this, 8000 + i * 2);

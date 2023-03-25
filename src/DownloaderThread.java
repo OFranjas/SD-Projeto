@@ -10,6 +10,9 @@ import java.io.*;
 
 public class DownloaderThread extends Thread {
 
+    private String MULTICAST_ADRESS = "224.3.2.1";
+    private int MULTICAST_PORT = 4321;
+
     private String url;
 
     private int id;
@@ -33,57 +36,67 @@ public class DownloaderThread extends Thread {
     }
 
     // Download the page and read its words
-    public static void download(String url) throws IOException {
+    public static void download(String url) {
 
-        Document doc = Jsoup.connect(url).get();
+        try {
 
-        // Get page title
-        String title = doc.title();
+            Document doc = Jsoup.connect(url).get();
 
-        // Read all words and associate them with the page, without duplicates
-        Elements words = doc.select("body");
+            // Get page title
+            String title = doc.title();
 
-        for (Element word : words) {
-            String[] wordsArray = word.text().split(" ");
+            // Read all words and associate them with the page, without duplicates
+            Elements words = doc.select("body");
 
-            for (String wordArray : wordsArray) {
-                if (index.containsKey(wordArray)) {
-                    index.get(wordArray).add(url);
-                } else {
-                    HashSet<String> urls = new HashSet<String>();
-                    urls.add(url);
-                    index.put(wordArray, urls);
+            for (Element word : words) {
+                String[] wordsArray = word.text().split(" ");
+
+                for (String wordArray : wordsArray) {
+                    if (index.containsKey(wordArray)) {
+                        index.get(wordArray).add(url);
+                    } else {
+                        HashSet<String> urls = new HashSet<String>();
+                        urls.add(url);
+                        index.put(wordArray, urls);
+                    }
                 }
             }
-        }
 
-        // Read any existing links and read their words as well recursively
-        Elements links = doc.select("a[href]");
-        for (Element link : links) {
-            String linkHref = link.attr("href");
-            // String linkText = link.text();
+            // Read any existing links and read their words as well recursively
+            Elements links = doc.select("a[href]");
+            for (Element link : links) {
+                String linkHref = link.attr("href");
+                // String linkText = link.text();
 
-            // Recursively read the link
-            // download(linkHref);
+                // Recursively read the link
+                // download(linkHref);
 
-            // Add links to the link array
-            found.add(linkHref);
+                // Add links to the link array
+                found.add(linkHref);
+            }
+        } catch (Exception e) {
+            System.out.println("Exception in Downloader.download: " + e);
         }
 
     }
 
-    public static void printIndex() throws IOException {
+    public static void printIndex() {
 
-        // Print all words and associated pages
-        for (String key : index.keySet()) {
+        try {
 
-            System.out.println(key + ": " + index.get(key));
+            // Print all words and associated pages
+            for (String key : index.keySet()) {
+
+                System.out.println(key + ": " + index.get(key));
+            }
+        } catch (Exception e) {
+            System.out.println("Exception in Downloader.printIndex: " + e);
         }
 
     }
 
     // Get a URL from the queue
-    public void getURL() throws IOException {
+    public void getURL() {
 
         try {
 
@@ -96,7 +109,7 @@ public class DownloaderThread extends Thread {
             BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             String command = reader.readLine();
 
-            System.out.println("Downloader Thread " + id + " got command " + command);
+            // System.out.println("Downloader Thread " + id + " got command " + command);
 
             if (command.startsWith("GET_URL")) {
 
@@ -121,20 +134,81 @@ public class DownloaderThread extends Thread {
     }
 
     // Adds a URL to the queue
-    public void adicionaURL(String url) throws IOException {
+    public void adicionaURL(String url) {
 
-        // Adicionar à queue
-        Socket socket = new Socket("localhost", SendPort);
-        OutputStream output = socket.getOutputStream();
-        PrintWriter writer = new PrintWriter(output);
-        writer.println("ADD_URL " + url);
-        writer.flush();
-        socket.close();
+        try {
+
+            // Adicionar à queue
+            Socket socket = new Socket("localhost", SendPort);
+            OutputStream output = socket.getOutputStream();
+            PrintWriter writer = new PrintWriter(output);
+
+            /*
+             * TODO
+             * Adicionar todos os urls encontrados, não apenas um
+             * Função Recebe um array de urls
+             * Ciclo for a enviar todos os urls
+             * Funciona pois a thread da Queue está sempre a correr e a receber os comandos
+             */
+
+            writer.println("ADD_URL " + url);
+            writer.flush();
+            socket.close();
+        } catch (IOException e) {
+            System.out.println("Exception in Downloader.adicionaURL: " + e);
+        }
+
     }
 
-    public void enviaIndex() throws IOException {
+    public String transformLineHashMap(HashMap<String, HashSet<String>> pack) {
+        // percorrer o hashmap e transformar em String do tipo "palavra: url1, url2,
+        // url3"
+        String string = "";
+        // go trough the hashmap
 
-        // Enviar o index para o IndexStorageBarrel
+        for (String key : pack.keySet()) {
+            string += key + " ";
+            for (String url : pack.get(key)) {
+                string += url + " ";
+            }
+            // separete keys/url with a new line
+            string += "\n";
+        }
+        return string;
+    }
+
+    public void enviaIndex(String index) {
+
+        try {
+
+            MulticastSocket socket = new MulticastSocket();
+
+            // Enviar o index para o IndexStorageBarrel
+            while (true) {
+                InetAddress group = InetAddress.getByName(MULTICAST_ADRESS);
+                // transform hasmap to bytes to send
+
+                byte[] buf = index.getBytes();
+                DatagramPacket packet = new DatagramPacket(buf, buf.length, group, MULTICAST_PORT);
+                socket.send(packet);
+
+                // Confirm that the index was sent
+                System.out.println("Downloader Thread " + id + " sent index to IndexStorageBarrel");
+
+                // Confirm that the index was received
+                // DatagramPacket response = new DatagramPacket(new byte[1024], 1024);
+                // socket.receive(response);
+                // if (response.getData() != null) {
+                // System.out.println("Index was received, exiting");
+                // break;
+                // }
+                break;
+            }
+
+            // socket.close();
+        } catch (IOException e) {
+            System.out.println("Exception in Downloader.enviaIndex: " + e);
+        }
 
     }
 
@@ -147,48 +221,32 @@ public class DownloaderThread extends Thread {
         while (true) {
 
             // Ir buscar o url à queue
-            try {
-                getURL();
-            } catch (IOException e) {
-                System.out.println("Exception in Downloader.getURL: " + e);
-            }
+            getURL();
 
             if (url != null) {
 
                 System.out.println("Downloader Thread " + id + " downloading " + url);
 
                 // Fazer o download do url
-                try {
-                    download(url);
-                } catch (IOException e) {
-                    System.out.println("Exception in Downloader.download: " + e);
-                }
+                download(url);
 
-                // Show index
-                // try {
-                // printIndex();
-                // } catch (IOException e) {
-                // System.out.println("Exception in Downloader.printIndex: " + e);
-                // }
+                // Convert the hashmap to a string
+                String string = transformLineHashMap(index);
+
+                // Print the index
+                System.out.println("Downloader Thread " + id + " index: " + string);
 
                 // Enviar o index para o IndexStorageBarrel - Multicast
-                try {
-                    enviaIndex();
-                } catch (IOException e) {
-                    System.out.println("Exception in Downloader.enviaIndex: " + e);
-                }
+                enviaIndex(string);
 
                 // Se houver urls encontrados, adicionar à queue
                 if (found.size() > 0) {
                     for (String url : found) {
-                        // Adicionar à queue
-                        try {
 
-                            System.out.println("Downloader Thread " + id + " adding url " + url);
-                            adicionaURL(url);
-                        } catch (IOException e) {
-                            System.out.println("Exception in Downloader.adicionaURL with url - " + url + ": " + e);
-                        }
+                        // Adicionar à queue
+                        System.out.println("Downloader Thread " + id + " adding url " + url);
+                        adicionaURL(url);
+
                     }
                 }
 
