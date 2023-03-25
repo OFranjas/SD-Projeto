@@ -92,9 +92,17 @@ public class IndexStorageBarrelThread extends Thread {
 
         try {
 
-            for (String key : index.keySet()) {
+            // If the index is empty, add the downloader to the index
+            if (index.isEmpty()) {
+                index = downloader;
+                return;
+            }
 
-                if (downloader.containsKey(key)) {
+            // Go through the downloader, if the word is in the index, add the url to the
+            // index, if not, add the word to the index
+            for (String key : downloader.keySet()) {
+
+                if (index.containsKey(key)) {
 
                     // if the word is in the downloader, and the url is not in the index, add the
                     // url to the index
@@ -111,6 +119,7 @@ public class IndexStorageBarrelThread extends Thread {
                     index.put(key, downloader.get(key));
                 }
             }
+
         } catch (Exception e) {
             System.out.println("IndexBarrel -> Error in CompareIndexWithDownloader");
             System.out.println(e);

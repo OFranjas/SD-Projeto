@@ -139,28 +139,24 @@ public class DownloaderThread extends Thread {
     }
 
     // Adds a URL to the queue
-    public void adicionaURL(String url) {
+    public void adicionaURL(ArrayList<String> urls) {
 
-        try {
+        for (String url : urls) {
 
-            // Adicionar à queue
-            Socket socket = new Socket("localhost", SendPort);
-            OutputStream output = socket.getOutputStream();
-            PrintWriter writer = new PrintWriter(output);
+            try {
 
-            /*
-             * TODO
-             * Adicionar todos os urls encontrados, não apenas um
-             * Função Recebe um array de urls
-             * Ciclo for a enviar todos os urls
-             * Funciona pois a thread da Queue está sempre a correr e a receber os comandos
-             */
+                // Adicionar à queue
+                Socket socket = new Socket("localhost", SendPort);
+                OutputStream output = socket.getOutputStream();
+                PrintWriter writer = new PrintWriter(output);
 
-            writer.println("ADD_URL " + url);
-            writer.flush();
-            socket.close();
-        } catch (IOException e) {
-            System.out.println("Exception in Downloader.adicionaURL: " + e);
+                writer.println("ADD_URL " + url);
+                writer.flush();
+                socket.close();
+            } catch (IOException e) {
+                System.out.println("Exception in Downloader.adicionaURL: " + e);
+            }
+
         }
 
     }
@@ -249,15 +245,15 @@ public class DownloaderThread extends Thread {
 
                 // Se houver urls encontrados, adicionar à queue
                 if (found.size() > 0) {
-                    for (String url : found) {
+                    // for (String url : found) {
 
-                        // Adicionar à queue
-                        if (debug)
-                            System.out.println("Downloader Thread " + id + " adding url " + url);
+                    // // Adicionar à queue
+                    // if (debug)
+                    // System.out.println("Downloader Thread " + id + " adding url " + url);
 
-                        adicionaURL(url);
+                    // }
 
-                    }
+                    adicionaURL(found);
                 }
 
             } else {

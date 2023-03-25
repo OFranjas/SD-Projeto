@@ -7,12 +7,13 @@
 # Downloader
 
 - [x] Receber URLs da fila
-- [ ] Enviar multicast para o IndexStorageBarrel
+- [x] Enviar multicast para o IndexStorageBarrel
+- [x] Enviar Lista de URLs para a Fila em vez de 1 URL
 
 # Barrels
 
-- [ ] Receber multicast do Downloader
-- [ ] Confirmar cenas do Zé
+- [x] Receber multicast do Downloader
+- [x] Confirmar cenas do Zé
 - [ ] RMI para o Search Module
 
 # Search Module
