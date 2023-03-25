@@ -13,6 +13,8 @@ public class DownloaderThread extends Thread {
     private String MULTICAST_ADRESS = "224.3.2.1";
     private int MULTICAST_PORT = 4321;
 
+    private boolean debug;
+
     private String url;
 
     private int id;
@@ -25,11 +27,12 @@ public class DownloaderThread extends Thread {
 
     private static ArrayList<String> found = new ArrayList<String>();
 
-    public DownloaderThread(int Port, int id) {
+    public DownloaderThread(int Port, int id, boolean debug) {
 
         this.SendPort = Port;
         this.id = id;
         this.ReceivePort = Port + 1;
+        this.debug = debug;
 
         // System.out.println("Downloader Thread " + id + " created with port " + Port);
 
@@ -100,7 +103,8 @@ public class DownloaderThread extends Thread {
 
         try {
 
-            System.out.println("Downloader Thread " + id + " waiting for command");
+            if (debug)
+                System.out.println("Downloader Thread " + id + " waiting for command");
 
             // Get the ServerSocket from the port in queue
 
@@ -123,7 +127,8 @@ public class DownloaderThread extends Thread {
 
                 this.url = url;
 
-                System.out.println("Downloader Thread " + id + " got url " + url);
+                if (debug)
+                    System.out.println("Downloader Thread " + id + " got url " + url);
             }
 
             socket.close();
@@ -193,7 +198,8 @@ public class DownloaderThread extends Thread {
                 socket.send(packet);
 
                 // Confirm that the index was sent
-                System.out.println("Downloader Thread " + id + " sent index to IndexStorageBarrel");
+                if (debug)
+                    System.out.println("Downloader Thread " + id + " sent index to IndexStorageBarrel");
 
                 // Confirm that the index was received
                 // DatagramPacket response = new DatagramPacket(new byte[1024], 1024);
@@ -225,7 +231,8 @@ public class DownloaderThread extends Thread {
 
             if (url != null) {
 
-                System.out.println("Downloader Thread " + id + " downloading " + url);
+                if (debug)
+                    System.out.println("Downloader Thread " + id + " downloading " + url);
 
                 // Fazer o download do url
                 download(url);
@@ -234,7 +241,8 @@ public class DownloaderThread extends Thread {
                 String string = transformLineHashMap(index);
 
                 // Print the index
-                System.out.println("Downloader Thread " + id + " index: " + string);
+                if (debug)
+                    System.out.println("Downloader Thread " + id + " index: " + string);
 
                 // Enviar o index para o IndexStorageBarrel - Multicast
                 enviaIndex(string);
@@ -244,7 +252,9 @@ public class DownloaderThread extends Thread {
                     for (String url : found) {
 
                         // Adicionar à queue
-                        System.out.println("Downloader Thread " + id + " adding url " + url);
+                        if (debug)
+                            System.out.println("Downloader Thread " + id + " adding url " + url);
+
                         adicionaURL(url);
 
                     }

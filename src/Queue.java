@@ -15,17 +15,21 @@ public class Queue {
 
     private static int MAX_THREADS = 5;
 
+    private boolean debug;
+
     // TODO Criar histórioco de URLs
 
-    private Thread thread;
+    private QueueThread thread;
 
-    public Queue(int num_threads) {
+    public Queue(int num_threads, boolean debug) {
 
         queue = new ArrayList<String>();
 
         history = new ArrayList<String>();
 
         this.num_threads = num_threads;
+
+        this.debug = debug;
 
         queue.add("http://127.0.0.1:5500/Test_Site/site.html");
 
@@ -69,12 +73,10 @@ public class Queue {
 
             for (int i = 0; i < num_threads; i++) {
 
-                QueueServer recebeServer = new QueueServer(this, 8000 + i * 2);
-                thread = new Thread(recebeServer);
+                thread = new QueueThread(this, 8000 + i * 2, debug);
                 thread.start();
 
-                QueueServer mandaServer = new QueueServer(this, 8001 + i * 2);
-                thread = new Thread(mandaServer);
+                thread = new QueueThread(this, 8001 + i * 2, debug);
                 thread.start();
             }
 

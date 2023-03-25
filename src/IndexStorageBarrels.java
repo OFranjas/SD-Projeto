@@ -23,9 +23,12 @@ public class IndexStorageBarrels {
     private static int MAX_THREADS = 5;
     private IndexStorageBarrelThread thread;
 
-    public IndexStorageBarrels(int num_threads) {
+    private boolean debug;
+
+    public IndexStorageBarrels(int num_threads, boolean debug) {
 
         this.num_threads = num_threads;
+        this.debug = debug;
 
     }
 
@@ -36,7 +39,7 @@ public class IndexStorageBarrels {
         }
 
         for (int i = 0; i < this.num_threads; i++) {
-            thread = new IndexStorageBarrelThread(i);
+            thread = new IndexStorageBarrelThread(i, debug);
             thread.start(); // send i to the thread for id of storage barrel
         }
 

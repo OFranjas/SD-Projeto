@@ -2,7 +2,7 @@ import java.util.*;
 import java.net.*;
 import java.io.*;
 
-public class QueueServer extends Thread {
+public class QueueThread extends Thread {
 
     private int Port;
 
@@ -10,9 +10,12 @@ public class QueueServer extends Thread {
 
     private ServerSocket serverSocket;
 
-    public QueueServer(Queue queue, int port) throws IOException {
+    private boolean debug;
+
+    public QueueThread(Queue queue, int port, boolean debug) throws IOException {
         this.queue = queue;
         this.Port = port;
+        this.debug = debug;
         serverSocket = new ServerSocket(Port);
 
         // System.out.println("QueueServer created with port " + Port);
@@ -31,14 +34,14 @@ public class QueueServer extends Thread {
 
                 synchronized (queue) {
 
-                    // TODO Verificar se a URL já existiu no histórico
                     if (queue.exists(url)) {
                         System.out.println("URL já existe no histórico: " + url);
                         return;
                     }
 
                     queue.add(url);
-                    System.out.println("URL adicionada à queue: " + url);
+                    if (debug)
+                        System.out.println("URL adicionada à queue: " + url);
 
                 }
 
@@ -64,7 +67,9 @@ public class QueueServer extends Thread {
                     PrintWriter writer = new PrintWriter(socket.getOutputStream());
                     writer.println("GET_URL " + queue.get(0));
                     writer.flush();
-                    System.out.println("QueueServer Thread: Enviando url " + queue.get(0));
+
+                    if (debug)
+                        System.out.println("QueueServer Thread: Enviando url " + queue.get(0));
 
                     // If the Downloader has downloaded the page, remove the url from the queue
 
@@ -74,7 +79,9 @@ public class QueueServer extends Thread {
 
                         String url = command.substring(11);
                         queue.remove(url);
-                        System.out.println("URL removida da queue: " + url);
+
+                        if (debug)
+                            System.out.println("URL removida da queue: " + url);
                     }
 
                     socket.close();

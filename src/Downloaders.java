@@ -20,11 +20,14 @@ public class Downloaders {
 
     private static int MAX_THREADS = 5;
 
+    private boolean debug;
+
     private DownloaderThread thread;
 
-    public Downloaders(int num_threads) {
+    public Downloaders(int num_threads, boolean debug) {
 
         this.num_threads = num_threads;
+        this.debug = debug;
 
         // System.out.println("Downloader created");
 
@@ -40,7 +43,7 @@ public class Downloaders {
         // Criar threads e inicia-las
         for (int i = 0; i < num_threads; i++) {
 
-            thread = new DownloaderThread(8000 + i * 2, i);
+            thread = new DownloaderThread(8000 + i * 2, i, debug);
             thread.start();
             // System.out.println("Downloader Thread " + i + " started...");
         }

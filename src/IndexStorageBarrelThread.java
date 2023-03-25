@@ -12,6 +12,11 @@ public class IndexStorageBarrelThread extends Thread {
 
     private String MULTICAST_ADRESS = "224.3.2.1";
     private int MULTICAST_PORT = 4321;
+    private MulticastSocket socket;
+    private InetSocketAddress group;
+    private NetworkInterface netIf;
+
+    private boolean debug;
 
     private HashMap<String, HashSet<String>> index; // Tem o que ja tem no ficheiro de texto, receber o que o downloader
                                                     // tem e adicionar ao que ja tem
@@ -19,9 +24,10 @@ public class IndexStorageBarrelThread extends Thread {
     private HashMap<String, HashSet<String>> downloader; // isto nunca pode existir, deve ser recebido por tcp/udp vindo
                                                          // do downloader
 
-    public IndexStorageBarrelThread(int id) {
+    public IndexStorageBarrelThread(int id, boolean debug) {
 
         this.id = id;
+        this.debug = debug;
 
         this.index = new HashMap<String, HashSet<String>>();
 
@@ -40,11 +46,13 @@ public class IndexStorageBarrelThread extends Thread {
 
             if (file.createNewFile()) {
 
-                System.out.println("File is created!");
+                if (debug)
+                    System.out.println("File is created!");
 
             } else {
 
-                System.out.println("File already exists.");
+                if (debug)
+                    System.out.println("File already exists.");
             }
 
         } catch (IOException e) {
@@ -68,6 +76,9 @@ public class IndexStorageBarrelThread extends Thread {
             }
 
             myWriter.close();
+
+            if (debug)
+                System.out.println("Successfully wrote to the file.");
 
         } catch (IOException e) {
             System.out.println("IndexBarrel -> Error in WriteTxtFile");
@@ -141,11 +152,12 @@ public class IndexStorageBarrelThread extends Thread {
 
         try {
 
-            System.out.println("IndexStorageBarrel " + id + " is waiting for the index from Downloader");
+            if (debug)
+                System.out.println("IndexStorageBarrel " + id + " is waiting for the index from Downloader");
 
-            MulticastSocket socket = new MulticastSocket(MULTICAST_PORT);
-            InetSocketAddress group = new InetSocketAddress(MULTICAST_ADRESS, MULTICAST_PORT);
-            NetworkInterface netIf = NetworkInterface.getByName("bge0");
+            this.socket = new MulticastSocket(MULTICAST_PORT);
+            this.group = new InetSocketAddress(MULTICAST_ADRESS, MULTICAST_PORT);
+            this.netIf = NetworkInterface.getByName("bge0");
 
             socket.joinGroup(group, netIf);
 
@@ -161,26 +173,30 @@ public class IndexStorageBarrelThread extends Thread {
                 // System.out.println(message);
                 messageToHashmap(message);
 
-                System.out.println("IndexStorageBarrel " + id + " received the following index from Downloader:");
-                printHashMap(downloader);
-
-                // Send response that the index was received
-                String response = "Index received";
-                byte[] buffer2 = response.getBytes();
-                DatagramPacket packet2 = new DatagramPacket(buffer2, buffer2.length, packet.getAddress(),
-                        packet.getPort());
-                socket.send(packet2);
-
-                if (message != null) {
-                    break;
+                if (debug) {
+                    System.out.println("IndexStorageBarrel " + id + " received the following index from Downloader:");
+                    printHashMap(downloader);
                 }
 
+                // Editar index com as novas cenas
+                CompareIndexWithDownloader();
+
+                if (debug) {
+                    System.out.println("IndexStorageBarrel " + id + " has the following index:");
+                    printHashMap(index);
+                }
+
+                // Guarda o index num ficheiro de texto
+                WriteTxtFile();
+
+                // Se o Search Module pedir, envia o index -> RMI
+
             }
-            socket.leaveGroup(group, netIf);
-            socket.close();
+
         } catch (IOException e) {
-            System.out.println("IndexBarrl -> Error in receiveMessage");
+            System.out.println("IndexBarrel -> Error in receiveMessage");
             e.printStackTrace();
+            this.socket.close();
         }
 
     }
@@ -192,19 +208,11 @@ public class IndexStorageBarrelThread extends Thread {
 
         while (true) {
 
-            System.out.println("IndexStorageBarrel " + id + " is running");
+            if (debug)
+                System.out.println("IndexStorageBarrel " + id + " is running");
 
             // Recebe o index do Downloader -> Multicast
             receiveMessage();
-
-            // Editar index com as novas cenas
-            CompareIndexWithDownloader();
-
-            // Guarda o index num ficheiro de texto
-
-            WriteTxtFile();
-
-            // Se o Search Module pedir, envia o index -> RMI
 
         }
 
