@@ -23,9 +23,17 @@ public class DownloaderThread extends Thread {
 
     private int ReceivePort;
 
-    private static HashMap<String, HashSet<String>> index = new HashMap<String, HashSet<String>>();
+    private HashMap<String, HashSet<String>> index;
 
-    private static ArrayList<String> found = new ArrayList<String>();
+    private ArrayList<String> found;
+
+    private HashMap<String, HashSet<String>> linksReferences;
+
+    private String title;
+
+    private ArrayList<String> content;
+
+    private int word_limit = 10;
 
     public DownloaderThread(int Port, int id, boolean debug) {
 
@@ -33,49 +41,79 @@ public class DownloaderThread extends Thread {
         this.id = id;
         this.ReceivePort = Port + 1;
         this.debug = debug;
+        this.index = new HashMap<String, HashSet<String>>();
+        this.found = new ArrayList<String>();
+        this.linksReferences = new HashMap<String, HashSet<String>>();
+        this.content = new ArrayList<String>();
 
         // System.out.println("Downloader Thread " + id + " created with port " + Port);
 
     }
 
     // Download the page and read its words
-    public static void download(String url) {
+    public void download(String url) {
 
         try {
 
             Document doc = Jsoup.connect(url).get();
 
             // Get page title
-            String title = doc.title();
+            this.title = doc.title();
 
             // Read all words and associate them with the page, without duplicates
             Elements words = doc.select("body");
+
+            int i = 0;
 
             for (Element word : words) {
                 String[] wordsArray = word.text().split(" ");
 
                 for (String wordArray : wordsArray) {
-                    if (index.containsKey(wordArray)) {
-                        index.get(wordArray).add(url);
+                    if (this.index.containsKey(wordArray)) {
+                        this.index.get(wordArray).add(url);
                     } else {
                         HashSet<String> urls = new HashSet<String>();
                         urls.add(url);
-                        index.put(wordArray, urls);
+                        this.index.put(wordArray, urls);
                     }
                 }
+
+                // Add the first 10 words of the page to the content
+                if (i < word_limit) {
+
+                    this.content.add(word.text());
+
+                }
+
+                i++;
+            }
+
+            // Add page to linksReferences but without a reference to it (if it isn't
+            // already there)
+            if (!this.linksReferences.containsKey(url)) {
+                HashSet<String> urls = new HashSet<String>();
+                this.linksReferences.put(url, urls);
             }
 
             // Read any existing links and read their words as well recursively
             Elements links = doc.select("a[href]");
             for (Element link : links) {
                 String linkHref = link.attr("href");
-                // String linkText = link.text();
 
-                // Recursively read the link
-                // download(linkHref);
+                // Add link to the refereces
+                if (this.linksReferences.containsKey(linkHref)) {
+                    this.linksReferences.get(linkHref).add(url);
+                } else {
+                    HashSet<String> urls = new HashSet<String>();
+                    urls.add(url);
+                    this.linksReferences.put(linkHref, urls);
+                }
 
-                // Add links to the link array
-                found.add(linkHref);
+                // Check if link was already found
+                if (!this.found.contains(linkHref)) {
+                    this.found.add(linkHref);
+                }
+
             }
         } catch (Exception e) {
             System.out.println("Exception in Downloader.download: " + e);
@@ -83,7 +121,7 @@ public class DownloaderThread extends Thread {
 
     }
 
-    public static void printIndex() {
+    public void printIndex() {
 
         try {
 
@@ -161,20 +199,40 @@ public class DownloaderThread extends Thread {
 
     }
 
-    public String transformLineHashMap(HashMap<String, HashSet<String>> pack) {
+    public String transformLineHashMap() {
         // percorrer o hashmap e transformar em String do tipo "palavra: url1, url2,
         // url3"
         String string = "";
-        // go trough the hashmap
 
-        for (String key : pack.keySet()) {
+        // Add the index to the string
+        for (String key : this.index.keySet()) {
             string += key + " ";
-            for (String url : pack.get(key)) {
+            for (String url : this.index.get(key)) {
                 string += url + " ";
             }
             // separete keys/url with a new line
             string += "\n";
         }
+
+        // Add a separator between the index and the links references
+        string += "LINKS\n";
+
+        string += this.url + " ";
+
+        // Add the found urls to the string
+        for (String url : this.found) {
+            string += url + " ";
+        }
+
+        // Add a separator and add the title
+        string += "\nTITLE\n" + this.title + "\n";
+
+        // Add a separator and add the content
+        string += "CONTENT\n";
+        for (String content : this.content) {
+            string += content + " ";
+        }
+
         return string;
     }
 
@@ -185,27 +243,25 @@ public class DownloaderThread extends Thread {
             MulticastSocket socket = new MulticastSocket();
 
             // Enviar o index para o IndexStorageBarrel
-            while (true) {
-                InetAddress group = InetAddress.getByName(MULTICAST_ADRESS);
-                // transform hasmap to bytes to send
 
-                byte[] buf = index.getBytes();
-                DatagramPacket packet = new DatagramPacket(buf, buf.length, group, MULTICAST_PORT);
-                socket.send(packet);
+            InetAddress group = InetAddress.getByName(MULTICAST_ADRESS);
+            // transform hasmap to bytes to send
 
-                // Confirm that the index was sent
-                if (debug)
-                    System.out.println("Downloader Thread " + id + " sent index to IndexStorageBarrel");
+            byte[] buf = index.getBytes();
+            DatagramPacket packet = new DatagramPacket(buf, buf.length, group, MULTICAST_PORT);
+            socket.send(packet);
 
-                // Confirm that the index was received
-                // DatagramPacket response = new DatagramPacket(new byte[1024], 1024);
-                // socket.receive(response);
-                // if (response.getData() != null) {
-                // System.out.println("Index was received, exiting");
-                // break;
-                // }
-                break;
-            }
+            // Confirm that the index was sent
+            if (debug)
+                System.out.println("Downloader Thread " + id + " sent index to IndexStorageBarrel");
+
+            // Confirm that the index was received
+            // DatagramPacket response = new DatagramPacket(new byte[1024], 1024);
+            // socket.receive(response);
+            // if (response.getData() != null) {
+            // System.out.println("Index was received, exiting");
+            // break;
+            // }
 
             // socket.close();
         } catch (IOException e) {
@@ -227,18 +283,24 @@ public class DownloaderThread extends Thread {
 
             if (url != null) {
 
-                if (debug)
-                    System.out.println("Downloader Thread " + id + " downloading " + url);
+                if (debug) {
+                }
+                System.out.println("Downloader Thread " + id + " downloading " + url);
 
                 // Fazer o download do url
-                download(url);
+                download(this.url);
 
-                // Convert the hashmap to a string
-                String string = transformLineHashMap(index);
+                if (debug) {
+                    System.out.println("Downloader Thread " + id + " Content " + this.content);
+                    System.out.println("Downloader Thread " + id + " Title " + this.title);
+                }
+
+                // Convert the index hashmap and the linksReferences hashmap to a string
+                String string = transformLineHashMap();
 
                 // Print the index
                 if (debug)
-                    System.out.println("Downloader Thread " + id + " index: " + string);
+                    System.out.println("Downloader Thread " + id + " index e linksReferences:\n " + string);
 
                 // Enviar o index para o IndexStorageBarrel - Multicast
                 enviaIndex(string);
@@ -262,9 +324,10 @@ public class DownloaderThread extends Thread {
             }
 
             this.url = null;
-            found.clear();
-            index.clear(); // Depois de confirmar que o index foi enviado para o IndexStorageBarrel
-
+            this.found.clear();
+            this.index.clear(); // Depois de confirmar que o index foi enviado para o IndexStorageBarrel
+            this.linksReferences.clear();
+            this.content.clear();
         }
 
     }
