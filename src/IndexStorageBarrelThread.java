@@ -249,7 +249,7 @@ public class IndexStorageBarrelThread extends Thread {
             if (this.linksReferences.isEmpty()) {
                 linksReferences = downloaderLinksReferences;
 
-                System.out.println("Empty");
+                // System.out.println("Empty");
 
             } else {
 

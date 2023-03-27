@@ -17,8 +17,6 @@ public class Queue {
 
     private boolean debug;
 
-    // TODO Criar histórioco de URLs
-
     private QueueThread thread;
 
     public Queue(int num_threads, boolean debug) {
@@ -31,7 +29,7 @@ public class Queue {
 
         this.debug = debug;
 
-        queue.add("http://127.0.0.1:5500/Test_Site/site.html");
+        // queue.add("http://127.0.0.1:5500/Test_Site/site.html");
 
     }
 
@@ -79,6 +77,9 @@ public class Queue {
                 thread = new QueueThread(this, 8001 + i * 2, debug);
                 thread.start();
             }
+
+            thread = new QueueThread(this, 7000, debug);
+            thread.start();
 
         } catch (IOException e) {
             System.out.println("Exception in Queue.start: " + e);

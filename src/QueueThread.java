@@ -143,7 +143,27 @@ public class QueueThread extends Thread {
                 }
 
             }
-        } else {
+        } else if (this.Port == 7000) {
+
+            while (true) {
+
+                try {
+
+                    // System.out.println("QueueServer2 running");
+
+                    recebe_urls();
+
+                    // printQueue();
+
+                } catch (IOException e) {
+                    System.out.println("Exception in QueueServer.run: " + e);
+                }
+
+            }
+
+        }
+
+        else {
             System.out.println("Porta inválida");
         }
 

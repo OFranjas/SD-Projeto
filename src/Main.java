@@ -6,7 +6,7 @@ public class Main {
 
     private static int num_threads = 1;
 
-    private static boolean debug = false;
+    private static boolean debug = true;
 
     public static void main(String[] args) {
 
@@ -17,7 +17,7 @@ public class Main {
             queue.start();
 
             // Start the IndexStorageBarrels Threads
-            IndexStorageBarrels indexStorageBarrel = new IndexStorageBarrels(num_threads, true);
+            IndexStorageBarrels indexStorageBarrel = new IndexStorageBarrels(num_threads, debug);
             indexStorageBarrel.start();
 
             // Start the Downloaders Threads
