@@ -1,57 +1,12 @@
-exception https://www.iana.org/domains/example
-been https://www.iana.org/domains/example
-Archive https://www.iana.org/domains/example
-functions https://www.iana.org/domains/example
-Ola http://127.0.0.1:5500/Test_Site/site.html http://127.0.0.1:5500/Test_Site2/site.html
-use http://example.com
-registered https://www.iana.org/domains/example
-Secretariat. https://www.iana.org/domains/example
-illustrative http://example.com
-exclusions https://www.iana.org/domains/example
-Servers https://www.iana.org/domains/example
-without http://example.com https://www.iana.org/domains/example
-coordination http://example.com
-Practices https://www.iana.org/domains/example
-nominally https://www.iana.org/domains/example
-Test http://127.0.0.1:5500/Test_Site2/site.html
-prior http://example.com
-Devanagari https://www.iana.org/domains/example
-Example http://example.com
-This http://example.com
-documents. http://example.com
-Cyrillic https://www.iana.org/domains/example
-in http://example.com
-& https://www.iana.org/domains/example
-documentation https://www.iana.org/domains/example
-6761). https://www.iana.org/domains/example
-this http://example.com
-(Nagari) https://www.iana.org/domains/example
-Yiddish https://www.iana.org/domains/example
-is http://example.com
-XN--0ZWM56D https://www.iana.org/domains/example
-permission. http://example.com
-XN--JXALPDLP https://www.iana.org/domains/example
-an https://www.iana.org/domains/
-123 http://127.0.0.1:5500/Test_Site/site.html
-2 http://127.0.0.1:5500/Test_Site2/site.html
-examples http://example.com
-domain http://example.com
-Domain http://example.com
-Link http://127.0.0.1:5500/Test_Site/site.html
 Site http://127.0.0.1:5500/Test_Site2/site.html
 bom http://127.0.0.1:5500/Test_Site/site.html
-asking http://example.com
-for http://example.com
-literature http://example.com
-More http://example.com
+123 http://127.0.0.1:5500/Test_Site/site.html
+2 http://127.0.0.1:5500/Test_Site2/site.html
+Ola http://127.0.0.1:5500/Test_Site/site.html http://127.0.0.1:5500/Test_Site2/site.html
+Test http://127.0.0.1:5500/Test_Site2/site.html
 bla http://127.0.0.1:5500/Test_Site2/site.html
-???? https://www.iana.org/domains/example
-or http://example.com
-may http://example.com
-information... http://example.com
 Hey http://127.0.0.1:5500/Test_Site/site.html http://127.0.0.1:5500/Test_Site2/site.html
 dia http://127.0.0.1:5500/Test_Site/site.html
-You http://example.com
+Link http://127.0.0.1:5500/Test_Site/site.html
 LINKSREFERENCES http://127.0.0.1:5500/Test_Site/site.html http://127.0.0.1:5500/Test_Site2/site.html|SD Test Website|Hey Ola bom dia 123 Hey Link Link 
 LINKSREFERENCES http://127.0.0.1:5500/Test_Site2/site.html|Document|Test Site 2 Test bla bla Hey Ola Hey Ola Test bla bla 
-LINKSREFERENCES http://example.com https://www.iana.org/domains/example|Example Domain|Example Domain This domain is for use in illustrative examples in documents. You may use this domain in literature without prior coordination or asking for permission. More information... 

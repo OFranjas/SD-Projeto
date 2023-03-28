@@ -72,13 +72,14 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                     server.opcaoUm(words[1]);
                 }
 
+                if (words[0].equals("2")) {
+                    server.opcaoTres(words[1]);
+                }
+
                 if (words[0].equals("3")) {
                     server.opcaoDois(words[1]);
                 }
             } else {
-                if (string.equals("2")) {
-                    server.opcaoTres(string);
-                }
 
                 if (string.equals("4")) {
                     server.opcaoQuatro(string);
@@ -150,7 +151,13 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
 
                     // string = option
 
-                    string = String.valueOf(option);
+                    sc.nextLine();
+
+                    string = sc.nextLine();
+
+                    System.out.println("Escreva o url: ");
+
+                    string = option + " " + string;
 
                     senderRmi(string);
 
@@ -179,6 +186,9 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                     string = String.valueOf(option);
 
                     // send option by rmi to rmisearchmodule
+
+                    string = option + " " + string;
+
                     senderRmi(string);
 
                     break;

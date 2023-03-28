@@ -1,4 +1,5 @@
 import java.rmi.registry.LocateRegistry;
+import java.util.ArrayList;
 import java.util.Scanner;
 import java.rmi.*;
 import java.rmi.server.*;
@@ -19,6 +20,8 @@ import java.net.Socket;
 public class RMISearchModule extends UnicastRemoteObject implements ServerInterface {
 
     static ClientInterface client;
+
+    private int num_threads = 1;
 
     RMISearchModule() throws RemoteException {
         super();
@@ -55,10 +58,43 @@ public class RMISearchModule extends UnicastRemoteObject implements ServerInterf
 
     public void opcaoDois(String s) throws RemoteException {
         System.out.println("Opcao2, fazer coisinhas: " + s);
+
+        int num = (int) (Math.random() * num_threads);
+
+        System.out.println("NUM: " + num);
+
+        try {
+
+            BarrelInterface barril = (BarrelInterface) Naming
+                    .lookup("IndexStorageBarrel" + num);
+
+            ArrayList<String> res = barril.procuraConteudo(s, 1);
+
+            System.out.println("RES: " + res);
+        } catch (Exception e) {
+            System.out.println("Exception in RMISearchModule.opcaoDois: " + e);
+        }
     }
 
     public void opcaoTres(String s) throws RemoteException {
         System.out.println("Opcao3, fazer coisinhas: " + s);
+
+        int num = (int) (Math.random() * num_threads);
+
+        System.out.println("NUM: " + num);
+
+        try {
+
+            BarrelInterface barril = (BarrelInterface) Naming
+                    .lookup("IndexStorageBarrel" + num);
+
+            ArrayList<String> res = barril.ligacoesURL(s);
+
+            System.out.println("RES: " + res);
+        } catch (Exception e) {
+            System.out.println("Exception in RMISearchModule.opcaoTres: " + e);
+        }
+
     }
 
     public void opcaoQuatro(String s) throws RemoteException {

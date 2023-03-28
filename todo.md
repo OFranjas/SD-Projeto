@@ -18,14 +18,14 @@
 
 # Search Module
 
-- [ ] Comunicação RMI com Cliente
+- [x] Comunicação RMI com Cliente
 - [ ] Comunicar RMI com os Barrels
-- [ ] Comunicar com Fila para enviar URLs
+- [x] Comunicar com Fila para enviar URLs
 
 # Client
 
-- [ ] Comunicar RMI com o Search Module
-- [ ] Interface para o utilizador
+- [x] Comunicar RMI com o Search Module
+- [x] Interface para o utilizador
 
 # Métodos
 
@@ -41,3 +41,4 @@
 
 - Nada de código.
 - Explicar raciocínio e decisões tomadas.
+- [Notas_Relatorio.md](Notas_Relatorio.md)

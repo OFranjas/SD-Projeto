@@ -4,11 +4,14 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.net.Socket;
+import java.rmi.Naming;
+import java.rmi.Remote;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
 import java.net.*;
 import java.io.*;
 
-public class IndexStorageBarrelThread extends Thread {
+public class IndexStorageBarrelThread extends Thread implements BarrelInterface, Serializable {
 
     private String MULTICAST_ADRESS = "224.3.2.1";
     private int MULTICAST_PORT = 4321;
@@ -48,6 +51,18 @@ public class IndexStorageBarrelThread extends Thread {
         this.contents = new HashMap<String, String>();
 
         // System.out.println("IndexStorageBarrel Thread " + id + " created");
+        try {
+            UnicastRemoteObject.exportObject(this, 0);
+            try {
+                Naming.bind("IndexStorageBarrel" + id, this);
+            } catch (Exception e) {
+                System.out.println("IndexStorageBarrelThread: " + e.getMessage());
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
+            System.out.println("IndexStorageBarrelThread: " + e.getMessage());
+            e.printStackTrace();
+        }
 
     }
 
@@ -91,11 +106,11 @@ public class IndexStorageBarrelThread extends Thread {
                         // Separate the elements with |
                         String splitado[] = line.split("\\|");
 
+                        words = splitado[0].split(" ");
+
                         this.contents.put(words[1], splitado[2]);
 
                         this.titles.put(words[1], splitado[1]);
-
-                        words = splitado[0].split(" ");
 
                         // System.out.println("WORDS -> " + words[0] + " " + words[1] + " " + words[2]);
 
@@ -249,7 +264,7 @@ public class IndexStorageBarrelThread extends Thread {
             if (this.linksReferences.isEmpty()) {
                 linksReferences = downloaderLinksReferences;
 
-                // System.out.println("Empty");
+                System.out.println("Empty");
 
             } else {
 
@@ -412,6 +427,7 @@ public class IndexStorageBarrelThread extends Thread {
 
                 // Kill the barrel
                 // break;
+
             }
 
         } catch (IOException e) {
@@ -453,6 +469,44 @@ public class IndexStorageBarrelThread extends Thread {
 
     }
 
+    private ArrayList<String> sortUrls(ArrayList<String> urls) {
+
+        // Store the number of times each url appears in the index
+        HashMap<String, Integer> urlsCount = new HashMap<String, Integer>();
+
+        // Go throught the linksReferences hashmap and count the number of links that
+        // contain the url
+        for (String url : urls) {
+
+            int count = 0;
+
+            for (String key : this.linksReferences.keySet()) {
+
+                if (this.linksReferences.get(key).contains(url)) {
+                    count++;
+                }
+
+            }
+
+            urlsCount.put(url, count);
+
+        }
+
+        // Sort the urls by the number of times they appear in the index, from the most
+        // to the least
+        Collections.sort(urls, new Comparator<String>() {
+
+            @Override
+            public int compare(String o1, String o2) {
+                return urlsCount.get(o2) - urlsCount.get(o1);
+            }
+
+        });
+
+        return urls;
+
+    }
+
     public void run() {
 
         // Create text file if it doesn't exist
@@ -462,8 +516,18 @@ public class IndexStorageBarrelThread extends Thread {
 
             System.out.println("IndexStorageBarrel " + id + " has the following starting index:");
             printHashMap(index);
-            System.out.println("IndexStorageBarrel " + id + " has the following starting links:");
+            System.out.println("IndexStorageBarrel " + id + " has the following starting LINKS:");
             printHashMap(linksReferences);
+            System.out.println("IndexStorageBarrel " + id + " has the following starting TITLES:");
+            // Print the titles hashmap
+            for (String key : this.titles.keySet()) {
+                System.out.println(key + " " + this.titles.get(key));
+            }
+            System.out.println("IndexStorageBarrel " + id + " has the following starting CONTENTS:");
+            // Print the contents hashmap
+            for (String key : this.contents.keySet()) {
+                System.out.println(key + " " + this.contents.get(key));
+            }
 
         }
 
@@ -479,4 +543,105 @@ public class IndexStorageBarrelThread extends Thread {
 
     }
 
+    @Override
+    public ArrayList<String> procuraConteudo(String conteudo, int pagina) {
+
+        try {
+
+            ArrayList<String> urls = new ArrayList<String>();
+
+            // String low = conteudo.toLowerCase();
+
+            // Run through the words in the index
+            for (int i = (pagina - 1) * 10; i < this.index.keySet().size(); i++) {
+
+                String word = (String) this.index.keySet().toArray()[i];
+
+                // word = word.toLowerCase();
+
+                if (urls.size() == 10) {
+                    break;
+                }
+
+                // If the word is the one we are looking for
+                if (word.equals(conteudo)) {
+
+                    // Run through the urls in the index of the word thats equal
+                    for (String url : this.index.get(conteudo)) {
+
+                        if (urls.size() == 10) {
+                            break;
+                        }
+
+                        urls.add(url);
+
+                    }
+
+                }
+
+            }
+
+            // Sort the urls by the number of times they appear in the index
+            urls = sortUrls(urls);
+
+            // Get the title and content of the urls
+            for (int i = 0; i < urls.size(); i++) {
+
+                String url = urls.get(i);
+
+                String title = this.titles.get(url);
+                String content = this.contents.get(url);
+
+                urls.set(i, url + "|" + title + "|" + content);
+
+            }
+
+            System.out.println("IndexStorageBarrel " + id + " has the following urls for the word " + conteudo + ":");
+            for (String url : urls) {
+                System.out.println(url);
+            }
+
+            return urls;
+
+        } catch (Exception e) {
+            System.out.println("IndexStorageBarrel -> Error in procuraConteudo");
+            e.printStackTrace();
+            return null;
+        }
+
+    }
+
+    @Override
+    public ArrayList<String> ligacoesURL(String url) {
+
+        try {
+
+            ArrayList<String> links = new ArrayList<String>();
+
+            // Go through the linksReferences hashmap and get the links that contain the url
+            for (String key : this.linksReferences.keySet()) {
+
+                if (this.linksReferences.get(key).contains(url)) {
+                    links.add(key);
+                }
+
+            }
+
+            links = sortUrls(links);
+
+            System.out.println("IndexStorageBarrel " + id + " has the following links for the url " + url + ":");
+
+            for (String link : links) {
+                System.out.println(link);
+            }
+
+            return links;
+
+        } catch (Exception e) {
+            System.out.println("IndexStorageBarrel -> Error in ligacoesURL");
+            e.printStackTrace();
+            return null;
+        }
+
+    }
 }
