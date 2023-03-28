@@ -56,7 +56,7 @@ public class RMISearchModule extends UnicastRemoteObject implements ServerInterf
 
     }
 
-    public void opcaoDois(String s) throws RemoteException {
+    public ArrayList<String> opcaoDois(String s) throws RemoteException {
         System.out.println("Opcao2, fazer coisinhas: " + s);
 
         int num = (int) (Math.random() * num_threads);
@@ -71,12 +71,16 @@ public class RMISearchModule extends UnicastRemoteObject implements ServerInterf
             ArrayList<String> res = barril.procuraConteudo(s, 1);
 
             System.out.println("RES: " + res);
+
+            return res;
+
         } catch (Exception e) {
             System.out.println("Exception in RMISearchModule.opcaoDois: " + e);
+            return null;
         }
     }
 
-    public void opcaoTres(String s) throws RemoteException {
+    public ArrayList<String> opcaoTres(String s) throws RemoteException {
         System.out.println("Opcao3, fazer coisinhas: " + s);
 
         int num = (int) (Math.random() * num_threads);
@@ -91,8 +95,11 @@ public class RMISearchModule extends UnicastRemoteObject implements ServerInterf
             ArrayList<String> res = barril.ligacoesURL(s);
 
             System.out.println("RES: " + res);
+
+            return res;
         } catch (Exception e) {
             System.out.println("Exception in RMISearchModule.opcaoTres: " + e);
+            return null;
         }
 
     }
@@ -159,6 +166,12 @@ public class RMISearchModule extends UnicastRemoteObject implements ServerInterf
             System.out.println("Exception in RMISearchModule.main: " + re);
         }
 
+    }
+
+    @Override
+    public ArrayList<String> recebe(ArrayList<String> s) {
+
+        return s;
     }
 
 }

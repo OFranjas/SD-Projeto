@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 import java.rmi.*;
 import java.rmi.server.*;
@@ -47,7 +48,12 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
 
     // }
 
-    public static void register() {
+    public static void printList(ArrayList<String> lista) {
+        System.out.println("printList");
+
+        for (int i = 0; i < lista.size(); i++) {
+            System.out.println(lista.get(i));
+        }
 
     }
 
@@ -73,11 +79,26 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                 }
 
                 if (words[0].equals("2")) {
-                    server.opcaoTres(words[1]);
+                    ArrayList<String> lista = new ArrayList<String>();
+
+                    lista = server.opcaoDois(words[1]);
+
+                    printList(lista);
+
+                    Thread.sleep(5000);
                 }
 
                 if (words[0].equals("3")) {
-                    server.opcaoDois(words[1]);
+                    // create arraylist of strings´
+
+                    ArrayList<String> lista = new ArrayList<String>();
+
+                    lista = server.opcaoTres(words[1]);
+
+                    printList(lista);
+
+                    Thread.sleep(5000);
+
                 }
             } else {
 
@@ -153,9 +174,9 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
 
                     sc.nextLine();
 
-                    string = sc.nextLine();
+                    System.out.println("Escreva o palavra: ");
 
-                    System.out.println("Escreva o url: ");
+                    string = sc.nextLine();
 
                     string = option + " " + string;
 
@@ -169,7 +190,7 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
 
                     sc.nextLine();
 
-                    System.out.println("Escreva o palavra: ");
+                    System.out.println("Escreva o url: ");
 
                     string = sc.nextLine();
 

@@ -9,23 +9,27 @@
 - [x] Receber URLs da fila
 - [x] Enviar multicast para o IndexStorageBarrel
 - [x] Enviar Lista de URLs para a Fila em vez de 1 URL
+- [ ] Mudar Multicast
 
 # Barrels
 
 - [x] Receber multicast do Downloader
 - [x] Confirmar cenas do Zé
-- [ ] RMI para o Search Module
+- [x] RMI para o Search Module
+- [ ] Mudar Multicast
+- [ ] Particionamento do índice
 
 # Search Module
 
 - [x] Comunicação RMI com Cliente
-- [ ] Comunicar RMI com os Barrels
+- [x] Comunicar RMI com os Barrels
 - [x] Comunicar com Fila para enviar URLs
 
 # Client
 
 - [x] Comunicar RMI com o Search Module
 - [x] Interface para o utilizador
+- [ ] Admin Page
 
 # Métodos
 
