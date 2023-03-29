@@ -30,6 +30,7 @@
 - [x] Comunicar RMI com o Search Module
 - [x] Interface para o utilizador
 - [ ] Admin Page
+- [ ] Paginação na pesquisa
 
 # Métodos
 

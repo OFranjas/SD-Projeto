@@ -78,6 +78,8 @@ public class DownloaderThread extends Thread {
                     }
                 }
 
+                i++;
+
                 // Add the first 10 words of the page to the content
                 if (i < word_limit) {
 
@@ -85,7 +87,6 @@ public class DownloaderThread extends Thread {
 
                 }
 
-                i++;
             }
 
             // Add page to linksReferences but without a reference to it (if it isn't

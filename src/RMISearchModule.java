@@ -54,6 +54,7 @@ public class RMISearchModule extends UnicastRemoteObject implements ServerInterf
             System.out.println("Exception in Downloader.adicionaURL: " + e);
         }
 
+
     }
 
     public ArrayList<String> opcaoDois(String s) throws RemoteException {
