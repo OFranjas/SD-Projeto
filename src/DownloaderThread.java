@@ -140,7 +140,8 @@ public class DownloaderThread extends Thread {
 
             }
         } catch (Exception e) {
-            System.out.println("Exception in Downloader.download: " + e);
+            System.out.println("Couldn't dowload  " + url);
+            return;
         }
 
     }
@@ -215,6 +216,8 @@ public class DownloaderThread extends Thread {
                 writer.println("ADD_URL " + url);
                 writer.flush();
                 socket.close();
+            } catch (ConnectException e) {
+                System.out.println("Couldn't connect to server");
             } catch (IOException e) {
                 System.out.println("Exception in Downloader.adicionaURL: " + e);
             }

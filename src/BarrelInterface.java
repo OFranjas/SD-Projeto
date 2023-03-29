@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public interface BarrelInterface extends Remote {
 
-    public ArrayList<String> procuraConteudo(String conteudo, int pagina)
+    public ArrayList<String> procuraConteudo(String conteudo)
             throws FileNotFoundException, IOException, RemoteException;
 
     public ArrayList<String> ligacoesURL(String url) throws FileNotFoundException, IOException, RemoteException;

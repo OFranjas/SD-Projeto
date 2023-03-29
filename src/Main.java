@@ -17,12 +17,14 @@ public class Main {
             queue.start();
 
             // Start the IndexStorageBarrels Threads
-            IndexStorageBarrels indexStorageBarrel = new IndexStorageBarrels(num_threads, true);
+            IndexStorageBarrels indexStorageBarrel = new IndexStorageBarrels(num_threads, debug);
             indexStorageBarrel.start();
 
             // Start the Downloaders Threads
-            Downloaders downloader = new Downloaders(num_threads, true);
+            Downloaders downloader = new Downloaders(num_threads, debug);
             downloader.start();
+
+            System.out.println("PROGRAM STARTED");
 
             // Start the Search Module Thread
             // RMISearchModule searchModule = new RMISearchModule();

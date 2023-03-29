@@ -68,7 +68,7 @@ public class RMISearchModule extends UnicastRemoteObject implements ServerInterf
             BarrelInterface barril = (BarrelInterface) Naming
                     .lookup("IndexStorageBarrel" + num);
 
-            ArrayList<String> res = barril.procuraConteudo(s, pagina);
+            ArrayList<String> res = barril.procuraConteudo(s);
 
             System.out.println("RES: " + res);
 

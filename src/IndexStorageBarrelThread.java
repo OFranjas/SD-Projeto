@@ -547,7 +547,7 @@ public class IndexStorageBarrelThread extends Thread implements BarrelInterface,
     }
 
     @Override
-    public ArrayList<String> procuraConteudo(String conteudo, int pagina) {
+    public ArrayList<String> procuraConteudo(String conteudo) {
 
         try {
 
@@ -556,25 +556,17 @@ public class IndexStorageBarrelThread extends Thread implements BarrelInterface,
             // String low = conteudo.toLowerCase();
 
             // Run through the words in the index
-            for (int i = (pagina - 1) * 10; i < this.index.keySet().size(); i++) {
+            for (int i = 0; i < this.index.keySet().size(); i++) {
 
                 String word = (String) this.index.keySet().toArray()[i];
 
                 // word = word.toLowerCase();
-
-                if (urls.size() == 10) {
-                    break;
-                }
 
                 // If the word is the one we are looking for
                 if (word.equals(conteudo)) {
 
                     // Run through the urls in the index of the word thats equal
                     for (String url : this.index.get(conteudo)) {
-
-                        if (urls.size() == 10) {
-                            break;
-                        }
 
                         urls.add(url);
 

@@ -76,20 +76,28 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
 
                                         int pagina = 1;
 
+                                        ArrayList<String> lista = server.opcaoDois(words[1], pagina);
+
+                                        ArrayList<String> printed = new ArrayList<String>();
+
+                                        if (lista.size() == 0) {
+                                                System.out.println("Não foram encontrados resultados");
+                                                return;
+                                        }
+
                                         while (true) {
 
-                                                ArrayList<String> lista = server.opcaoDois(words[1], pagina);
+                                                for (int i = 0; i < 10; i++) {
 
-                                                if (lista.size() == 0) {
-                                                        System.out.println("Nao foram encontrados resultados");
-                                                        break;
-                                                }
+                                                        if (i >= lista.size()) {
 
-                                                // System.out.println(" OPCAO 2 ");
+                                                                break;
 
-                                                for (int i = 0; i < lista.size(); i++) {
+                                                        }
 
                                                         String element = lista.get(i);
+
+                                                        printed.add(element);
 
                                                         // Separate the string by the |
                                                         String[] res = element.split("\\|");
@@ -131,6 +139,14 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                                                 }
 
                                                 System.out.println("Página: " + pagina);
+
+                                                // Remove the elements that were already printed
+                                                lista.removeAll(printed);
+
+                                                // Check if there are more elements to print
+                                                if (lista.size() == 0) {
+                                                        break;
+                                                }
 
                                                 System.out.println("Próxima página? (s/n)");
 
