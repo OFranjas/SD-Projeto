@@ -13,6 +13,8 @@ public class DownloaderThread extends Thread {
     private String MULTICAST_ADRESS = "224.3.2.1";
     private int MULTICAST_PORT = 4321;
 
+    private int MAX_LINKS = 10;
+
     private boolean debug;
 
     private String url;
@@ -57,8 +59,17 @@ public class DownloaderThread extends Thread {
 
             Document doc = Jsoup.connect(url).get();
 
+            String title = doc.title();
+
+            // If page has no title, don't add it to the index
+            if (title.equals("")) {
+
+                System.out.println("Page " + url + " has no title");
+                return;
+            }
+
             // Get page title
-            this.title = doc.title();
+            this.title = title;
 
             // Read all words and associate them with the page, without duplicates
             Elements words = doc.select("body");
@@ -69,22 +80,20 @@ public class DownloaderThread extends Thread {
                 String[] wordsArray = word.text().split(" ");
 
                 for (String wordArray : wordsArray) {
+
                     if (this.index.containsKey(wordArray)) {
                         this.index.get(wordArray).add(url);
                     } else {
                         HashSet<String> urls = new HashSet<String>();
                         urls.add(url);
                         this.index.put(wordArray, urls);
+
+                        // Add the word to the content
+                        if (i < this.word_limit) {
+                            this.content.add(wordArray);
+                            i++;
+                        }
                     }
-                }
-
-                i++;
-
-                // Add the first 10 words of the page to the content
-                if (i < word_limit) {
-
-                    this.content.add(word.text());
-
                 }
 
             }
@@ -96,10 +105,24 @@ public class DownloaderThread extends Thread {
                 this.linksReferences.put(url, urls);
             }
 
+            int linksFound = 0;
+
             // Read any existing links and read their words as well recursively
             Elements links = doc.select("a[href]");
             for (Element link : links) {
                 String linkHref = link.attr("href");
+
+                // Check if link is a valid url
+                if (!linkHref.startsWith("http") && !linkHref.startsWith("https")) {
+                    continue;
+                }
+
+                // Only get the first MAX_LINKS links
+                if (linksFound >= this.MAX_LINKS) {
+                    break;
+                }
+
+                linksFound++;
 
                 // Add link to the refereces
                 if (this.linksReferences.containsKey(linkHref)) {
@@ -249,6 +272,13 @@ public class DownloaderThread extends Thread {
             // transform hasmap to bytes to send
 
             byte[] buf = index.getBytes();
+
+            // If the buffer is bigger than 65534
+            if (buf.length > 65534) {
+                System.out.println("Buffer is bigger than 65534");
+                return;
+            }
+
             DatagramPacket packet = new DatagramPacket(buf, buf.length, group, MULTICAST_PORT);
             socket.send(packet);
 
@@ -291,6 +321,13 @@ public class DownloaderThread extends Thread {
                 // Fazer o download do url
                 download(this.url);
 
+                if (this.title == null) {
+
+                    System.out.println("Downloader Thread " + id + " title is null");
+
+                    continue;
+                }
+
                 if (debug) {
                     System.out.println("Downloader Thread " + id + " Content " + this.content);
                     System.out.println("Downloader Thread " + id + " Title " + this.title);
@@ -319,6 +356,9 @@ public class DownloaderThread extends Thread {
                     adicionaURL(found);
                 }
 
+                if (debug)
+                    System.out.println("=================================================================");
+
             } else {
 
                 System.out.println("Downloader Thread " + id + " got no url");
@@ -329,6 +369,7 @@ public class DownloaderThread extends Thread {
             this.index.clear(); // Depois de confirmar que o index foi enviado para o IndexStorageBarrel
             this.linksReferences.clear();
             this.content.clear();
+            this.title = null;
         }
 
     }

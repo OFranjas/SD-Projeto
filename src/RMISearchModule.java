@@ -54,10 +54,9 @@ public class RMISearchModule extends UnicastRemoteObject implements ServerInterf
             System.out.println("Exception in Downloader.adicionaURL: " + e);
         }
 
-
     }
 
-    public ArrayList<String> opcaoDois(String s) throws RemoteException {
+    public ArrayList<String> opcaoDois(String s, int pagina) throws RemoteException {
         System.out.println("Opcao2, fazer coisinhas: " + s);
 
         int num = (int) (Math.random() * num_threads);
@@ -69,7 +68,7 @@ public class RMISearchModule extends UnicastRemoteObject implements ServerInterf
             BarrelInterface barril = (BarrelInterface) Naming
                     .lookup("IndexStorageBarrel" + num);
 
-            ArrayList<String> res = barril.procuraConteudo(s, 1);
+            ArrayList<String> res = barril.procuraConteudo(s, pagina);
 
             System.out.println("RES: " + res);
 

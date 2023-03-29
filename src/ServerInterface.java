@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public interface ServerInterface extends Remote {
     public void opcaoUm(String s) throws java.rmi.RemoteException;
 
-    public ArrayList<String> opcaoDois(String s) throws java.rmi.RemoteException;
+    public ArrayList<String> opcaoDois(String s, int pagina) throws java.rmi.RemoteException;
 
     public ArrayList<String> opcaoTres(String s) throws java.rmi.RemoteException;
 

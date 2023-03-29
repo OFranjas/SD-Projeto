@@ -21,7 +21,7 @@ public class Main {
             indexStorageBarrel.start();
 
             // Start the Downloaders Threads
-            Downloaders downloader = new Downloaders(num_threads, debug);
+            Downloaders downloader = new Downloaders(num_threads, true);
             downloader.start();
 
             // Start the Search Module Thread

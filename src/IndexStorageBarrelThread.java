@@ -382,7 +382,7 @@ public class IndexStorageBarrelThread extends Thread implements BarrelInterface,
 
             socket.joinGroup(group, netIf);
 
-            byte[] buffer = new byte[1024];
+            byte[] buffer = new byte[65534];
 
             // Wait for a message to be received, when it is received, the loop will break
             while (true) {
@@ -427,6 +427,9 @@ public class IndexStorageBarrelThread extends Thread implements BarrelInterface,
 
                 // Kill the barrel
                 // break;
+
+                if (debug)
+                    System.out.println("=======================================================================");
 
             }
 

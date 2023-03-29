@@ -1,50 +1,12 @@
 Site http://127.0.0.1:5500/Test_Site2/site.html
 bom http://127.0.0.1:5500/Test_Site/site.html
-AustraliaMarried https://reddit.com
-Singapura https://reddit.com
-A https://reddit.com
-fornecer https://reddit.com
-Carrega https://reddit.com
-Reino https://reddit.com
-utilizadorPolítica https://reddit.com
-Ola http://127.0.0.1:5500/Test_Site/site.html http://127.0.0.1:5500/Test_Site2/site.html
-seus https://reddit.com
-poderá https://reddit.com
-comer https://reddit.com
-J https://reddit.com
-Angeles https://reddit.com
-plataforma.Para https://reddit.com
-Test http://127.0.0.1:5500/Test_Site2/site.html
-menos https://reddit.com
-bla http://127.0.0.1:5500/Test_Site2/site.html
-cookies, https://reddit.com
-participar https://reddit.com
-incluindo https://reddit.com
-Todos https://reddit.com
-gajas, https://reddit.com
-Motor https://reddit.com
-qualidade https://reddit.com
-& https://reddit.com
-Business, https://reddit.com
-atacou https://reddit.com
-ao https://reddit.com
-. https://reddit.com
-/ https://reddit.com
-0 https://reddit.com
-Maioria https://reddit.com
 123 http://127.0.0.1:5500/Test_Site/site.html
 2 http://127.0.0.1:5500/Test_Site2/site.html
-Crypto https://reddit.com
-as https://reddit.com
-volta https://reddit.com
-at https://reddit.com
-4 https://reddit.com
-Legion https://reddit.com
-AtlantaThe https://reddit.com
-9 https://reddit.com
+Ola http://127.0.0.1:5500/Test_Site/site.html http://127.0.0.1:5500/Test_Site2/site.html
+Test http://127.0.0.1:5500/Test_Site2/site.html
+bla http://127.0.0.1:5500/Test_Site2/site.html
 Hey http://127.0.0.1:5500/Test_Site/site.html http://127.0.0.1:5500/Test_Site2/site.html
 dia http://127.0.0.1:5500/Test_Site/site.html
-Week https://reddit.com
 Link http://127.0.0.1:5500/Test_Site/site.html
-LINKSREFERENCES http://127.0.0.1:5500/Test_Site/site.html http://127.0.0.1:5500/Test_Site2/site.html|SD Test Website|Hey Ola bom dia 123 Hey Link Link 
-LINKSREFERENCES http://127.0.0.1:5500/Test_Site2/site.html|Document|Test Site 2 Test bla bla Hey Ola Hey
+LINKSREFERENCES http://127.0.0.1:5500/Test_Site/site.html http://127.0.0.1:5500/Test_Site2/site.html|SD Test Website|Hey Ola bom dia 123 Link 
+LINKSREFERENCES http://127.0.0.1:5500/Test_Site2/site.html|Document|Test Site 2 bla Hey Ola 
