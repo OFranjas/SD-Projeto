@@ -69,10 +69,11 @@ public class RMISearchModule extends UnicastRemoteObject implements ServerInterf
 
     }
 
-    public ArrayList<String> opcaoDois(String s, int pagina) throws RemoteException {
+    public ArrayList<String> opcaoDois(String s, int tentativas) throws RemoteException {
         System.out.println("Opcao2, fazer coisinhas: " + s);
 
-        this.words = pagadmin.recebe_palavras(s);
+        if (tentativas == 1)
+            this.words = pagadmin.recebe_palavras(s);
 
         int num = (int) (Math.random() * num_threads);
 

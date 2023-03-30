@@ -587,10 +587,13 @@ public class IndexStorageBarrelThread extends Thread implements BarrelInterface,
 
             // String low = conteudo.toLowerCase();
 
-            // Run through the words in the index
-            for (int i = 0; i < this.index.keySet().size(); i++) {
+            // Check if the word is not in the index
+            if (!this.index.containsKey(conteudo)) {
+                return urls;
+            }
 
-                String word = (String) this.index.keySet().toArray()[i];
+            // Run through the words in the index
+            for (String word : this.index.keySet()) {
 
                 // word = word.toLowerCase();
 
@@ -623,7 +626,8 @@ public class IndexStorageBarrelThread extends Thread implements BarrelInterface,
 
             }
 
-            System.out.println("IndexStorageBarrel " + id + " has the following urls for the word " + conteudo + ":");
+            // System.out.println("IndexStorageBarrel " + id + " has the following urls for
+            // the word " + conteudo + ":");
             for (String url : urls) {
                 System.out.println(url);
             }
@@ -633,6 +637,7 @@ public class IndexStorageBarrelThread extends Thread implements BarrelInterface,
         } catch (Exception e) {
             System.out.println("IndexStorageBarrel -> Error in procuraConteudo");
             e.printStackTrace();
+
             return null;
         }
 

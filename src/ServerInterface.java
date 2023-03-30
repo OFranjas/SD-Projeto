@@ -6,7 +6,7 @@ import java.util.HashMap;
 public interface ServerInterface extends Remote {
     public void opcaoUm(String s) throws java.rmi.RemoteException;
 
-    public ArrayList<String> opcaoDois(String s, int pagina) throws java.rmi.RemoteException;
+    public ArrayList<String> opcaoDois(String s, int tentativas) throws java.rmi.RemoteException;
 
     public ArrayList<String> opcaoTres(String s) throws java.rmi.RemoteException;
 
