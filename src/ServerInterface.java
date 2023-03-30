@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public interface ServerInterface extends Remote {
-    public void opcaoUm(String s) throws java.rmi.RemoteException;
+    public boolean opcaoUm(String s) throws java.rmi.RemoteException;
 
     public ArrayList<String> opcaoDois(String s, int tentativas) throws java.rmi.RemoteException;
 

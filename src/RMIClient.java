@@ -13,6 +13,7 @@ import org.jsoup.select.Selector.SelectorParseException;
 import java.rmi.*;
 import java.rmi.server.*;
 import java.net.*;
+import java.net.ConnectException;
 import java.rmi.registry.Registry;
 import java.rmi.registry.LocateRegistry;
 import java.io.File;
@@ -23,18 +24,52 @@ import Global.Global;
 // Apenas comunica com o RMISearchModule (porta de entrada)
 
 public class RMIClient extends UnicastRemoteObject implements ClientInterface {
+
+        private boolean ligado;
+
+        private ServerInterface server;
+
         // create constructor
 
         RMIClient() throws RemoteException {
                 super();
+                this.ligado = false;
+                this.server = null;
         }
 
-        public static void senderRmi(String string) {
+        public void senderRmi(String string) {
 
                 try {
-                        // create a RMIClient
 
-                        ServerInterface server = (ServerInterface) Naming.lookup("rmi://localhost/searchmodule");
+                        int tries = 0;
+
+                        while (ligado == false) {
+
+                                tries++;
+
+                                if (tries > 10) {
+                                        System.out.println("Erro na ligação, tentativas esgotadas");
+                                        return;
+                                }
+
+                                try {
+                                        ServerInterface server = (ServerInterface) Naming
+                                                        .lookup("rmi://localhost/searchmodule");
+
+                                        if (server != null) {
+                                                this.server = server;
+                                                System.out.println("Conectado ao servidor");
+                                                ligado = true;
+                                        }
+
+                                } catch (Exception e) {
+                                        System.out.println("Erro na ligação, tentando novamente (tentativa "
+                                                        + tries + ")");
+                                        Thread.sleep(1000);
+                                }
+
+                        }
+                        // create a RMIClient
 
                         // System.out.println("String: " + string);
 
@@ -47,7 +82,13 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                                 // System.out.println("word1: " + words[1]);
 
                                 if (words[0].equals("1")) {
-                                        server.opcaoUm(words[1]);
+                                        boolean res = server.opcaoUm(words[1]);
+
+                                        if (res == true) {
+                                                System.out.println("URL enviada com sucesso");
+                                        } else {
+                                                System.out.println("Erro ao enviar URL");
+                                        }
                                 }
 
                                 if (words[0].equals("2")) {
@@ -266,7 +307,7 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
 
         }
 
-        public static RMIClient mainMenu() {
+        public RMIClient mainMenu() {
 
                 Scanner sc = new Scanner(System.in);
                 int option = 0;
@@ -442,7 +483,7 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                                                         "|___________________________________________________________________________________________________________________________________|");
 
                                         string = option + " " + string;
-                                        senderRmi(string);
+                                        this.senderRmi(string);
 
                                         System.out.println(" Insira qualquer coisa para continuar...");
                                         sc.nextLine();
@@ -727,6 +768,17 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
 
         }
 
+        private void run() {
+
+                // Get the URL from the user input
+                while (true) {
+
+                        this.mainMenu();
+
+                }
+
+        }
+
         public static void main(String[] args) {
 
                 // Scanner sc = new Scanner(System.in);
@@ -754,12 +806,8 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                         // break;
                         // }
 
-                        // Get the URL from the user input
-                        while (true) {
-
-                                mainMenu();
-
-                        }
+                        RMIClient client = new RMIClient();
+                        client.run();
 
                 } catch (Exception e) {
                         System.out.println("Exception in RMIClient.main: " + e);

@@ -40,7 +40,7 @@ public class RMISearchModule extends UnicastRemoteObject implements ServerInterf
 
     }
 
-    public void opcaoUm(String s) throws RemoteException {
+    public boolean opcaoUm(String s) throws RemoteException {
         System.out.println("Enviar string para a qeue: " + s);
 
         // check if the string is a URL
@@ -50,7 +50,7 @@ public class RMISearchModule extends UnicastRemoteObject implements ServerInterf
             System.out.println("String is a URL");
         } else {
             System.out.println("String is not a URL, ERROR");
-            return;
+            return false;
         }
 
         // send the string to the queue
@@ -63,10 +63,14 @@ public class RMISearchModule extends UnicastRemoteObject implements ServerInterf
             System.out.println("STRING SENT TO THE QUEUE");
             writer.flush();
             socket.close();
+
+            return true;
         } catch (ConnectException e) {
             System.out.println("Could not connect to the server");
+            return false;
         } catch (IOException e) {
             System.out.println("Exception in Downloader.adicionaURL: " + e);
+            return false;
         }
 
     }
