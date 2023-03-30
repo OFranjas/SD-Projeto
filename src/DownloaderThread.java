@@ -7,6 +7,7 @@ import java.net.Socket;
 import java.util.*;
 import java.net.*;
 import java.io.*;
+import Global.Global;
 
 public class DownloaderThread extends Thread {
 
@@ -14,6 +15,8 @@ public class DownloaderThread extends Thread {
     private int MULTICAST_PORT = 4321;
 
     private int MAX_LINKS = 10;
+
+    private String status;
 
     private boolean debug;
 
@@ -41,6 +44,7 @@ public class DownloaderThread extends Thread {
 
         this.SendPort = Port;
         this.id = id;
+        this.status = "0";
         this.ReceivePort = Port + 1;
         this.debug = debug;
         this.index = new HashMap<String, HashSet<String>>();
@@ -59,10 +63,10 @@ public class DownloaderThread extends Thread {
 
             Document doc = Jsoup.connect(url).get();
 
-            String title = doc.title();
+            this.title = doc.title();
 
             // If page has no title, don't add it to the index
-            if (title.equals("")) {
+            if (this.title.equals("")) {
 
                 System.out.println("Page " + url + " has no title");
                 return;
@@ -304,76 +308,109 @@ public class DownloaderThread extends Thread {
 
     }
 
+    public void status() {
+
+        try {
+            MulticastSocket socket = new MulticastSocket();
+
+            InetAddress group = InetAddress.getByName(Global.MULTICAST_ADRESS);
+
+            String msg = "DOWNLOADER " + this.id + " " + status;
+
+            byte[] buffer = msg.getBytes();
+
+            DatagramPacket packet = new DatagramPacket(buffer, buffer.length, group, 6500);
+
+            socket.send(packet);
+        } catch (Exception e) {
+            System.out.println("Exception in Downloader.statusDownloader: " + e);
+        }
+    }
+
     // Thread running method
     public void run() {
 
         // System.out.println("Downloader Thread " + id + " running with port " +
         // SendPort + " and " + ReceivePort + "");
 
-        while (true) {
+        try {
 
-            // Ir buscar o url à queue
-            getURL();
+            while (true) {
 
-            if (url != null) {
+                this.status = "1";
+                status();
 
-                if (debug) {
+                // Ir buscar o url à queue
+                getURL();
+
+                if (url != null) {
+
+                    if (debug) {
+                    }
+                    System.out.println("Downloader Thread " + id + " downloading " + url);
+
+                    // Fazer o download do url
+                    download(this.url);
+
+                    if (this.title.equals("")) {
+
+                        System.out.println("Downloader Thread " + id + " title is null");
+
+                        continue;
+                    }
+
+                    if (debug) {
+                        System.out.println("Downloader Thread " + id + " Content " + this.content);
+                        System.out.println("Downloader Thread " + id + " Title " + this.title);
+                    }
+
+                    // Convert the index hashmap and the linksReferences hashmap to a string
+                    String string = transformLineHashMap();
+
+                    // Print the index
+                    if (debug)
+                        System.out.println("Downloader Thread " + id + " index e linksReferences:\n " + string);
+
+                    // Enviar o index para o IndexStorageBarrel - Multicast
+                    enviaIndex(string);
+
+                    // Se houver urls encontrados, adicionar à queue
+                    if (found.size() > 0) {
+                        // for (String url : found) {
+
+                        // // Adicionar à queue
+                        // if (debug)
+                        // System.out.println("Downloader Thread " + id + " adding url " + url);
+
+                        // }
+
+                        adicionaURL(found);
+                    }
+
+                    if (debug)
+                        System.out.println("=================================================================");
+
+                } else {
+
+                    System.out.println("Downloader Thread " + id + " got no url");
                 }
-                System.out.println("Downloader Thread " + id + " downloading " + url);
 
-                // Fazer o download do url
-                download(this.url);
-
-                if (this.title == null) {
-
-                    System.out.println("Downloader Thread " + id + " title is null");
-
-                    continue;
-                }
-
-                if (debug) {
-                    System.out.println("Downloader Thread " + id + " Content " + this.content);
-                    System.out.println("Downloader Thread " + id + " Title " + this.title);
-                }
-
-                // Convert the index hashmap and the linksReferences hashmap to a string
-                String string = transformLineHashMap();
-
-                // Print the index
-                if (debug)
-                    System.out.println("Downloader Thread " + id + " index e linksReferences:\n " + string);
-
-                // Enviar o index para o IndexStorageBarrel - Multicast
-                enviaIndex(string);
-
-                // Se houver urls encontrados, adicionar à queue
-                if (found.size() > 0) {
-                    // for (String url : found) {
-
-                    // // Adicionar à queue
-                    // if (debug)
-                    // System.out.println("Downloader Thread " + id + " adding url " + url);
-
-                    // }
-
-                    adicionaURL(found);
-                }
-
-                if (debug)
-                    System.out.println("=================================================================");
-
-            } else {
-
-                System.out.println("Downloader Thread " + id + " got no url");
+                this.url = null;
+                this.found.clear();
+                this.index.clear(); // Depois de confirmar que o index foi enviado para o IndexStorageBarrel
+                this.linksReferences.clear();
+                this.content.clear();
+                this.title = null;
             }
 
-            this.url = null;
-            this.found.clear();
-            this.index.clear(); // Depois de confirmar que o index foi enviado para o IndexStorageBarrel
-            this.linksReferences.clear();
-            this.content.clear();
-            this.title = null;
+        } catch (Exception e) {
+            System.out.println("Exception in Downloader.run: " + e);
+            this.status = "0";
+            status();
         }
+
+        this.status = "0";
+        status();
 
     }
 

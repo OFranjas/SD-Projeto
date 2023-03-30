@@ -10,6 +10,7 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
 import java.net.*;
 import java.io.*;
+import Global.Global;
 
 public class IndexStorageBarrelThread extends Thread implements BarrelInterface, Serializable {
 
@@ -22,6 +23,8 @@ public class IndexStorageBarrelThread extends Thread implements BarrelInterface,
     private boolean debug;
 
     private int id;
+
+    private String status;
 
     private HashMap<String, HashSet<String>> index; // Index Normal
 
@@ -43,6 +46,7 @@ public class IndexStorageBarrelThread extends Thread implements BarrelInterface,
 
         this.id = id;
         this.debug = debug;
+        this.status = "0";
 
         this.index = new HashMap<String, HashSet<String>>();
         this.invertedIndex = new HashMap<String, HashSet<String>>();
@@ -275,7 +279,8 @@ public class IndexStorageBarrelThread extends Thread implements BarrelInterface,
                         for (String url : this.downloaderLinksReferences.get(key)) {
                             if (!this.linksReferences.get(key).contains(url)) {
 
-                                System.out.println("IndexBarrel -> CompareIndexWithDownloader -> " + key + " " + url);
+                                // System.out.println("IndexBarrel -> CompareIndexWithDownloader -> " + key + "
+                                // " + url);
                                 this.linksReferences.get(key).add(url);
                             }
                         }
@@ -373,6 +378,9 @@ public class IndexStorageBarrelThread extends Thread implements BarrelInterface,
 
         try {
 
+            this.status = "1";
+            status();
+
             if (debug)
                 System.out.println("IndexStorageBarrel " + id + " is waiting for the index from Downloader");
 
@@ -437,7 +445,12 @@ public class IndexStorageBarrelThread extends Thread implements BarrelInterface,
             System.out.println("IndexBarrel -> Error in receiveMessage");
             e.printStackTrace();
             this.socket.close();
+            this.status = "0";
+            status();
         }
+
+        this.status = "0";
+        status();
 
     }
 
@@ -508,6 +521,25 @@ public class IndexStorageBarrelThread extends Thread implements BarrelInterface,
 
         return urls;
 
+    }
+
+    public void status() {
+
+        try {
+            MulticastSocket socket = new MulticastSocket();
+
+            InetAddress group = InetAddress.getByName(Global.MULTICAST_ADRESS);
+
+            String msg = "BARREL " + this.id + " " + status;
+
+            byte[] buffer = msg.getBytes();
+
+            DatagramPacket packet = new DatagramPacket(buffer, buffer.length, group, 6500);
+
+            socket.send(packet);
+        } catch (Exception e) {
+            System.out.println("Exception in IndexStorageBarrelThread.status: " + e);
+        }
     }
 
     public void run() {

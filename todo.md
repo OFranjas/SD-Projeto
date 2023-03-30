@@ -10,6 +10,7 @@
 - [x] Enviar multicast para o IndexStorageBarrel
 - [x] Enviar Lista de URLs para a Fila em vez de 1 URL
 - [ ] Mudar Multicast
+- [ ] Verificar se palavra tem pontuação
 
 # Barrels
 

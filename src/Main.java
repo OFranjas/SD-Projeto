@@ -1,10 +1,11 @@
 import java.rmi.*;
 import java.rmi.server.*;
 import java.util.ArrayList;
+import Global.Global;
 
 public class Main {
 
-    private static int num_threads = 1;
+    private static int num_threads = Global.num_threads;
 
     private static boolean debug = false;
 

@@ -1,6 +1,7 @@
 import java.rmi.*;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public interface ServerInterface extends Remote {
     public void opcaoUm(String s) throws java.rmi.RemoteException;
@@ -9,13 +10,9 @@ public interface ServerInterface extends Remote {
 
     public ArrayList<String> opcaoTres(String s) throws java.rmi.RemoteException;
 
-    public void opcaoQuatro(String s) throws java.rmi.RemoteException;
+    public HashMap<String, Integer> opcaoQuatro() throws java.rmi.RemoteException;
 
-    public void opcaoCinco(String s) throws java.rmi.RemoteException;
-
-    public void opcaoSeis(String s) throws java.rmi.RemoteException;
-
-    public void opcaoSete(String s) throws java.rmi.RemoteException;
+    public String opcaoQuatroAgain() throws RemoteException;
 
     public ArrayList<String> recebe(ArrayList<String> s) throws java.rmi.RemoteException;
 

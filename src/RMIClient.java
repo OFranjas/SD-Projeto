@@ -1,4 +1,9 @@
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 import javax.lang.model.element.Element;
@@ -8,8 +13,8 @@ import java.rmi.server.*;
 import java.net.*;
 import java.rmi.registry.Registry;
 import java.rmi.registry.LocateRegistry;
-import java.rmi.RemoteException;
 import java.io.File;
+import Global.Global;
 
 // Utilizado pelo utilizador para pesquisar palavras
 // Serve para invocar métodos remotos no servidor RMI
@@ -21,35 +26,6 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
         RMIClient() throws RemoteException {
                 super();
         }
-
-        // create a function to make a menu
-        // made a function to make a menu
-        // public static void login(){
-
-        // //ask for username and password
-
-        // String username;
-        // String password;
-
-        // Scanner sc = new Scanner(System.in);
-
-        // System.out.println("Escreva o username: ");
-
-        // username = sc.nextLine();
-
-        // System.out.println("Escreva o password: ");
-
-        // password = sc.nextLine();
-
-        // //open a file.txt and check if the username and password are correct
-
-        // //if correct, call the mainMenu function
-
-        // //if not correct, call the login function again
-
-        // File fp = new File("users.txt");
-
-        // }
 
         public static void senderRmi(String string) {
 
@@ -209,20 +185,57 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                         } else {
 
                                 if (string.equals("4")) {
-                                        server.opcaoQuatro(string);
+                                        // System.out.println("OPCAO 4");
+                                        System.out.println("Status do sistema: ");
+
+                                        // GET BARRELS/DOWNLOADERS ONLINE AND HOW MANY
+                                        System.out.println("IP in use between Downloaders and Barrels: "
+                                                        + Global.MULTICAST_ADRESS);
+                                        System.out.println("Port in use between Downloaders and Barrels: "
+                                                        + Global.MULTICAST_PORT);
+
+                                        System.out.println("//////////////////////////////");
+                                        System.out.println("\n");
+
+                                        System.out.println(server.opcaoQuatroAgain());
+
+                                        System.out.println("//////////////////////////////");
+                                        System.out.println("\n");
+                                        HashMap<String, Integer> lista = new HashMap<String, Integer>();
+                                        lista = server.opcaoQuatro();
+                                        List<Map.Entry<String, Integer>> list = new ArrayList<Map.Entry<String, Integer>>(
+                                                        lista.entrySet());
+
+                                        // If the list is empty, return
+                                        if (list.size() == 0) {
+                                                System.out.println("Não foram realizadas pesquisas");
+                                                return;
+                                        }
+                                        Collections.sort(list, new Comparator<Map.Entry<String, Integer>>() {
+                                                public int compare(Map.Entry<String, Integer> o1,
+                                                                Map.Entry<String, Integer> o2) {
+                                                        return (o2.getValue()).compareTo(o1.getValue());
+                                                }
+                                        });
+                                        System.out.println("PALAVRAS MAIS BUSCADAS: ");
+
+                                        // for (Map.Entry<String, Integer> entry : list) {
+                                        // System.out.println(entry.getKey() + " = " + entry.getValue());
+                                        // }
+                                        for (int i = 0; i < 10; i++) {
+
+                                                if (i >= list.size()) {
+
+                                                        break;
+
+                                                }
+
+                                                System.out.println("#" + (i + 1) + " -> " + list.get(i).getKey() + ": "
+                                                                + list.get(i).getValue());
+                                        }
+
                                 }
 
-                                if (string.equals("5")) {
-                                        server.opcaoCinco(string);
-                                }
-
-                                if (string.equals("6")) {
-                                        server.opcaoSeis(string);
-                                }
-
-                                if (string.equals("7")) {
-                                        server.opcaoSete(string);
-                                }
                         }
 
                 } catch (Exception e) {
@@ -498,6 +511,18 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
 
                                         // send option by rmi to rmisearchmodule
                                         break;
+
+                                case 4:
+
+                                        // transform option to string
+                                        string = Integer.toString(option);
+                                        senderRmi(string);
+
+                                        System.out.println(" Insira qualquer coisa para continuar...");
+                                        sc.nextLine();
+                                        sc.nextLine();
+                                        break;
+
                                 case 8:
                                         // Registar
                                         System.out.println("Nao sabes ler?");

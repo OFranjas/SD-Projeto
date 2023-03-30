@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.HashMap;
+import Global.Global;
 
 // A comunicação com o IndexStorageBarrel é feita usando RMI
 // Visível para o utilizador através do RMIClient
@@ -21,10 +23,21 @@ public class RMISearchModule extends UnicastRemoteObject implements ServerInterf
 
     static ClientInterface client;
 
-    private int num_threads = 1;
+    private int num_threads = Global.num_threads;
+
+    private PagAdministracao pagadmin;
+
+    private HashMap<String, Integer> words;
+
+    private String status;
+
+    // constructor
 
     RMISearchModule() throws RemoteException {
         super();
+        this.words = new HashMap<String, Integer>();
+        pagadmin = new PagAdministracao(words);
+
     }
 
     public void opcaoUm(String s) throws RemoteException {
@@ -58,6 +71,8 @@ public class RMISearchModule extends UnicastRemoteObject implements ServerInterf
 
     public ArrayList<String> opcaoDois(String s, int pagina) throws RemoteException {
         System.out.println("Opcao2, fazer coisinhas: " + s);
+
+        this.words = pagadmin.recebe_palavras(s);
 
         int num = (int) (Math.random() * num_threads);
 
@@ -104,20 +119,18 @@ public class RMISearchModule extends UnicastRemoteObject implements ServerInterf
 
     }
 
-    public void opcaoQuatro(String s) throws RemoteException {
-        System.out.println("Opcao4, fazer coisinhas: " + s);
+    public HashMap<String, Integer> opcaoQuatro() throws RemoteException {
+
+        // Create a string wiht all the words in the words HashMap
+
+        return this.words;
+
     }
 
-    public void opcaoCinco(String s) throws RemoteException {
-        System.out.println("Opcao5, fazer coisinhas: " + s);
-    }
+    public String opcaoQuatroAgain() throws RemoteException {
 
-    public void opcaoSeis(String s) throws RemoteException {
-        System.out.println("Opcao6, fazer coisinhas: " + s);
-    }
+        return pagadmin.getStatus();
 
-    public void opcaoSete(String s) throws RemoteException {
-        System.out.println("Opcao7, fazer coisinhas: " + s);
     }
 
     public void getBarrel() throws RemoteException {
@@ -141,15 +154,14 @@ public class RMISearchModule extends UnicastRemoteObject implements ServerInterf
         try {
 
             LocateRegistry.createRegistry(1099);
-            // get string form RMIClient and save in a string
-
-            // Server is waitting for client to connect
 
             System.out.println("RMISearchModule is waiting for client to connect");
 
             Naming.rebind("rmi://localhost/searchmodule", searchModule);
 
-            // receive the string from the client
+            this.status = pagadmin.finalStatus();
+
+            // System.out.println("AQUIIII"+ this.status);
 
         } catch (RemoteException re) {
             System.out.println("Exception in RMISearchModule.main: " + re);
@@ -160,8 +172,12 @@ public class RMISearchModule extends UnicastRemoteObject implements ServerInterf
 
     public static void main(String[] args) throws MalformedURLException {
         try {
+
             RMISearchModule searchModule = new RMISearchModule();
+            searchModule.pagadmin = new PagAdministracao(searchModule.words);
+
             searchModule.run(searchModule);
+            // pagina administracao
         } catch (RemoteException re) {
             System.out.println("Exception in RMISearchModule.main: " + re);
         }
