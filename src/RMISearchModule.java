@@ -45,11 +45,9 @@ public class RMISearchModule extends UnicastRemoteObject implements ServerInterf
 
         // check if the string is a URL
 
-        if (s.contains("http://") || s.contains("https://")) {
+        if (!s.contains("http://") && !s.contains("https://")) {
             // send the string to the queue
-            System.out.println("String is a URL");
-        } else {
-            System.out.println("String is not a URL, ERROR");
+            System.out.println("String is not a url, don't do anything");
             return false;
         }
 
@@ -180,9 +178,10 @@ public class RMISearchModule extends UnicastRemoteObject implements ServerInterf
 
             return res;
 
-        }
-
-        catch (Exception e) {
+        } catch (RemoteException e) {
+            System.out.println("Could not connect to the server");
+            return null;
+        } catch (Exception e) {
             System.out.println("Exception in RMISearchModule.opcaoDois: " + e);
             return null;
         }
@@ -195,6 +194,13 @@ public class RMISearchModule extends UnicastRemoteObject implements ServerInterf
 
         System.out.println("NUM: " + num);
 
+        if (!s.contains("http://") && !s.contains("https://")) {
+            // send the string to the queue
+
+            System.out.println("String is not a URL, don't do anything");
+            return new ArrayList<String>();
+        }
+
         try {
 
             BarrelInterface barril = (BarrelInterface) Naming
@@ -205,7 +211,12 @@ public class RMISearchModule extends UnicastRemoteObject implements ServerInterf
             System.out.println("RES: " + res);
 
             return res;
-        } catch (Exception e) {
+        } catch (NotBoundException e) {
+            System.out.println("Barrel not bound");
+            return null;
+        }
+
+        catch (Exception e) {
             System.out.println("Exception in RMISearchModule.opcaoTres: " + e);
             return null;
         }

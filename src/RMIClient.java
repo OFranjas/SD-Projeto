@@ -84,13 +84,21 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
 
                                 if (words[0].equals("1")) {
 
-                                        boolean res = server.opcaoUm(words[1]);
+                                        try {
+                                                boolean res = server.opcaoUm(words[1]);
 
-                                        if (res == true) {
-                                                System.out.println("URL enviada com sucesso");
-                                        } else {
-                                                System.out.println("Erro ao enviar URL");
+                                                if (res == true) {
+                                                        System.out.println("URL enviada com sucesso");
+                                                } else {
+                                                        System.out.println("Erro ao enviar URL");
+                                                }
+
+                                        } catch (Exception e) {
+
+                                                ligado = false;
+                                                senderRmi(string);
                                         }
+
                                 }
 
                                 if (words[0].equals("2")) {
@@ -106,107 +114,118 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                                                 word += words[i] + " ";
                                         }
 
-                                        ArrayList<String> lista = server.opcaoDois(word, pagina);
+                                        try {
+                                                ArrayList<String> lista = server.opcaoDois(word, pagina);
 
-                                        while (lista == null) {
+                                                while (lista == null) {
 
-                                                Thread.sleep(1000);
+                                                        Thread.sleep(1000);
 
-                                                tentativas++;
+                                                        tentativas++;
 
-                                                if (tentativas > 10) {
-                                                        System.out.println("Erro na pesquisa, tentativas esgotadas");
+                                                        if (tentativas > 10) {
+                                                                System.out.println(
+                                                                                "Erro na pesquisa, tentativas esgotadas");
+                                                                return;
+                                                        }
+
+                                                        System.out.println(
+                                                                        "Erro na pesquisa, tentando novamente (tentativa "
+                                                                                        + tentativas + ")");
+
+                                                        lista = server.opcaoDois(words[1], tentativas);
+
+                                                }
+
+                                                ArrayList<String> printed = new ArrayList<String>();
+
+                                                if (lista.size() == 0) {
+                                                        System.out.println("Não foram encontrados resultados");
                                                         return;
                                                 }
 
-                                                System.out.println("Erro na pesquisa, tentando novamente (tentativa "
-                                                                + tentativas + ")");
+                                                while (true) {
 
-                                                lista = server.opcaoDois(words[1], tentativas);
+                                                        for (int i = 0; i < 10; i++) {
 
-                                        }
+                                                                if (i >= lista.size()) {
 
-                                        ArrayList<String> printed = new ArrayList<String>();
+                                                                        break;
 
-                                        if (lista.size() == 0) {
-                                                System.out.println("Não foram encontrados resultados");
-                                                return;
-                                        }
+                                                                }
 
-                                        while (true) {
+                                                                String element = lista.get(i);
 
-                                                for (int i = 0; i < 10; i++) {
+                                                                printed.add(element);
 
-                                                        if (i >= lista.size()) {
+                                                                // Separate the string by the |
+                                                                String[] res = element.split("\\|");
 
-                                                                break;
+                                                                String url = res[0];
+                                                                String title = res[1];
+                                                                String description = res[2];
 
+                                                                System.out
+                                                                                .println(
+                                                                                                " _____________________________________________________________________________________");
+                                                                System.out
+                                                                                .println(
+                                                                                                "|                                                                                     |");
+                                                                System.out
+                                                                                .println(
+                                                                                                "|                                                                                     |");
+                                                                System.out.println(
+                                                                                "|                                        "
+                                                                                                + title
+                                                                                                + "                                                         ");
+                                                                System.out
+                                                                                .println(
+                                                                                                "|                                                                                     |");
+                                                                System.out.println(
+                                                                                "|                     " + url
+                                                                                                + "                                                         ");
+                                                                System.out
+                                                                                .println(
+                                                                                                "|                                                                                     |");
+                                                                System.out.println("|                   " + description
+                                                                                + "                                                         ");
+                                                                System.out
+                                                                                .println(
+                                                                                                "|                                                                                     |");
+                                                                System.out
+                                                                                .println(
+                                                                                                "|____________________________________________________________________________________|");
                                                         }
 
-                                                        String element = lista.get(i);
+                                                        System.out.println("Página: " + pagina);
 
-                                                        printed.add(element);
+                                                        // Remove the elements that were already printed
+                                                        lista.removeAll(printed);
 
-                                                        // Separate the string by the |
-                                                        String[] res = element.split("\\|");
+                                                        // Check if there are more elements to print
+                                                        if (lista.size() == 0) {
+                                                                break;
+                                                        }
 
-                                                        String url = res[0];
-                                                        String title = res[1];
-                                                        String description = res[2];
+                                                        System.out.println("Próxima página? (s/n)");
 
-                                                        System.out
-                                                                        .println(
-                                                                                        " _____________________________________________________________________________________");
-                                                        System.out
-                                                                        .println(
-                                                                                        "|                                                                                     |");
-                                                        System.out
-                                                                        .println(
-                                                                                        "|                                                                                     |");
-                                                        System.out.println(
-                                                                        "|                                        "
-                                                                                        + title
-                                                                                        + "                                                         ");
-                                                        System.out
-                                                                        .println(
-                                                                                        "|                                                                                     |");
-                                                        System.out.println(
-                                                                        "|                     " + url
-                                                                                        + "                                                         ");
-                                                        System.out
-                                                                        .println(
-                                                                                        "|                                                                                     |");
-                                                        System.out.println("|                   " + description
-                                                                        + "                                                         ");
-                                                        System.out
-                                                                        .println(
-                                                                                        "|                                                                                     |");
-                                                        System.out
-                                                                        .println(
-                                                                                        "|____________________________________________________________________________________|");
+                                                        Scanner sc = new Scanner(System.in);
+
+                                                        String next = sc.nextLine();
+
+                                                        if (next.equals("s")) {
+                                                                pagina++;
+                                                        } else {
+                                                                break;
+                                                        }
+
                                                 }
 
-                                                System.out.println("Página: " + pagina);
+                                        } catch (Exception e) {
 
-                                                // Remove the elements that were already printed
-                                                lista.removeAll(printed);
-
-                                                // Check if there are more elements to print
-                                                if (lista.size() == 0) {
-                                                        break;
-                                                }
-
-                                                System.out.println("Próxima página? (s/n)");
-
-                                                Scanner sc = new Scanner(System.in);
-
-                                                String next = sc.nextLine();
-
-                                                if (next.equals("s")) {
-                                                        pagina++;
-                                                } else {
-                                                        break;
-                                                }
+                                                // Try to reconnect
+                                                ligado = false;
+                                                senderRmi(string);
 
                                         }
 
@@ -216,9 +235,35 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                                 if (words[0].equals("3")) {
                                         // create arraylist of strings´
 
-                                        ArrayList<String> lista = new ArrayList<String>();
+                                        ArrayList<String> lista = server.opcaoTres(words[1]);
 
-                                        lista = server.opcaoTres(words[1]);
+                                        int tentativas = 1;
+
+                                        while (lista == null) {
+
+                                                Thread.sleep(1000);
+
+                                                tentativas++;
+
+                                                if (tentativas > 10) {
+                                                        System.out.println(
+                                                                        "Erro na pesquisa, tentativas esgotadas");
+                                                        return;
+                                                }
+
+                                                System.out.println(
+                                                                "Erro na pesquisa, tentando novamente (tentativa "
+                                                                                + tentativas + ")");
+
+                                                lista = server.opcaoTres(words[1]);
+
+                                        }
+
+                                        if (lista.size() == 0) {
+                                                System.out.println("Não foram encontrados resultados");
+                                                return;
+                                        }
+
                                         // System.out.println(" OPCAO 3 ");
 
                                         System.out
@@ -257,6 +302,14 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                         } else {
 
                                 if (string.equals("4")) {
+
+                                        String status = server.opcaoQuatroAgain();
+
+                                        if (status == null) {
+                                                System.out.println("Erro ao obter status");
+                                                return;
+                                        }
+
                                         // System.out.println("OPCAO 4");
                                         System.out.println("Status do sistema: ");
 
@@ -269,7 +322,7 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                                         System.out.println("//////////////////////////////");
                                         System.out.println("\n");
 
-                                        System.out.println(server.opcaoQuatroAgain());
+                                        System.out.println(status);
 
                                         System.out.println("//////////////////////////////");
                                         System.out.println("\n");
