@@ -45,12 +45,23 @@ public class IndexStorageBarrelThread extends Thread implements BarrelInterface,
 
     private boolean ligado;
 
+    private boolean parteSo;
+
     public IndexStorageBarrelThread(int id, boolean debug) {
 
         this.id = id;
         this.debug = debug;
         this.status = "0";
         this.ligado = false;
+
+        if (id <= (Global.num_threads / 2)) {
+
+            this.parteSo = true;
+
+        } else {
+
+            this.parteSo = false;
+        }
 
         this.index = new HashMap<String, HashSet<String>>();
         this.invertedIndex = new HashMap<String, HashSet<String>>();
@@ -287,7 +298,7 @@ public class IndexStorageBarrelThread extends Thread implements BarrelInterface,
             if (this.linksReferences.isEmpty()) {
                 linksReferences = downloaderLinksReferences;
 
-                System.out.println("Empty");
+                // System.out.println("Empty");
 
             } else {
 
@@ -337,15 +348,38 @@ public class IndexStorageBarrelThread extends Thread implements BarrelInterface,
                 break;
             }
 
-            for (int j = 1; j < palavras.length; j++) {
-                if (j == 1) {
-                    // System.out.println(palavras[0]);
-                    this.downloaderIndex.put(palavras[0], new HashSet<String>());
-                    this.downloaderIndex.get(palavras[0]).add(palavras[j]);
-                } else {
-                    this.downloaderIndex.get(palavras[0]).add(palavras[j]);
+            if (this.parteSo) {
+                if (palavras[0].toLowerCase().charAt(0) <= 'm') {
+                    for (int j = 1; j < palavras.length; j++) {
+
+                        if (j == 1) {
+
+                            // System.out.println(palavras[0]);
+                            this.downloaderIndex.put(palavras[0], new HashSet<String>());
+                            this.downloaderIndex.get(palavras[0]).add(palavras[j]);
+                        } else {
+                            this.downloaderIndex.get(palavras[0]).add(palavras[j]);
+                        }
+
+                    }
+                }
+            } else {
+                if (palavras[0].toLowerCase().charAt(0) > 'm') {
+                    for (int j = 1; j < palavras.length; j++) {
+
+                        if (j == 1) {
+
+                            // System.out.println(palavras[0]);
+                            this.downloaderIndex.put(palavras[0], new HashSet<String>());
+                            this.downloaderIndex.get(palavras[0]).add(palavras[j]);
+                        } else {
+                            this.downloaderIndex.get(palavras[0]).add(palavras[j]);
+                        }
+
+                    }
                 }
             }
+
         }
 
         // For
@@ -646,9 +680,10 @@ public class IndexStorageBarrelThread extends Thread implements BarrelInterface,
 
             // System.out.println("IndexStorageBarrel " + id + " has the following urls for
             // the word " + conteudo + ":");
-            for (String url : urls) {
-                System.out.println(url);
-            }
+
+            // for (String url : urls) {
+            // System.out.println(url);
+            // }
 
             return urls;
 

@@ -13,6 +13,13 @@ public class Main {
 
         try {
 
+            if (num_threads < 2) {
+
+                System.out.println("Number of threads must be greater than 1");
+                System.exit(0);
+
+            }
+
             // Start the Queue
             Queue queue = new Queue(num_threads, debug);
             queue.start();
