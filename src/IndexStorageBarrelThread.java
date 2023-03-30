@@ -714,11 +714,12 @@ public class IndexStorageBarrelThread extends Thread implements BarrelInterface,
 
             links = sortUrls(links);
 
-            System.out.println("IndexStorageBarrel " + id + " has the following links for the url " + url + ":");
+            // System.out.println("IndexStorageBarrel " + id + " has the following links for
+            // the url " + url + ":");
 
-            for (String link : links) {
-                System.out.println(link);
-            }
+            // for (String link : links) {
+            // System.out.println(link);
+            // }
 
             return links;
 

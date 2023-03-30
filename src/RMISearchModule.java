@@ -188,11 +188,11 @@ public class RMISearchModule extends UnicastRemoteObject implements ServerInterf
     }
 
     public ArrayList<String> opcaoTres(String s) throws RemoteException {
-        System.out.println("Opcao3, fazer coisinhas: " + s);
+        // System.out.println("Opcao3, fazer coisinhas: " + s);
 
         int num = (int) (Math.random() * num_threads);
 
-        System.out.println("NUM: " + num);
+        // System.out.println("NUM: " + num);
 
         if (!s.contains("http://") && !s.contains("https://")) {
             // send the string to the queue
@@ -214,10 +214,11 @@ public class RMISearchModule extends UnicastRemoteObject implements ServerInterf
         } catch (NotBoundException e) {
             System.out.println("Barrel not bound");
             return null;
-        }
-
-        catch (Exception e) {
-            System.out.println("Exception in RMISearchModule.opcaoTres: " + e);
+        } catch (RemoteException e) {
+            System.out.println("Could not connect to the server");
+            return null;
+        }catch (Exception e) {
+            System.out.println("Exception in RMISearchModule.opcaoTres: ");
             return null;
         }
 
