@@ -352,9 +352,9 @@ public class DownloaderThread extends Thread {
                     // Fazer o download do url
                     download(this.url);
 
-                    if (this.title.equals("")) {
+                    if (this.title == null || this.title.equals("")) {
 
-                        System.out.println("Downloader Thread " + id + " title is null");
+                        System.out.println("Downloader Thread " + id + " -> " + url + " has no title, skipping");
 
                         continue;
                     }

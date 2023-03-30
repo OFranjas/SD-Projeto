@@ -52,7 +52,17 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
 
                                         int pagina = 1;
 
+                                        int tentativas = 1;
+
                                         ArrayList<String> lista = server.opcaoDois(words[1], pagina);
+
+                                        while (lista == null) {
+                                                tentativas++;
+                                                System.out.println("Erro na pesquisa, tentando novamente (tentativa "
+                                                                + tentativas + ")");
+                                                lista = server.opcaoDois(words[1], pagina);
+
+                                        }
 
                                         ArrayList<String> printed = new ArrayList<String>();
 
