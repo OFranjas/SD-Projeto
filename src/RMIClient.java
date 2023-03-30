@@ -311,21 +311,29 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                                         }
 
                                         // System.out.println("OPCAO 4");
-                                        System.out.println("Status do sistema: ");
+                                        System.out.println(" ________________________________________________________________________________");
+                                        System.out.println("|                             Status do sistema                                  |");
+                                        System.out.println("|________________________________________________________________________________|");
+                                        System.out.println("|                                                                                |");
+                                        System.out.println("|                                                                                |");
 
                                         // GET BARRELS/DOWNLOADERS ONLINE AND HOW MANY
-                                        System.out.println("IP in use between Downloaders and Barrels: "
-                                                        + Global.MULTICAST_ADRESS);
-                                        System.out.println("Port in use between Downloaders and Barrels: "
-                                                        + Global.MULTICAST_PORT);
+                                        System.out.println("| IP in use between Downloaders and Barrels: "
+                                                        + Global.MULTICAST_ADRESS + "                           |");
+                                        System.out.println("| Port in use between Downloaders and Barrels: "
+                                                        + Global.MULTICAST_PORT + "                              |");
 
-                                        System.out.println("//////////////////////////////");
-                                        System.out.println("\n");
+                                        System.out.println("|                                                                                |");
+                                        System.out.println("|________________________________________________________________________________|");   
+                                        System.out.println("|                                                                                |");
+                                        System.out.println("|                                                                                |");                               
+
 
                                         System.out.println(status);
 
-                                        System.out.println("//////////////////////////////");
-                                        System.out.println("\n");
+                                        System.out.println("|                                                                                |");
+                                        System.out.println("|________________________________________________________________________________|");
+                                        System.out.println("|                                                                                |");
                                         HashMap<String, Integer> lista = new HashMap<String, Integer>();
                                         lista = server.opcaoQuatro();
                                         List<Map.Entry<String, Integer>> list = new ArrayList<Map.Entry<String, Integer>>(
@@ -342,7 +350,7 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                                                         return (o2.getValue()).compareTo(o1.getValue());
                                                 }
                                         });
-                                        System.out.println("PALAVRAS MAIS BUSCADAS: ");
+                                        System.out.println("| Palavras mais pesquisadas: ");
 
                                         // for (Map.Entry<String, Integer> entry : list) {
                                         // System.out.println(entry.getKey() + " = " + entry.getValue());
@@ -355,9 +363,10 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
 
                                                 }
 
-                                                System.out.println("#" + (i + 1) + " -> " + list.get(i).getKey() + ": "
+                                                System.out.println("| |" + (i + 1) + "º| -> " + list.get(i).getKey() + ": "
                                                                 + list.get(i).getValue());
                                         }
+                                        System.out.println("|________________________________________________________________________________|");
 
                                 }
 
@@ -429,7 +438,7 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                                                         "|      3. Pesquisar por URL  " + a
                                                                         + "                                                                                                    ");
                                         System.out.println(
-                                                        "|                                                                                                                                   |");
+                                                        "|      4. Página de administração                                                                                                   |");
                                         System.out.println(
                                                         "|      8. Registar  ( Indisponivel )                                                                                                |");
                                         System.out.println(
@@ -486,7 +495,7 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                                                         "|      3. Pesquisar por URL  " + a
                                                                         + "                                                                                                    ");
                                         System.out.println(
-                                                        "|                                                                                                                                   |");
+                                                        "|      4. Página de administração                                                                                                   |");
                                         System.out.println(
                                                         "|      8. Registar  ( Indisponivel )                                                                                                |");
                                         System.out.println(
