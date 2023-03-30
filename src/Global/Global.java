@@ -8,7 +8,7 @@ public class Global {
     public static final int MULTICAST_PORT = 4321;
 
     public static final int MAX_THREADS = 5;
-    public static final int num_threads = 1;
+    public static final int num_threads = 5;
     public static final int maxLines = 10;
     //public static final int num_threads_downloaders = 5;
 

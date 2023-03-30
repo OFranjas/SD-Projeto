@@ -4,13 +4,13 @@ import java.util.Scanner;
 import java.rmi.*;
 import java.rmi.server.*;
 import java.net.*;
+import java.net.ConnectException;
 import java.rmi.registry.Registry;
 import java.rmi.RemoteException;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.net.Socket;
 import java.util.HashMap;
 import Global.Global;
 
@@ -63,6 +63,8 @@ public class RMISearchModule extends UnicastRemoteObject implements ServerInterf
             System.out.println("STRING SENT TO THE QUEUE");
             writer.flush();
             socket.close();
+        } catch (ConnectException e) {
+            System.out.println("Could not connect to the server");
         } catch (IOException e) {
             System.out.println("Exception in Downloader.adicionaURL: " + e);
         }
@@ -90,6 +92,9 @@ public class RMISearchModule extends UnicastRemoteObject implements ServerInterf
 
             return res;
 
+        } catch (NotBoundException e) {
+            System.out.println("Barrel not bound");
+            return null;
         } catch (Exception e) {
             System.out.println("Exception in RMISearchModule.opcaoDois: " + e);
             return null;

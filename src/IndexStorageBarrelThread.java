@@ -11,6 +11,7 @@ import java.util.*;
 import java.net.*;
 import java.io.*;
 import Global.Global;
+import java.rmi.ConnectException;
 
 public class IndexStorageBarrelThread extends Thread implements BarrelInterface, Serializable {
 
@@ -42,11 +43,14 @@ public class IndexStorageBarrelThread extends Thread implements BarrelInterface,
 
     private String url;
 
+    private boolean ligado;
+
     public IndexStorageBarrelThread(int id, boolean debug) {
 
         this.id = id;
         this.debug = debug;
         this.status = "0";
+        this.ligado = false;
 
         this.index = new HashMap<String, HashSet<String>>();
         this.invertedIndex = new HashMap<String, HashSet<String>>();
@@ -57,12 +61,27 @@ public class IndexStorageBarrelThread extends Thread implements BarrelInterface,
         // System.out.println("IndexStorageBarrel Thread " + id + " created");
         try {
             UnicastRemoteObject.exportObject(this, 0);
-            try {
-                Naming.bind("IndexStorageBarrel" + id, this);
-            } catch (Exception e) {
-                System.out.println("IndexStorageBarrelThread: " + e.getMessage());
-                e.printStackTrace();
+
+            while (this.ligado == false) {
+
+                try {
+                    // Try to bind the object to the registry
+                    Naming.rebind("IndexStorageBarrel" + id, this);
+
+                    this.ligado = true;
+
+                } catch (ConnectException e) {
+
+                    System.out.println("Waiting to start");
+                    sleep(1000);
+
+                } catch (Exception e) {
+                    System.out.println("IndexStorageBarrelThread: " + e.getMessage());
+                    e.printStackTrace();
+                }
+
             }
+
         } catch (Exception e) {
             System.out.println("IndexStorageBarrelThread: " + e.getMessage());
             e.printStackTrace();
@@ -378,9 +397,6 @@ public class IndexStorageBarrelThread extends Thread implements BarrelInterface,
 
         try {
 
-            this.status = "1";
-            status();
-
             if (debug)
                 System.out.println("IndexStorageBarrel " + id + " is waiting for the index from Downloader");
 
@@ -403,6 +419,9 @@ public class IndexStorageBarrelThread extends Thread implements BarrelInterface,
                     System.out.println("IndexStorageBarrel " + id + " received the following message from Downloader:");
                     System.out.println(message);
                 }
+
+                this.status = "1";
+                status();
 
                 messageToHashmap(message);
 
@@ -544,6 +563,9 @@ public class IndexStorageBarrelThread extends Thread implements BarrelInterface,
 
     public void run() {
 
+        this.status = "0";
+        status();
+
         // Create text file if it doesn't exist
         CreateTxtFile();
 
@@ -566,15 +588,11 @@ public class IndexStorageBarrelThread extends Thread implements BarrelInterface,
 
         }
 
-        while (true) {
+        if (debug)
+            System.out.println("IndexStorageBarrel " + id + " is running");
 
-            if (debug)
-                System.out.println("IndexStorageBarrel " + id + " is running");
-
-            // Recebe o index do Downloader -> Multicast
-            receiveMessage();
-
-        }
+        // Recebe o index do Downloader -> Multicast
+        receiveMessage();
 
     }
 

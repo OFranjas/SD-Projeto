@@ -8,6 +8,8 @@ import java.util.Scanner;
 
 import javax.lang.model.element.Element;
 
+import org.jsoup.select.Selector.SelectorParseException;
+
 import java.rmi.*;
 import java.rmi.server.*;
 import java.net.*;
@@ -57,7 +59,15 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                                         ArrayList<String> lista = server.opcaoDois(words[1], pagina);
 
                                         while (lista == null) {
+
+                                                Thread.sleep(1000);
+
                                                 tentativas++;
+
+                                                if (tentativas > 10) {
+                                                        System.out.println("Erro na pesquisa, tentativas esgotadas");
+                                                        return;
+                                                }
 
                                                 System.out.println("Erro na pesquisa, tentando novamente (tentativa "
                                                                 + tentativas + ")");

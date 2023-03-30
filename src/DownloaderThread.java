@@ -337,11 +337,11 @@ public class DownloaderThread extends Thread {
 
             while (true) {
 
-                this.status = "1";
-                status();
-
                 // Ir buscar o url à queue
                 getURL();
+
+                this.status = "1";
+                status();
 
                 if (url != null) {
 
