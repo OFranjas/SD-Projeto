@@ -78,21 +78,99 @@ public class RMISearchModule extends UnicastRemoteObject implements ServerInterf
     public ArrayList<String> opcaoDois(String s, int tentativas) throws RemoteException {
         System.out.println("Opcao2, fazer coisinhas: " + s);
 
-        if (tentativas == 1)
-            this.words = pagadmin.recebe_palavras(s);
-
-        int num = (int) (Math.random() * num_threads);
-
-        System.out.println("NUM: " + num);
-
         try {
 
-            BarrelInterface barril = (BarrelInterface) Naming
-                    .lookup("IndexStorageBarrel" + num);
+            if (tentativas == 1)
+                this.words = pagadmin.recebe_palavras(s);
 
-            ArrayList<String> res = barril.procuraConteudo(s);
+            ArrayList<String> res1 = new ArrayList<String>();
 
-            System.out.println("RES: " + res);
+            ArrayList<String> res2 = new ArrayList<String>();
+
+            // Separar palavras
+            String[] palavras = s.split(" ");
+
+            System.out.println("Palavras: ");
+            for (String palavra : palavras) {
+                System.out.println(palavra);
+            }
+
+            // Percorrer palavras
+            for (String palavra : palavras) {
+
+                // Verificar se primeira letra é menor que 'm'
+                if (palavra.toLowerCase().charAt(0) <= 'm') {
+
+                    // Escolher um IndexStorageBarrel com id <= num_threads/2
+                    int num = (int) (Math.random() * (num_threads / 2));
+
+                    System.out.println("Barril: " + num);
+
+                    // Procurar palavra no IndexStorageBarrel
+
+                    BarrelInterface barril = (BarrelInterface) Naming
+                            .lookup("IndexStorageBarrel" + num);
+
+                    // If the res1 is empty, then add the results of the first search
+                    if (res1.isEmpty())
+                        res1.addAll(barril.procuraConteudo(palavra));
+                    else
+                        res1.retainAll(barril.procuraConteudo(palavra));
+
+                } else {
+
+                    // Escolher um IndexStorageBarrel com id > num_threads/2
+                    int num = (int) (Math.random() * (num_threads / 2)) + (num_threads / 2) + 1;
+
+                    System.out.println("Barril: " + num);
+
+                    // Procurar palavra no IndexStorageBarrel
+                    BarrelInterface barril = (BarrelInterface) Naming
+                            .lookup("IndexStorageBarrel" + num);
+
+                    // If res2 is empty, then add the results of the first search
+                    if (res2.isEmpty())
+                        res2.addAll(barril.procuraConteudo(palavra));
+                    else
+                        res2.retainAll(barril.procuraConteudo(palavra));
+
+                    // System.out.println("RES2 para " + palavra + ": " + res2);
+
+                }
+
+            }
+
+            // System.out.println("RES1: " + res1);
+
+            // System.out.println("RES2: " + res2);
+
+            ArrayList<String> res = new ArrayList<String>();
+
+            // Fazer interseção dos resultados se for preciso, ou seja, se res2 não estiver
+            // vazio
+            if (!res2.isEmpty() && !res1.isEmpty()) {
+
+                // Make intersection of the two results res1 and res2 and store in res
+                for (String s1 : res1) {
+                    for (String s2 : res2) {
+                        if (s1.equals(s2)) {
+                            res.add(s1);
+                        }
+                    }
+                }
+            }
+
+            // Se for só uma palavra, ou seja, se res2 estiver vazio, então res = res1
+            else if (res2.isEmpty()) {
+                res = res1;
+            }
+
+            // Se for só uma palavra, ou seja, se res1 estiver vazio, então res = res2
+            else if (res1.isEmpty()) {
+                res = res2;
+            }
+
+            // System.out.println("RES: " + res);
 
             return res;
 

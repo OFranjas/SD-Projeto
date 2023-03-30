@@ -31,7 +31,7 @@ public class PagAdministracao {
             words.put(s, 1);
         }
 
-        System.out.println("Palavra: " + s + " Valor: " + words.get(s));
+        // System.out.println("Palavra: " + s + " Valor: " + words.get(s));
 
         return words;
     }

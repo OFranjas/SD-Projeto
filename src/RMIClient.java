@@ -82,6 +82,7 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                                 // System.out.println("word1: " + words[1]);
 
                                 if (words[0].equals("1")) {
+
                                         boolean res = server.opcaoUm(words[1]);
 
                                         if (res == true) {
@@ -97,7 +98,14 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
 
                                         int tentativas = 1;
 
-                                        ArrayList<String> lista = server.opcaoDois(words[1], pagina);
+                                        // Store the words from index 1 to the end in a string
+                                        String word = "";
+
+                                        for (int i = 1; i < words.length; i++) {
+                                                word += words[i] + " ";
+                                        }
+
+                                        ArrayList<String> lista = server.opcaoDois(word, pagina);
 
                                         while (lista == null) {
 
