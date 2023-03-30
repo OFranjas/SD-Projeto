@@ -2,6 +2,7 @@ import java.rmi.*;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.rmi.ConnectException;
 
 public interface ServerInterface extends Remote {
     public boolean opcaoUm(String s) throws java.rmi.RemoteException;

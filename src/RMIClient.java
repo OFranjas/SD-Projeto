@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -120,6 +121,7 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
 
                                                 System.out.println("Erro na pesquisa, tentando novamente (tentativa "
                                                                 + tentativas + ")");
+
                                                 lista = server.opcaoDois(words[1], tentativas);
 
                                         }
@@ -315,149 +317,37 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
 
         }
 
-        public RMIClient mainMenu() {
+        public void mainMenu() {
 
-                Scanner sc = new Scanner(System.in);
-                int option = 0;
-                boolean login = false;
-                boolean aux = false;
-                String string;
+                try {
 
-                while (true) {
-                        String a = "";
-                        // create a RMIClient
-                        if (login == false) {
-                                a = "(Login necessário)";
-                        }
-                        if (aux == false) {
-                                System.out.println(
-                                                " ___________________________________________________________________________________________________________________________________");
-                                System.out.println(
-                                                "|        Googol         |   _|_                                                                                          --  |_|  X |");
-                                System.out.println(
-                                                "| ______________________|____|______________________________________________________________________________________________________|");
-                                System.out.println(
-                                                "|                                         _____    ____   ____   _____   ____                                                       |");
-                                System.out.println(
-                                                "|                                        |        |    | |    | |       |    | |                                                    |");
-                                System.out.println(
-                                                "|                                        |   __   |    | |    | |   __  |    | |                                                    |");
-                                System.out.println(
-                                                "|                                        |_____|  |____| |____| |_____| |____| |____                                                |");
-                                System.out.println(
-                                                "|                               _______________________________________________________________                                     |");
-                                System.out.println(
-                                                "|                              /  _                                                        __  |                                    |");
-                                System.out.println(
-                                                "|                              | |_|                                                      |__| |                                    |");
-                                System.out.println(
-                                                "|                              |__|_______________________________________________________/___/                                     |");
-                                System.out.println(
-                                                "|                                                                                                                                   |");
-                                System.out.println(
-                                                "|                                                                                                                                   |");
-                                System.out.println(
-                                                "|                                                                                                                                   |");
-                                System.out.println(
-                                                "|      Escolha uma das seguntes opções:                                                                                             |");
-                                System.out.println(
-                                                "|                                                                                                                                   |");
-                                System.out.println(
-                                                "|                                                                                                                                   |");
-                                System.out.println(
-                                                "|      1. Indexar novo URL                                                                                                          |");
-                                System.out.println(
-                                                "|      2. Pesquisar por uma palavra aou conjunto de palavras                                                                        |");
-                                System.out.println(
-                                                "|      3. Pesquisar por URL  " + a
-                                                                + "                                                                                                    ");
-                                System.out.println(
-                                                "|                                                                                                                                   |");
-                                System.out.println(
-                                                "|      8. Registar  ( Indisponivel )                                                                                                |");
-                                System.out.println(
-                                                "|      9. Login                                                                                                                     |");
-                                System.out.println(
-                                                "|                                                                                                                                   |");
-                                System.out.println(
-                                                "|      0. Sair                                                                                                                      |");
-                                System.out.println(
-                                                "|                                                                                                                                   |");
-                                System.out.println(
-                                                "|___________________________________________________________________________________________________________________________________|");
+                        Scanner sc = new Scanner(System.in);
+                        int option = 0;
+                        boolean login = false;
+                        boolean aux = false;
+                        String string;
 
-                        } else if (aux == true) {
-                                System.out.println(
-                                                " ___________________________________________________________________________________________________________________________________");
-                                System.out.println(
-                                                "|        Googol         |   _|_                                                                                          --  |_|  X |");
-                                System.out.println(
-                                                "| ______________________|____|______________________________________________________________________________________________________|");
-                                System.out.println(
-                                                "|                                         _____    ____   ____   _____   ____                                                       |");
-                                System.out.println(
-                                                "|                                        |        |    | |    | |       |    | |                                                    |");
-                                System.out.println(
-                                                "|                                        |   __   |    | |    | |   __  |    | |                                                    |");
-                                System.out.println(
-                                                "|                                        |_____|  |____| |____| |_____| |____| |____                                                |");
-                                System.out.println(
-                                                "|                               _______________________________________________________________                                     |");
-                                System.out.println(
-                                                "|                              /  _                                                        __  |                                    |");
-                                System.out.println(
-                                                "|                              | |_|                                                      |__| |                                    |");
-                                System.out.println(
-                                                "|                              |__|_______________________________________________________/___/                                     |");
-                                System.out.println(
-                                                "|                                                     INVALID OPTION                                                                |");
-                                System.out.println(
-                                                "|                                                                                                                                   |");
-                                System.out.println(
-                                                "|                                                                                                                                   |");
-                                System.out.println(
-                                                "|      Escolha uma das seguintes opções                                                                                             |");
-                                System.out.println(
-                                                "|                                                                                                                                   |");
-                                System.out.println(
-                                                "|                                                                                                                                   |");
-                                System.out.println(
-                                                "|      1. Indexar novo URL                                                                                                          |");
-                                System.out.println(
-                                                "|      2. Pesquisar por uma palavar aou conjunto de palavras                                                                        |");
-                                System.out.println(
-                                                "|      3. Pesquisar por URL  " + a
-                                                                + "                                                                                                    ");
-                                System.out.println(
-                                                "|                                                                                                                                   |");
-                                System.out.println(
-                                                "|      8. Registar  ( Indisponivel )                                                                                                |");
-                                System.out.println(
-                                                "|      9. Login                                                                                                                     |");
-                                System.out.println(
-                                                "|                                                                                                                                   |");
-                                System.out.println(
-                                                "|      0. Sair                                                                                                                      |");
-                                System.out.println(
-                                                "|                                                                                                                                   |");
-                                System.out.println(
-                                                "|___________________________________________________________________________________________________________________________________|");
-                                aux = false;
-                        }
-
-                        System.out.print("\nOpçao : ");
-
-                        option = sc.nextInt();
-
-                        switch (option) {
-
-                                case 1:
-                                        // cliente can write the url
-
-                                        // Send url by rmi to rmisearchmodule
-                                        sc.nextLine();
+                        while (true) {
+                                String a = "";
+                                // create a RMIClient
+                                if (login == false) {
+                                        a = "(Login necessário)";
+                                }
+                                if (aux == false) {
                                         System.out.println(
                                                         " ___________________________________________________________________________________________________________________________________");
+                                        System.out.println(
+                                                        "|        Googol         |   _|_                                                                                          --  |_|  X |");
+                                        System.out.println(
+                                                        "| ______________________|____|______________________________________________________________________________________________________|");
+                                        System.out.println(
+                                                        "|                                         _____    ____   ____   _____   ____                                                       |");
+                                        System.out.println(
+                                                        "|                                        |        |    | |    | |       |    | |                                                    |");
+                                        System.out.println(
+                                                        "|                                        |   __   |    | |    | |   __  |    | |                                                    |");
+                                        System.out.println(
+                                                        "|                                        |_____|  |____| |____| |_____| |____| |____                                                |");
                                         System.out.println(
                                                         "|                               _______________________________________________________________                                     |");
                                         System.out.println(
@@ -469,12 +359,52 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                                         System.out.println(
                                                         "|                                                                                                                                   |");
                                         System.out.println(
+                                                        "|                                                                                                                                   |");
+                                        System.out.println(
+                                                        "|                                                                                                                                   |");
+                                        System.out.println(
+                                                        "|      Escolha uma das seguntes opções:                                                                                             |");
+                                        System.out.println(
+                                                        "|                                                                                                                                   |");
+                                        System.out.println(
+                                                        "|                                                                                                                                   |");
+                                        System.out.println(
+                                                        "|      1. Indexar novo URL                                                                                                          |");
+                                        System.out.println(
+                                                        "|      2. Pesquisar por uma palavra aou conjunto de palavras                                                                        |");
+                                        System.out.println(
+                                                        "|      3. Pesquisar por URL  " + a
+                                                                        + "                                                                                                    ");
+                                        System.out.println(
+                                                        "|                                                                                                                                   |");
+                                        System.out.println(
+                                                        "|      8. Registar  ( Indisponivel )                                                                                                |");
+                                        System.out.println(
+                                                        "|      9. Login                                                                                                                     |");
+                                        System.out.println(
+                                                        "|                                                                                                                                   |");
+                                        System.out.println(
+                                                        "|      0. Sair                                                                                                                      |");
+                                        System.out.println(
+                                                        "|                                                                                                                                   |");
+                                        System.out.println(
                                                         "|___________________________________________________________________________________________________________________________________|");
 
-                                        string = sc.nextLine();
-
+                                } else if (aux == true) {
                                         System.out.println(
                                                         " ___________________________________________________________________________________________________________________________________");
+                                        System.out.println(
+                                                        "|        Googol         |   _|_                                                                                          --  |_|  X |");
+                                        System.out.println(
+                                                        "| ______________________|____|______________________________________________________________________________________________________|");
+                                        System.out.println(
+                                                        "|                                         _____    ____   ____   _____   ____                                                       |");
+                                        System.out.println(
+                                                        "|                                        |        |    | |    | |       |    | |                                                    |");
+                                        System.out.println(
+                                                        "|                                        |   __   |    | |    | |   __  |    | |                                                    |");
+                                        System.out.println(
+                                                        "|                                        |_____|  |____| |____| |_____| |____| |____                                                |");
                                         System.out.println(
                                                         "|                               _______________________________________________________________                                     |");
                                         System.out.println(
@@ -482,207 +412,228 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                                         System.out.println(
                                                         "|                              | |_|                                                      |__| |                                    |");
                                         System.out.println(
-                                                        "|                              |  |                                                       /   /                                     |");
-                                        System.out.println("|                                         " + string
-                                                        + "                                                                                     ");
+                                                        "|                              |__|_______________________________________________________/___/                                     |");
                                         System.out.println(
-                                                        "|                              |_______________________________________________________________|                                    |");
+                                                        "|                                                     INVALID OPTION                                                                |");
+                                        System.out.println(
+                                                        "|                                                                                                                                   |");
+                                        System.out.println(
+                                                        "|                                                                                                                                   |");
+                                        System.out.println(
+                                                        "|      Escolha uma das seguintes opções                                                                                             |");
+                                        System.out.println(
+                                                        "|                                                                                                                                   |");
+                                        System.out.println(
+                                                        "|                                                                                                                                   |");
+                                        System.out.println(
+                                                        "|      1. Indexar novo URL                                                                                                          |");
+                                        System.out.println(
+                                                        "|      2. Pesquisar por uma palavar aou conjunto de palavras                                                                        |");
+                                        System.out.println(
+                                                        "|      3. Pesquisar por URL  " + a
+                                                                        + "                                                                                                    ");
+                                        System.out.println(
+                                                        "|                                                                                                                                   |");
+                                        System.out.println(
+                                                        "|      8. Registar  ( Indisponivel )                                                                                                |");
+                                        System.out.println(
+                                                        "|      9. Login                                                                                                                     |");
+                                        System.out.println(
+                                                        "|                                                                                                                                   |");
+                                        System.out.println(
+                                                        "|      0. Sair                                                                                                                      |");
+                                        System.out.println(
+                                                        "|                                                                                                                                   |");
                                         System.out.println(
                                                         "|___________________________________________________________________________________________________________________________________|");
+                                        aux = false;
+                                }
 
-                                        string = option + " " + string;
-                                        this.senderRmi(string);
+                                System.out.print("\nOpçao : ");
 
-                                        System.out.println(" Insira qualquer coisa para continuar...");
-                                        sc.nextLine();
+                                option = sc.nextInt();
 
-                                        break;
+                                switch (option) {
 
-                                case 2:
-                                        // Pesquisar páginas que contenham um conjunto de termos
+                                        case 1:
+                                                // cliente can write the url
 
-                                        sc.nextLine();
-
-                                        System.out.print("Escreva o palavra: ");
-
-                                        string = sc.nextLine();
-
-                                        // make a string like " option + string"
-
-                                        string = option + " " + string;
-
-                                        senderRmi(string);
-
-                                        System.out.println(" Insira qualquer coisa para continuar...");
-                                        sc.nextLine();
-
-                                        break;
-                                case 3:
-                                        // Consultar lista de páginas com ligação para uma página específica
-                                        if (login == false) {
+                                                // Send url by rmi to rmisearchmodule
+                                                sc.nextLine();
                                                 System.out.println(
                                                                 " ___________________________________________________________________________________________________________________________________");
                                                 System.out.println(
+                                                                "|                               _______________________________________________________________                                     |");
+                                                System.out.println(
+                                                                "|                              /  _                                                        __  |                                    |");
+                                                System.out.println(
+                                                                "|                              | |_|                                                      |__| |                                    |");
+                                                System.out.println(
+                                                                "|                              |__|_______________________________________________________/___/                                     |");
+                                                System.out.println(
                                                                 "|                                                                                                                                   |");
-                                                System.out.println(
-                                                                "|                                            Login necessário para aceder a esta opçâo                                              |");
-                                                System.out.println(
-                                                                "|                                                                                                                                   |");
-                                                System.out.println(
-                                                                "|                                              Insira qualquer coisa para continuar...                                              |");
                                                 System.out.println(
                                                                 "|___________________________________________________________________________________________________________________________________|");
+
+                                                string = sc.nextLine();
+
+                                                System.out.println(
+                                                                " ___________________________________________________________________________________________________________________________________");
+                                                System.out.println(
+                                                                "|                               _______________________________________________________________                                     |");
+                                                System.out.println(
+                                                                "|                              /  _                                                        __  |                                    |");
+                                                System.out.println(
+                                                                "|                              | |_|                                                      |__| |                                    |");
+                                                System.out.println(
+                                                                "|                              |  |                                                       /   /                                     |");
+                                                System.out.println("|                                         " + string
+                                                                + "                                                                                     ");
+                                                System.out.println(
+                                                                "|                              |_______________________________________________________________|                                    |");
+                                                System.out.println(
+                                                                "|___________________________________________________________________________________________________________________________________|");
+
+                                                string = option + " " + string;
+                                                this.senderRmi(string);
+
+                                                System.out.println(" Insira qualquer coisa para continuar...");
+                                                sc.nextLine();
+
+                                                break;
+
+                                        case 2:
+                                                // Pesquisar páginas que contenham um conjunto de termos
+
+                                                sc.nextLine();
+
+                                                System.out.print("Escreva o palavra: ");
+
+                                                string = sc.nextLine();
+
+                                                // make a string like " option + string"
+
+                                                string = option + " " + string;
+
+                                                senderRmi(string);
+
+                                                System.out.println(" Insira qualquer coisa para continuar...");
+                                                sc.nextLine();
+
+                                                break;
+                                        case 3:
+                                                // Consultar lista de páginas com ligação para uma página específica
+                                                if (login == false) {
+                                                        System.out.println(
+                                                                        " ___________________________________________________________________________________________________________________________________");
+                                                        System.out.println(
+                                                                        "|                                                                                                                                   |");
+                                                        System.out.println(
+                                                                        "|                                            Login necessário para aceder a esta opçâo                                              |");
+                                                        System.out.println(
+                                                                        "|                                                                                                                                   |");
+                                                        System.out.println(
+                                                                        "|                                              Insira qualquer coisa para continuar...                                              |");
+                                                        System.out.println(
+                                                                        "|___________________________________________________________________________________________________________________________________|");
+                                                        sc.nextLine();
+                                                        sc.nextLine();
+                                                        break;
+                                                }
+
+                                                System.out.println(
+                                                                " ___________________________________________________________________________________________________________________________________");
+                                                System.out.println(
+                                                                "|                               _______________________________________________________________                                     |");
+                                                System.out.println(
+                                                                "|                              /  _                                                        __  |                                    |");
+                                                System.out.println(
+                                                                "|                              | |_|                                                      |__| |                                    |");
+                                                System.out.println(
+                                                                "|                              |__|_______________________________________________________/___/                                     |");
+                                                System.out.println(
+                                                                "|                                                                                                                                   |");
+                                                System.out.println(
+                                                                "|___________________________________________________________________________________________________________________________________|");
+
+                                                sc.nextLine();
+                                                string = sc.nextLine();
+
+                                                System.out.println(
+                                                                " ___________________________________________________________________________________________________________________________________");
+                                                System.out.println(
+                                                                "|                               _______________________________________________________________                                     |");
+                                                System.out.println(
+                                                                "|                              /  _                                                        __  |                                    |");
+                                                System.out.println(
+                                                                "|                              | |_|                                                      |__| |                                    |");
+                                                System.out.println(
+                                                                "|                              |  |                                                       /   /                                     |");
+                                                System.out.println("|                                         " + string
+                                                                + "                                                                                     ");
+                                                System.out.println(
+                                                                "|                              |_______________________________________________________________|                                    |");
+                                                System.out.println(
+                                                                "|___________________________________________________________________________________________________________________________________|");
+
+                                                string = option + " " + string;
+
+                                                senderRmi(string);
+
+                                                System.out.println(" Insira qualquer coisa para continuar...");
+                                                sc.nextLine();
+
+                                                // send option by rmi to rmisearchmodule
+                                                break;
+
+                                        case 4:
+
+                                                // transform option to string
+                                                string = Integer.toString(option);
+                                                senderRmi(string);
+
+                                                System.out.println(" Insira qualquer coisa para continuar...");
                                                 sc.nextLine();
                                                 sc.nextLine();
                                                 break;
-                                        }
 
-                                        System.out.println(
-                                                        " ___________________________________________________________________________________________________________________________________");
-                                        System.out.println(
-                                                        "|                               _______________________________________________________________                                     |");
-                                        System.out.println(
-                                                        "|                              /  _                                                        __  |                                    |");
-                                        System.out.println(
-                                                        "|                              | |_|                                                      |__| |                                    |");
-                                        System.out.println(
-                                                        "|                              |__|_______________________________________________________/___/                                     |");
-                                        System.out.println(
-                                                        "|                                                                                                                                   |");
-                                        System.out.println(
-                                                        "|___________________________________________________________________________________________________________________________________|");
+                                        case 8:
+                                                // Registar
+                                                System.out.println("Nao sabes ler?");
+                                                break;
 
-                                        sc.nextLine();
-                                        string = sc.nextLine();
+                                        case 9:
+                                                // Login
 
-                                        System.out.println(
-                                                        " ___________________________________________________________________________________________________________________________________");
-                                        System.out.println(
-                                                        "|                               _______________________________________________________________                                     |");
-                                        System.out.println(
-                                                        "|                              /  _                                                        __  |                                    |");
-                                        System.out.println(
-                                                        "|                              | |_|                                                      |__| |                                    |");
-                                        System.out.println(
-                                                        "|                              |  |                                                       /   /                                     |");
-                                        System.out.println("|                                         " + string
-                                                        + "                                                                                     ");
-                                        System.out.println(
-                                                        "|                              |_______________________________________________________________|                                    |");
-                                        System.out.println(
-                                                        "|___________________________________________________________________________________________________________________________________|");
+                                                System.out.println(
+                                                                " ___________________________________________________________________________________________________________________________________");
+                                                System.out.println(
+                                                                "|                                                                                                                                   |");
+                                                System.out.println(
+                                                                "|                                                      L O G I N                                                                    |");
+                                                System.out.println(
+                                                                "|                                                                                                                                   |");
+                                                System.out.println(
+                                                                "|                        ____________________________________                                                                       |");
+                                                System.out.println(
+                                                                "|             Username: |____________________________________|                                                                      |");
+                                                System.out.println(
+                                                                "|                        ____________________________________                                                                       |");
+                                                System.out.println(
+                                                                "|             Password: |____________________________________|                                                                      |");
+                                                System.out.println(
+                                                                "|                                                                                                                                   |");
+                                                System.out.println(
+                                                                "|                                                                                                                                   |");
+                                                System.out.println(
+                                                                "|                                                                                                                                   |");
+                                                System.out.println(
+                                                                "|___________________________________________________________________________________________________________________________________|");
 
-                                        string = option + " " + string;
+                                                sc.nextLine();
 
-                                        senderRmi(string);
+                                                String user = sc.nextLine();
 
-                                        System.out.println(" Insira qualquer coisa para continuar...");
-                                        sc.nextLine();
-
-                                        // send option by rmi to rmisearchmodule
-                                        break;
-
-                                case 4:
-
-                                        // transform option to string
-                                        string = Integer.toString(option);
-                                        senderRmi(string);
-
-                                        System.out.println(" Insira qualquer coisa para continuar...");
-                                        sc.nextLine();
-                                        sc.nextLine();
-                                        break;
-
-                                case 8:
-                                        // Registar
-                                        System.out.println("Nao sabes ler?");
-                                        break;
-
-                                case 9:
-                                        // Login
-
-                                        System.out.println(
-                                                        " ___________________________________________________________________________________________________________________________________");
-                                        System.out.println(
-                                                        "|                                                                                                                                   |");
-                                        System.out.println(
-                                                        "|                                                      L O G I N                                                                    |");
-                                        System.out.println(
-                                                        "|                                                                                                                                   |");
-                                        System.out.println(
-                                                        "|                        ____________________________________                                                                       |");
-                                        System.out.println(
-                                                        "|             Username: |____________________________________|                                                                      |");
-                                        System.out.println(
-                                                        "|                        ____________________________________                                                                       |");
-                                        System.out.println(
-                                                        "|             Password: |____________________________________|                                                                      |");
-                                        System.out.println(
-                                                        "|                                                                                                                                   |");
-                                        System.out.println(
-                                                        "|                                                                                                                                   |");
-                                        System.out.println(
-                                                        "|                                                                                                                                   |");
-                                        System.out.println(
-                                                        "|___________________________________________________________________________________________________________________________________|");
-
-                                        sc.nextLine();
-
-                                        String user = sc.nextLine();
-
-                                        System.out.println(
-                                                        " ___________________________________________________________________________________________________________________________________");
-                                        System.out.println(
-                                                        "|                                                                                                                                   |");
-                                        System.out.println(
-                                                        "|                                                      L O G I N                                                                    |");
-                                        System.out.println(
-                                                        "|                                                                                                                                   |");
-                                        System.out.println(
-                                                        "|                        ____________________________________                                                                       |");
-                                        System.out.println("|             Username: |_______________" + user
-                                                        + "________________|                                                                      |");
-                                        System.out.println(
-                                                        "|                        ____________________________________                                                                       |");
-                                        System.out.println(
-                                                        "|             Password: |____________________________________|                                                                      |");
-                                        System.out.println(
-                                                        "|                                                                                                                                   |");
-                                        System.out.println(
-                                                        "|                                                                                                                                   |");
-                                        System.out.println(
-                                                        "|                                                                                                                                   |");
-                                        System.out.println(
-                                                        "|___________________________________________________________________________________________________________________________________|");
-
-                                        String pass = sc.nextLine();
-
-                                        System.out.println(
-                                                        " ___________________________________________________________________________________________________________________________________");
-                                        System.out.println(
-                                                        "|                                                                                                                                   |");
-                                        System.out.println(
-                                                        "|                                                      L O G I N                                                                    |");
-                                        System.out.println(
-                                                        "|                                                                                                                                   |");
-                                        System.out.println(
-                                                        "|                        ____________________________________                                                                       |");
-                                        System.out.println("|             Username: |_______________" + user
-                                                        + "________________|                                                                      |");
-                                        System.out.println(
-                                                        "|                        ____________________________________                                                                       |");
-                                        System.out.println(
-                                                        "|             Password: |______________........______________|                                                                      |");
-                                        System.out.println(
-                                                        "|                                                                                                                                   |");
-                                        System.out.println(
-                                                        "|                                                                                                                                   |");
-                                        System.out.println(
-                                                        "|                                                                                                                                   |");
-                                        System.out.println(
-                                                        "|___________________________________________________________________________________________________________________________________|");
-
-                                        if (user.equals("aluno") && pass.equals("password")) {
                                                 System.out.println(
                                                                 " ___________________________________________________________________________________________________________________________________");
                                                 System.out.println(
@@ -698,20 +649,17 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                                                 System.out.println(
                                                                 "|                        ____________________________________                                                                       |");
                                                 System.out.println(
-                                                                "|             Password: |______________........______________|                                                                      |");
+                                                                "|             Password: |____________________________________|                                                                      |");
                                                 System.out.println(
                                                                 "|                                                                                                                                   |");
                                                 System.out.println(
-                                                                "|             Login Successful!!!                                                                                                   |");
-                                                System.out.println(
                                                                 "|                                                                                                                                   |");
                                                 System.out.println(
-                                                                "|             Insira qualquer coisa para continuar...                                                                               |");
+                                                                "|                                                                                                                                   |");
                                                 System.out.println(
                                                                 "|___________________________________________________________________________________________________________________________________|");
-                                                sc.nextLine();
-                                                login = true;
-                                        } else {
+
+                                                String pass = sc.nextLine();
 
                                                 System.out.println(
                                                                 " ___________________________________________________________________________________________________________________________________");
@@ -732,46 +680,110 @@ public class RMIClient extends UnicastRemoteObject implements ClientInterface {
                                                 System.out.println(
                                                                 "|                                                                                                                                   |");
                                                 System.out.println(
-                                                                "|             Invalid Credentials!!!                                                                                                |");
+                                                                "|                                                                                                                                   |");
                                                 System.out.println(
                                                                 "|                                                                                                                                   |");
                                                 System.out.println(
-                                                                "|             Insira qualquer coisa para continuar...                                                                               |");
-                                                System.out.println(
                                                                 "|___________________________________________________________________________________________________________________________________|");
-                                                sc.nextLine();
-                                        }
-                                        break;
-                                case 0:
-                                        // Sair
-                                        System.out.println(
-                                                        " ___________________________________________________________________________________________________________________________________");
-                                        System.out.println(
-                                                        "|                                                                                                                                   |");
-                                        System.out.println(
-                                                        "|                               _______   ______   ______   ____     _____           ______                                       |");
-                                        System.out.println(
-                                                        "|                              |         |      | |      | |     \\  |     |   \\   / |                                             |");
-                                        System.out.println(
-                                                        "|                              |   ____  |      | |      | |     |  |____/     \\ /  |____                                         |");
-                                        System.out.println(
-                                                        "|                              |      |  |      | |      | |     /  |     \\     |   |                                             |");
-                                        System.out.println(
-                                                        "|                              |______|  |______| |______| |____/   |_____|     |   |______                                       |");
-                                        System.out.println(
-                                                        "|                                                                                                                                   |");
-                                        System.out.println(
-                                                        "|                                                                                                                                   |");
-                                        System.out.println(
-                                                        "____________________________________________________________________________________________________________________________________|");
 
-                                        System.exit(0);
-                                        break;
-                                default:
-                                        aux = true;
-                                        break;
+                                                if (user.equals("aluno") && pass.equals("password")) {
+                                                        System.out.println(
+                                                                        " ___________________________________________________________________________________________________________________________________");
+                                                        System.out.println(
+                                                                        "|                                                                                                                                   |");
+                                                        System.out.println(
+                                                                        "|                                                      L O G I N                                                                    |");
+                                                        System.out.println(
+                                                                        "|                                                                                                                                   |");
+                                                        System.out.println(
+                                                                        "|                        ____________________________________                                                                       |");
+                                                        System.out.println("|             Username: |_______________"
+                                                                        + user
+                                                                        + "________________|                                                                      |");
+                                                        System.out.println(
+                                                                        "|                        ____________________________________                                                                       |");
+                                                        System.out.println(
+                                                                        "|             Password: |______________........______________|                                                                      |");
+                                                        System.out.println(
+                                                                        "|                                                                                                                                   |");
+                                                        System.out.println(
+                                                                        "|             Login Successful!!!                                                                                                   |");
+                                                        System.out.println(
+                                                                        "|                                                                                                                                   |");
+                                                        System.out.println(
+                                                                        "|             Insira qualquer coisa para continuar...                                                                               |");
+                                                        System.out.println(
+                                                                        "|___________________________________________________________________________________________________________________________________|");
+                                                        sc.nextLine();
+                                                        login = true;
+                                                } else {
 
+                                                        System.out.println(
+                                                                        " ___________________________________________________________________________________________________________________________________");
+                                                        System.out.println(
+                                                                        "|                                                                                                                                   |");
+                                                        System.out.println(
+                                                                        "|                                                      L O G I N                                                                    |");
+                                                        System.out.println(
+                                                                        "|                                                                                                                                   |");
+                                                        System.out.println(
+                                                                        "|                        ____________________________________                                                                       |");
+                                                        System.out.println("|             Username: |_______________"
+                                                                        + user
+                                                                        + "________________|                                                                      |");
+                                                        System.out.println(
+                                                                        "|                        ____________________________________                                                                       |");
+                                                        System.out.println(
+                                                                        "|             Password: |______________........______________|                                                                      |");
+                                                        System.out.println(
+                                                                        "|                                                                                                                                   |");
+                                                        System.out.println(
+                                                                        "|             Invalid Credentials!!!                                                                                                |");
+                                                        System.out.println(
+                                                                        "|                                                                                                                                   |");
+                                                        System.out.println(
+                                                                        "|             Insira qualquer coisa para continuar...                                                                               |");
+                                                        System.out.println(
+                                                                        "|___________________________________________________________________________________________________________________________________|");
+                                                        sc.nextLine();
+                                                }
+                                                break;
+                                        case 0:
+                                                // Sair
+                                                System.out.println(
+                                                                " ___________________________________________________________________________________________________________________________________");
+                                                System.out.println(
+                                                                "|                                                                                                                                   |");
+                                                System.out.println(
+                                                                "|                               _______   ______   ______   ____     _____           ______                                       |");
+                                                System.out.println(
+                                                                "|                              |         |      | |      | |     \\  |     |   \\   / |                                             |");
+                                                System.out.println(
+                                                                "|                              |   ____  |      | |      | |     |  |____/     \\ /  |____                                         |");
+                                                System.out.println(
+                                                                "|                              |      |  |      | |      | |     /  |     \\     |   |                                             |");
+                                                System.out.println(
+                                                                "|                              |______|  |______| |______| |____/   |_____|     |   |______                                       |");
+                                                System.out.println(
+                                                                "|                                                                                                                                   |");
+                                                System.out.println(
+                                                                "|                                                                                                                                   |");
+                                                System.out.println(
+                                                                "____________________________________________________________________________________________________________________________________|");
+
+                                                System.exit(0);
+                                                break;
+                                        default:
+                                                aux = true;
+                                                break;
+
+                                }
                         }
+
+                } catch (InputMismatchException e) {
+                        System.out.println("Invalid option");
+
+                        this.mainMenu();
                 }
 
         }

@@ -76,7 +76,7 @@ public class RMISearchModule extends UnicastRemoteObject implements ServerInterf
     }
 
     public ArrayList<String> opcaoDois(String s, int tentativas) throws RemoteException {
-        System.out.println("Opcao2, fazer coisinhas: " + s);
+        // System.out.println("Opcao2, fazer coisinhas: " + s);
 
         try {
 
@@ -90,11 +90,6 @@ public class RMISearchModule extends UnicastRemoteObject implements ServerInterf
             // Separar palavras
             String[] palavras = s.split(" ");
 
-            System.out.println("Palavras: ");
-            for (String palavra : palavras) {
-                System.out.println(palavra);
-            }
-
             // Percorrer palavras
             for (String palavra : palavras) {
 
@@ -104,7 +99,7 @@ public class RMISearchModule extends UnicastRemoteObject implements ServerInterf
                     // Escolher um IndexStorageBarrel com id <= num_threads/2
                     int num = (int) (Math.random() * (num_threads / 2));
 
-                    System.out.println("Barril: " + num);
+                    // System.out.println("Barril: " + num);
 
                     // Procurar palavra no IndexStorageBarrel
 
@@ -122,7 +117,7 @@ public class RMISearchModule extends UnicastRemoteObject implements ServerInterf
                     // Escolher um IndexStorageBarrel com id > num_threads/2
                     int num = (int) (Math.random() * (num_threads / 2)) + (num_threads / 2) + 1;
 
-                    System.out.println("Barril: " + num);
+                    // System.out.println("Barril: " + num);
 
                     // Procurar palavra no IndexStorageBarrel
                     BarrelInterface barril = (BarrelInterface) Naming
@@ -177,7 +172,17 @@ public class RMISearchModule extends UnicastRemoteObject implements ServerInterf
         } catch (NotBoundException e) {
             System.out.println("Barrel not bound");
             return null;
-        } catch (Exception e) {
+        } catch (StringIndexOutOfBoundsException e) {
+
+            System.out.println("Input inválido");
+
+            ArrayList<String> res = new ArrayList<String>();
+
+            return res;
+
+        }
+
+        catch (Exception e) {
             System.out.println("Exception in RMISearchModule.opcaoDois: " + e);
             return null;
         }
