@@ -284,7 +284,7 @@ public class DownloaderThread extends Thread {
 
             // If the buffer is bigger than 65534
             if (buf.length > 65534) {
-                System.out.println("Buffer is bigger than 65534");
+                // System.out.println("Buffer is bigger than 65534");
                 return;
             }
 

@@ -764,7 +764,7 @@ public class RMIClient extends UnicastRemoteObject {
                                                 System.out.println(
                                                                 "|___________________________________________________________________________________________________________________________________|");
 
-                                                if (user.equals("aluno") && pass.equals("password")) {
+                                                if ((user.equals("aluno") && pass.equals("password")) || (user.equals("rafa") && pass.equals("tacho")) || (user.equals("jose") && pass.equals("fialho"))) {
                                                         System.out.println(
                                                                         " ___________________________________________________________________________________________________________________________________");
                                                         System.out.println(

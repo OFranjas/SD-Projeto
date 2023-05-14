@@ -334,90 +334,100 @@ public class IndexStorageBarrelThread extends Thread implements BarrelInterface,
 
     private void messageToHashmap(String message) {
 
-        // percorrer a string recebida linhh a linha e separar a 1ª palavra de cada
-        // linha como key e as restantes como urls
-        downloaderIndex = new HashMap<String, HashSet<String>>();
-        downloaderLinksReferences = new HashMap<String, HashSet<String>>();
-        String linhas[] = message.split("\n");
+        try {
 
-        int res = 9999;
+            // percorrer a string recebida linhh a linha e separar a 1ª palavra de cada
+            // linha como key e as restantes como urls
+            downloaderIndex = new HashMap<String, HashSet<String>>();
+            downloaderLinksReferences = new HashMap<String, HashSet<String>>();
+            String linhas[] = message.split("\n");
 
-        for (int i = 0; i < linhas.length; i++) {
-            String[] palavras = linhas[i].split(" ");
+            int res = 9999;
 
-            if (palavras[0].equals("LINKS")) {
-                res = i;
-                break;
-            }
+            for (int i = 0; i < linhas.length; i++) {
+                String[] palavras = linhas[i].split(" ");
 
-            if (this.parteSo) {
-                if (palavras[0].toLowerCase().charAt(0) <= 'm') {
-                    for (int j = 1; j < palavras.length; j++) {
-
-                        if (j == 1) {
-
-                            // System.out.println(palavras[0]);
-                            this.downloaderIndex.put(palavras[0], new HashSet<String>());
-                            this.downloaderIndex.get(palavras[0]).add(palavras[j]);
-                        } else {
-                            this.downloaderIndex.get(palavras[0]).add(palavras[j]);
-                        }
-
-                    }
+                if (palavras[0].equals("LINKS")) {
+                    res = i;
+                    break;
                 }
-            } else {
-                if (palavras[0].toLowerCase().charAt(0) > 'm') {
-                    for (int j = 1; j < palavras.length; j++) {
 
-                        if (j == 1) {
+                if (this.parteSo) {
+                    if (palavras[0].toLowerCase().charAt(0) <= 'm') {
+                        for (int j = 1; j < palavras.length; j++) {
 
-                            // System.out.println(palavras[0]);
-                            this.downloaderIndex.put(palavras[0], new HashSet<String>());
-                            this.downloaderIndex.get(palavras[0]).add(palavras[j]);
-                        } else {
-                            this.downloaderIndex.get(palavras[0]).add(palavras[j]);
+                            if (j == 1) {
+
+                                // System.out.println(palavras[0]);
+                                this.downloaderIndex.put(palavras[0], new HashSet<String>());
+                                this.downloaderIndex.get(palavras[0]).add(palavras[j]);
+                            } else {
+                                this.downloaderIndex.get(palavras[0]).add(palavras[j]);
+                            }
+
                         }
-
                     }
-                }
-            }
-
-        }
-
-        // For
-        for (int i = res + 1; i < linhas.length; i++) {
-            String[] palavras = linhas[i].split(" ");
-
-            // If it finds the TITLE separator, stop
-            if (palavras[0].equals("TITLE")) {
-                res = i;
-                break;
-            }
-
-            this.url = palavras[0];
-
-            // If there is no links references, only add the url
-            if (palavras.length == 1) {
-                this.downloaderLinksReferences.put(palavras[0], new HashSet<String>());
-                continue;
-            }
-
-            for (int j = 1; j < palavras.length; j++) {
-                if (j == 1) {
-                    // System.out.println(palavras[0]);
-                    this.downloaderLinksReferences.put(palavras[0], new HashSet<String>());
-                    this.downloaderLinksReferences.get(palavras[0]).add(palavras[j]);
                 } else {
-                    this.downloaderLinksReferences.get(palavras[0]).add(palavras[j]);
+                    if (palavras[0].toLowerCase().charAt(0) > 'm') {
+                        for (int j = 1; j < palavras.length; j++) {
+
+                            if (j == 1) {
+
+                                // System.out.println(palavras[0]);
+                                this.downloaderIndex.put(palavras[0], new HashSet<String>());
+                                this.downloaderIndex.get(palavras[0]).add(palavras[j]);
+                            } else {
+                                this.downloaderIndex.get(palavras[0]).add(palavras[j]);
+                            }
+
+                        }
+                    }
+                }
+
+            }
+
+            // For
+            for (int i = res + 1; i < linhas.length; i++) {
+                String[] palavras = linhas[i].split(" ");
+
+                // If it finds the TITLE separator, stop
+                if (palavras[0].equals("TITLE")) {
+                    res = i;
+                    break;
+                }
+
+                this.url = palavras[0];
+
+                // If there is no links references, only add the url
+                if (palavras.length == 1) {
+                    this.downloaderLinksReferences.put(palavras[0], new HashSet<String>());
+                    continue;
+                }
+
+                for (int j = 1; j < palavras.length; j++) {
+                    if (j == 1) {
+                        // System.out.println(palavras[0]);
+                        this.downloaderLinksReferences.put(palavras[0], new HashSet<String>());
+                        this.downloaderLinksReferences.get(palavras[0]).add(palavras[j]);
+                    } else {
+                        this.downloaderLinksReferences.get(palavras[0]).add(palavras[j]);
+                    }
                 }
             }
-        }
 
-        // Add the title and content to the hashmap if it isnt already there
-        if (!this.titles.containsKey(this.url))
-            this.titles.put(this.url, linhas[res + 1]);
-        if (!this.contents.containsKey(this.url))
-            this.contents.put(this.url, linhas[res + 3]);
+            // Add the title and content to the hashmap if it isnt already there
+            if (!this.titles.containsKey(this.url))
+                this.titles.put(this.url, linhas[res + 1]);
+            if (!this.contents.containsKey(this.url))
+                this.contents.put(this.url, linhas[res + 3]);
+
+        } catch (StringIndexOutOfBoundsException e) {
+
+            System.out.println("IndexBarrel -> Message received is empty");
+        } catch (Exception e) {
+            System.out.println("IndexBarrel -> Error in messageToHashmap");
+            System.out.println(e);
+        }
 
     }
 
