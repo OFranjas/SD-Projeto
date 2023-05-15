@@ -326,6 +326,10 @@ public class App_Controller {
     @GetMapping("/url")
     public String url(Model model) {
 
+        if (!this.logged_in) {
+            return "error";
+        }
+
         try {
 
             String link = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest()

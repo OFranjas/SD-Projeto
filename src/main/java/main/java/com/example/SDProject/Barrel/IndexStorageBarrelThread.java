@@ -720,10 +720,19 @@ public class IndexStorageBarrelThread extends Thread implements BarrelInterface,
 
             ArrayList<String> links = new ArrayList<String>();
 
+            System.out.println(url);
+
+            // add to url ","
+
+            String str = url + ",";
+
             // Go through the linksReferences hashmap and get the links that contain the url
             for (String key : this.linksReferences.keySet()) {
 
-                if (this.linksReferences.get(key).contains(url)) {
+                // print the linksReferences hashmap
+
+                if (this.linksReferences.get(key).contains(url) || this.linksReferences.get(key).contains(str)) {
+                    System.out.println(key + " " + this.linksReferences.get(key));
                     links.add(key);
                 }
 
