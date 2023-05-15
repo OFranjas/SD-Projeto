@@ -10,8 +10,6 @@ public class apirest {
         apirest apirest = new apirest();
         // String[] res = apirest.topStories();
 
-        String[] res = userStories("jl");
-
     }
 
     private String[] topStories() {
@@ -120,7 +118,7 @@ public class apirest {
         }
     }
 
-    private static String[] userStories(String id) {
+    public static String[] userStories(String id) {
 
         try {
             // api rest GET request to get user stories
@@ -147,7 +145,7 @@ public class apirest {
             con.disconnect();
 
             // printing result from response
-            System.out.println(response.toString());
+            // System.out.println(response.toString());
 
             // Remove everything before the [ and after the ]
             response.delete(0, response.indexOf("[") + 1);
@@ -210,7 +208,7 @@ public class apirest {
                 con.disconnect();
 
                 // print the url
-                System.out.println(url_story);
+                // System.out.println(url_story);
 
                 // Add the url to the array
                 urls[i] = url_story;
