@@ -49,4 +49,10 @@ public class App_Controller {
         return "word";
     }
 
+    @GetMapping("/url")
+    public String url(Model model) {
+
+        return "url";
+    }
+
 }
