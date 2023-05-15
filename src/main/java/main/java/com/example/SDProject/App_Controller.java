@@ -28,7 +28,25 @@ public class App_Controller {
             Model model) {
         model.addAttribute("name", name);
         model.addAttribute("othername", "SD");
-        return "greeting";
+        return "menu";
+    }
+
+    @GetMapping("/login")
+    public String login(Model model) {
+        // model.addAttribute("user", new User());
+        return "login";
+    }
+
+    @GetMapping("/index")
+    public String index(Model model) {
+
+        return "index";
+    }
+
+    @GetMapping("/word")
+    public String word(Model model) {
+
+        return "word";
     }
 
 }

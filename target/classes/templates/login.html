@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Login Page</title>
+		<link rel="stylesheet" type="text/css" href="\login.css" />
+	</head>
+	<body>
+		<div class="container">
+			<button class="menu-button" onclick="goToMenu()">Menu</button>
+
+			<h1>Login</h1>
+			<form>
+				<div class="form-group">
+					<label for="username">Username:</label>
+					<input
+						type="text"
+						id="username"
+						name="username"
+						placeholder="Enter your username"
+					/>
+				</div>
+				<div class="form-group">
+					<label for="password">Password:</label>
+					<input
+						type="password"
+						id="password"
+						name="password"
+						placeholder="Enter your password"
+					/>
+				</div>
+				<button type="submit">Login</button>
+			</form>
+		</div>
+
+		<script>
+			function goToMenu() {
+				window.location.href = "menu";
+			}
+		</script>
+	</body>
+</html>
