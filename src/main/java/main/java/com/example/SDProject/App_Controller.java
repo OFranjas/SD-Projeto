@@ -84,6 +84,97 @@ public class App_Controller {
     @GetMapping("/word")
     public String word(Model model) {
 
+        // Get the word or phrase from the link "?inputText=...+..."
+        String inputText = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest()
+                .getParameter("inputText");
+
+        System.out.println("Input Text: " + inputText);
+
+        if (inputText != null) {
+
+            int pagina = 1;
+
+            int tentativas = 1;
+
+            try {
+                ArrayList<String> lista = server.opcaoDois(inputText, pagina);
+
+                while (lista == null) {
+
+                    Thread.sleep(1000);
+
+                    if (tentativas == 10) {
+                        System.out.println(
+                                "Erro na pesquisa, tentativas esgotadas");
+
+                        return "error";
+                    }
+
+                    tentativas++;
+
+                    System.out.println(
+                            "Erro na pesquisa, tentando novamente (tentativa "
+                                    + tentativas + ")");
+
+                    lista = server.opcaoDois(inputText, pagina);
+
+                }
+
+                if (lista.size() == 0) {
+                    System.out.println(
+                            "Erro na pesquisa, lista vazia");
+
+                    return "error";
+
+                }
+
+                ArrayList<String> printed = new ArrayList<String>();
+
+                while (true) {
+
+                    for (int i = 0; i < 10; i++) {
+
+                        if (i >= lista.size()) {
+
+                            break;
+
+                        }
+
+                        String element = lista.get(i);
+
+                        printed.add(element);
+
+                        // Separate the string by the |
+                        String[] res = element.split("\\|");
+
+                        String url = res[0];
+                        String title = res[1];
+                        String description = res[2];
+
+                        model.addAttribute("element" + i, element);
+
+                    }
+
+                    lista.removeAll(printed);
+
+                    // Check if there are more elements to print
+                    if (lista.size() == 0) {
+                        break;
+                    }
+
+                    // If next button was pressed
+                    
+
+                }
+
+                model.addAttribute("element1", lista);
+
+            } catch (Exception e) {
+                System.out.println("Exception in App_Controller.word: " + e);
+            }
+
+        }
+
         return "word";
     }
 
