@@ -7,15 +7,18 @@ body {
 }
 
 .container {
-	max-width: 600px;
-	margin: 0 auto;
+	width: 300px;
+	margin: 100px auto;
 	padding: 20px;
+	background-color: #222;
+	border-radius: 10px;
 	text-align: center;
 }
 
 h1 {
 	font-size: 32px;
 	margin-bottom: 20px;
+	text-align: center;
 }
 
 .form-group {
@@ -26,10 +29,10 @@ label {
 	display: block;
 	font-size: 18px;
 	margin-bottom: 5px;
+	text-align: center;
 }
 
 input[type="text"],
-input[type="email"],
 input[type="password"] {
 	width: 100%;
 	padding: 10px;
@@ -46,16 +49,6 @@ button {
 	cursor: pointer;
 }
 
-.cool-button {
-	background-color: #ffcc00;
-	color: #222;
-	transition: background-color 0.3s ease;
-}
-
-.cool-button:hover {
-	background-color: #ffc107;
-}
-
 .menu-button {
 	position: absolute;
 	top: 20px;
@@ -69,4 +62,26 @@ button {
 
 .menu-button:hover {
 	text-decoration: underline;
+}
+
+.cool-button {
+	background-color: #ffcc00;
+	color: #222;
+	transition: background-color 0.3s ease;
+}
+
+.cool-button:hover {
+	background-color: #ffc107;
+	transform: scale(1.1);
+	transition: transform 0.3s ease-in-out;
+}
+
+button {
+	padding: 10px 20px;
+	font-size: 18px;
+	border: none;
+	border-radius: 5px;
+	background-color: #333;
+	color: #fff;
+	cursor: pointer;
 }

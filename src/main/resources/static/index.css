@@ -1,5 +1,5 @@
 body {
-	background-color: #111;
+	background-color: #222;
 	color: #fff;
 	font-family: Arial, sans-serif;
 	margin: 0;
@@ -52,7 +52,34 @@ h1 {
 	box-sizing: border-box;
 }
 
+.menu-button {
+	position: absolute;
+	top: 20px;
+	right: 20px;
+	background-color: transparent;
+	border: none;
+	color: #fff;
+	font-size: 16px;
+	cursor: pointer;
+}
+
+.menu-button:hover {
+	text-decoration: underline;
+}
+
 .cool-button {
+	background-color: #ffcc00;
+	color: #222;
+	transition: background-color 0.3s ease;
+}
+
+.cool-button:hover {
+	background-color: #ffc107;
+	transform: scale(1.1);
+	transition: transform 0.3s ease-in-out;
+}
+
+button {
 	padding: 10px 20px;
 	font-size: 18px;
 	border: none;
@@ -60,30 +87,5 @@ h1 {
 	background-color: #333;
 	color: #fff;
 	cursor: pointer;
-	display: block;
-	margin: 20px auto;
-	width: 200px;
-}
-
-.cool-button:hover {
-	background-color: #555;
-	transform: scale(1.1);
-	transition: transform 0.3s ease-in-out;
-}
-
-.menu-button {
-	position: absolute;
-	top: 10px;
-	right: 175px;
-	padding: 8px 12px;
-	font-size: 16px;
-	border: none;
-	border-radius: 5px;
-	background-color: #333;
-	color: #fff;
-	cursor: pointer;
-}
-
-.menu-button:hover {
-	background-color: #555;
+	margin: 10px auto;
 }

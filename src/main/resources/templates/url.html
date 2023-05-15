@@ -1,25 +1,36 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>URL Search Page</title>
-  <link rel="stylesheet" type="text/css" href="\url.css">
-</head>
-<body>
-  <div class="container">
-    <button class="menu-button" onclick="goToMenu()">Menu</button>
-    <h1>Enter a URL to Search</h1>
-    <form>
-      <div class="form-group">
-        <input type="text" id="link" name="link" placeholder="Enter a link to search" class="center-input">
-      </div>
-      <button type="submit" class="cool-button">Search</button>
-    </form>
-  </div>
+	<head>
+		<title>URL Search Page</title>
+		<link rel="stylesheet" type="text/css" href="\url.css" />
+	</head>
+	<body>
+		<div class="container">
+			<h1>Enter a URL to Search</h1>
+			<form>
+				<div class="form-group">
+					<input
+						type="text"
+						id="link"
+						name="link"
+						placeholder="Enter a link to search"
+						class="center-input"
+					/>
+				</div>
+				<button type="submit" class="cool-button">Search</button>
+			</form>
+		</div>
 
-  <script>
-    function goToMenu() {
-      window.location.href = "menu";
-    }
-  </script>
-</body>
+		<div class="results">
+			<p th:text="${lista}" class="result"></p>
+		</div>
+
+		<button class="menu-button" onclick="goToMenu()">Menu</button>
+
+		<script>
+			function goToMenu() {
+				window.location.href = "menu";
+			}
+		</script>
+	</body>
 </html>

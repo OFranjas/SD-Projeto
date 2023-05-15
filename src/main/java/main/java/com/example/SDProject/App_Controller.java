@@ -23,10 +23,21 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import main.java.com.example.SDProject.SearchModule.ServerInterface;
 
+import java.io.FileWriter;
+import java.io.IOException;
+
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.File;
+
 @Controller
 public class App_Controller {
 
     private ServerInterface server;
+
+    private boolean logged_in = false;
+    private String username;
 
     @Autowired
     public App_Controller(ServerInterface server) {
@@ -34,23 +45,190 @@ public class App_Controller {
     }
 
     @GetMapping("/menu")
-    public String greeting(@RequestParam(name = "name", required = false, defaultValue = "World") String name,
-            Model model) {
-        model.addAttribute("name", name);
-        model.addAttribute("othername", "SD");
-        return "menu";
-    }
+    public String menu(Model model) {
 
-    @GetMapping("/login")
-    public String login(Model model) {
-        // model.addAttribute("user", new User());
-        return "login";
+        if (this.logged_in) {
+            String aux = "Logged in as " + this.username;
+
+            System.out.println(aux);
+
+            model.addAttribute("user", aux);
+        }
+
+        return "menu";
     }
 
     @GetMapping("/register")
     public String register(Model model) {
         // model.addAttribute("user", new User());
-        return "register";
+
+        try {
+            String username = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest()
+                    .getParameter("name");
+            String password = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest()
+                    .getParameter("password");
+
+            // print the username and password
+            System.out.println("Username: " + username);
+            System.out.println("Password: " + password);
+
+            if (username == null || password == null) {
+                return "register";
+            }
+
+            File file = new File("src\\main\\java\\main\\java\\com\\example\\SDProject\\login.txt");
+
+            file.createNewFile();
+
+            // read from login file and check if username exists
+            StringBuilder sb = new StringBuilder(); // create a StringBuilder to store the contents of the file
+            BufferedReader reader = new BufferedReader(
+                    new FileReader("src\\main\\java\\main\\java\\com\\example\\SDProject\\login.txt")); // create a
+                                                                                                        // BufferedReader
+                                                                                                        // to read
+                                                                                                        // the
+            // file
+
+            String line; // create a String to store each line of the file
+
+            while ((line = reader.readLine()) != null) { // read each line of the file
+                // System.out.println("line: " + line);
+                sb.append(line); // add the line to the StringBuilder
+                sb.append("\n"); // add a newline character
+            }
+
+            reader.close(); // close the BufferedReader
+
+            String fileContents = sb.toString(); // convert the StringBuilder to a String
+
+            // System.out.println("fileContents: " + fileContents);
+
+            String[] lines = fileContents.split("\n"); // split the String into an array of Strings, one for each
+                                                       // line
+
+            // go through the array of lines and check if the username exists
+
+            boolean userExists = false;
+
+            for (int i = 0; i < lines.length; i++) {
+                String[] user = lines[i].split(";"); // split the line into an array of Strings, one for each word
+
+                if (user[0].equals(username)) { // check if the first word is the username
+
+                    System.out.println("User already exists!");
+                    model.addAttribute("User already exists!", "User already exists!");
+                    userExists = true;
+                    break;
+                }
+            }
+
+            // if the username doesn't exist, add it to the file like this:
+            // username;password
+
+            if (!userExists) {
+                FileWriter writer = new FileWriter(
+                        "src\\main\\java\\main\\java\\com\\example\\SDProject\\login.txt",
+                        true); // create a FileWriter to write to the file
+
+                writer.write(username + ";" + password + "\n"); // write the username and password to the file
+
+                model.addAttribute("User Registed", "User Registed");
+
+                writer.close(); // close the FileWriter
+
+                return "menu";
+            }
+
+            return "register";
+
+        } catch (Exception e) {
+            return "register";
+        }
+
+    }
+
+    @GetMapping("/login")
+    public String login(Model model) {
+
+        try {
+            // model.addAttribute("user", new User());
+            String username = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest()
+                    .getParameter("username");
+            String password = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest()
+                    .getParameter("password");
+
+            if (username == null || password == null) {
+                return "login";
+            }
+
+            // go through the file and check if the username exists and if the password is
+            // correct
+
+            File file = new File("src\\main\\java\\main\\java\\com\\example\\SDProject\\login.txt");
+
+            file.createNewFile();
+
+            StringBuilder sb = new StringBuilder(); // create a StringBuilder to store the contents of the file
+
+            BufferedReader reader = new BufferedReader(
+                    new FileReader("src\\main\\java\\main\\java\\com\\example\\SDProject\\login.txt")); // create a
+                                                                                                        // BufferedReader
+                                                                                                        // to
+                                                                                                        // read the file
+
+            String line; // create a String to store each line of the file
+
+            while ((line = reader.readLine()) != null) { // read each line of the file
+                // System.out.println("line: " + line);
+                sb.append(line); // add the line to the StringBuilder
+                sb.append("\n"); // add a newline character
+            }
+
+            reader.close(); // close the BufferedReader
+
+            String fileContents = sb.toString(); // convert the StringBuilder to a String
+
+            // System.out.println("fileContents: " + fileContents);
+
+            String[] lines = fileContents.split("\n"); // split the String into an array of Strings, one for each line
+
+            boolean userExists = false;
+
+            for (int i = 0; i < lines.length; i++) {
+                String[] user = lines[i].split(";"); // split the line into an array of Strings, one for each word
+
+                if (user[0].equals(username)) { // check if the first word is the username
+                    System.out.println("User exists!");
+                    userExists = true;
+
+                    if (user[1].equals(password)) { // check if the second word is the password
+                        System.out.println("Password is correct!");
+                        this.logged_in = true;
+                        this.username = username;
+
+                        String aux = "Logged in as " + this.username;
+
+                        System.out.println(aux);
+
+                        model.addAttribute("user", aux);
+                        return "menu";
+                    } else {
+                        System.out.println("Password is incorrect!");
+                        return "login";
+                    }
+                }
+            }
+
+            if (!userExists) {
+                System.out.println("User doesn't exist!");
+                model.addAttribute("error", "User doesn't exist!");
+            }
+
+            return "login";
+        } catch (Exception e) {
+            return "login";
+        }
+
     }
 
     @GetMapping("/index")
@@ -148,6 +326,60 @@ public class App_Controller {
     @GetMapping("/url")
     public String url(Model model) {
 
+        try {
+
+            String link = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest()
+                    .getParameter("link");
+
+            System.out.println("Link: " + link);
+
+            if (link != null) {
+
+                int tentativas = 1;
+
+                ArrayList<String> lista = server.opcaoTres(link);
+
+                while (lista == null) {
+
+                    Thread.sleep(1000);
+
+                    tentativas++;
+
+                    if (tentativas > 10) {
+                        System.out.println(
+                                "Erro na pesquisa, tentativas esgotadas");
+
+                        return "error";
+                    }
+
+                    System.out.println(
+                            "Erro na pesquisa, tentando novamente (tentativa "
+                                    + tentativas + ")");
+
+                    lista = server.opcaoTres(link);
+
+                }
+
+                if (lista.size() == 0) {
+                    System.out.println("Não foram encontrados resultados");
+                    return "error";
+                }
+
+                for (int i = 0; i < lista.size(); i++) {
+
+                    String element = lista.get(i);
+
+                    System.out.println(element);
+                }
+
+                model.addAttribute("lista", lista);
+
+            }
+
+        } catch (Exception e) {
+            System.out.println("Exception in App_Controller.url: " + e);
+        }
+
         return "url";
     }
 
@@ -155,6 +387,14 @@ public class App_Controller {
     public String error(Model model) {
 
         return "error";
+    }
+
+    @GetMapping("/logout")
+    public String logout(Model model) {
+
+        this.logged_in = false;
+
+        return "menu";
     }
 
 }

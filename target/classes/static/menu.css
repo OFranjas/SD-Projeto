@@ -1,5 +1,5 @@
 body {
-	background-color: #111;
+	background-color: #222;
 	color: #fff;
 	font-family: Arial, sans-serif;
 	margin: 0;
@@ -10,6 +10,7 @@ header {
 	background-color: #222;
 	padding: 20px;
 	text-align: center;
+	margin: 20px auto;
 }
 
 nav ul {
@@ -33,6 +34,8 @@ nav ul li a {
 
 nav ul li a:hover {
 	background-color: #555;
+	transform: scale(1.1);
+	transition: transform 0.3s ease-in-out;
 }
 
 .container {
@@ -56,16 +59,20 @@ nav ul li a:hover {
 
 h1 {
 	font-size: 50px;
-	text-align: center;
-	/* Center of page */
-	margin: 40 auto;
+	margin-bottom: 20px;
+
+	background: -webkit-linear-gradient(#eee, #333);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
 }
 
 p {
-	font-size: 20px;
+	font-size: 25px;
 	text-align: center;
 	/* Center of page */
-	margin: 30 auto;
+	margin: 40 auto;
+
+	/* Cool font color gradient */
 }
 
 .form-group {
@@ -75,6 +82,7 @@ p {
 label {
 	display: block;
 	font-size: 18px;
+	margin-bottom: 5px;
 }
 
 input[type="text"],
@@ -89,6 +97,33 @@ input[type="password"] {
 	margin: 0 auto;
 }
 
+.menu-button {
+	position: absolute;
+	top: 20px;
+	right: 20px;
+	background-color: transparent;
+	border: none;
+	color: #fff;
+	font-size: 16px;
+	cursor: pointer;
+}
+
+.menu-button:hover {
+	text-decoration: underline;
+}
+
+.cool-button {
+	background-color: #ffcc00;
+	color: #222;
+	transition: background-color 0.3s ease;
+}
+
+.cool-button:hover {
+	background-color: #ffc107;
+	transform: scale(1.1);
+	transition: transform 0.3s ease-in-out;
+}
+
 button {
 	padding: 10px 20px;
 	font-size: 18px;
@@ -97,10 +132,28 @@ button {
 	background-color: #333;
 	color: #fff;
 	cursor: pointer;
-	display: block;
-	margin: 20px auto;
 }
 
-button:hover {
-	background-color: #555;
+.usernames {
+	position: absolute;
+	top: 20px;
+	right: 20px;
+	display: flex;
+	align-items: center;
+	width: auto;
+}
+
+.username {
+	background-color: #ffcc00;
+	color: #222;
+	padding: 10px 15px;
+	border-radius: 5px;
+	margin-left: 10px;
+	font-size: 16px;
+	font-weight: bold;
+	transition: background-color 0.3s ease;
+}
+
+.username:hover {
+	background-color: #ffc107;
 }

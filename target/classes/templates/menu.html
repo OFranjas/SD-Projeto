@@ -5,6 +5,15 @@
 		<link rel="stylesheet" type="text/css" href="\menu.css" />
 	</head>
 	<body>
+		<div class="usernames">
+			<p th:text="${user}" class="username"></p>
+		</div>
+
+		<div class="content">
+			<h1 id="title">Welcome to Googol!</h1>
+			<p>Please select an option</p>
+		</div>
+
 		<header>
 			<nav>
 				<ul id="menu">
@@ -13,14 +22,10 @@
 					<li><a href="#">URL</a></li>
 					<li><a href="#">Login</a></li>
 					<li><a href="#">Register</a></li>
+					<li><a href="#">Logout</a></li>
 				</ul>
 			</nav>
 		</header>
-
-		<div class="content">
-			<h1 id="title">Welcome to Googol!</h1>
-			<p>Please select an option</p>
-		</div>
 
 		<script src="\menu.js"></script>
 	</body>

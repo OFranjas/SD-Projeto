@@ -6,7 +6,6 @@
 	</head>
 	<body>
 		<div class="container">
-			<button class="menu-button" onclick="goToMenu()">Menu</button>
 			<h1>Enter a Word or Phrase</h1>
 			<form>
 				<div class="form-group">
@@ -21,6 +20,8 @@
 				<button type="submit" class="cool-button">Search</button>
 			</form>
 		</div>
+
+		<button class="menu-button" onclick="goToMenu()">Menu</button>
 
 		<div class="result">
 			<p th:text="${lista}" class="result"></p>
