@@ -47,6 +47,12 @@ public class App_Controller {
         return "login";
     }
 
+    @GetMapping("/register")
+    public String register(Model model) {
+        // model.addAttribute("user", new User());
+        return "register";
+    }
+
     @GetMapping("/index")
     public String index(Model model) {
 
@@ -128,46 +134,7 @@ public class App_Controller {
 
                 }
 
-                ArrayList<String> printed = new ArrayList<String>();
-
-                while (true) {
-
-                    for (int i = 0; i < 10; i++) {
-
-                        if (i >= lista.size()) {
-
-                            break;
-
-                        }
-
-                        String element = lista.get(i);
-
-                        printed.add(element);
-
-                        // Separate the string by the |
-                        String[] res = element.split("\\|");
-
-                        String url = res[0];
-                        String title = res[1];
-                        String description = res[2];
-
-                        model.addAttribute("element" + i, element);
-
-                    }
-
-                    lista.removeAll(printed);
-
-                    // Check if there are more elements to print
-                    if (lista.size() == 0) {
-                        break;
-                    }
-
-                    // If next button was pressed
-                    
-
-                }
-
-                model.addAttribute("element1", lista);
+                model.addAttribute("lista", lista);
 
             } catch (Exception e) {
                 System.out.println("Exception in App_Controller.word: " + e);

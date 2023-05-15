@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Registration Page</title>
+		<link rel="stylesheet" type="text/css" href="\register.css" />
+	</head>
+	<body>
+		<div class="container">
+			<h1>Registration</h1>
+			<form>
+				<div class="form-group">
+					<label for="name">Name:</label>
+					<input type="text" id="name" name="name" class="center-input" />
+				</div>
+				<div class="form-group">
+					<label for="password">Password:</label>
+					<input
+						type="password"
+						id="password"
+						name="password"
+						class="center-input"
+					/>
+				</div>
+				<button type="submit" class="cool-button">Register</button>
+			</form>
+			<button class="menu-button" onclick="goToMenu()">Return to Menu</button>
+		</div>
+
+		<script>
+			function goToMenu() {
+				window.location.href = "menu";
+			}
+		</script>
+	</body>
+</html>
