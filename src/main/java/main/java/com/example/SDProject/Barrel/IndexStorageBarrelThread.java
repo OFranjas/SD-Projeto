@@ -12,7 +12,7 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
 import java.net.*;
 import java.io.*;
-import Global.Global;
+import main.java.com.example.SDProject.Global.Global;
 import java.rmi.ConnectException;
 
 public class IndexStorageBarrelThread extends Thread implements BarrelInterface, Serializable {

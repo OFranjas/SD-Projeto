@@ -1,6 +1,6 @@
 package main.java.com.example.SDProject.SearchModule;
 
-import Global.Global;
+import main.java.com.example.SDProject.Global.Global;
 import java.util.*;
 import java.net.*;
 import java.io.*;

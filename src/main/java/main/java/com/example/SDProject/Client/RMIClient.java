@@ -20,8 +20,8 @@ import java.net.ConnectException;
 import java.rmi.registry.Registry;
 import java.rmi.registry.LocateRegistry;
 import java.io.File;
-import Global.Global;
-import SearchModule.ServerInterface;
+import main.java.com.example.SDProject.Global.Global;
+import main.java.com.example.SDProject.SearchModule.ServerInterface;
 
 // Utilizado pelo utilizador para pesquisar palavras
 // Serve para invocar métodos remotos no servidor RMI
@@ -764,7 +764,9 @@ public class RMIClient extends UnicastRemoteObject {
                                                 System.out.println(
                                                                 "|___________________________________________________________________________________________________________________________________|");
 
-                                                if ((user.equals("aluno") && pass.equals("password")) || (user.equals("rafa") && pass.equals("tacho")) || (user.equals("jose") && pass.equals("fialho"))) {
+                                                if ((user.equals("aluno") && pass.equals("password"))
+                                                                || (user.equals("rafa") && pass.equals("tacho"))
+                                                                || (user.equals("jose") && pass.equals("fialho"))) {
                                                         System.out.println(
                                                                         " ___________________________________________________________________________________________________________________________________");
                                                         System.out.println(

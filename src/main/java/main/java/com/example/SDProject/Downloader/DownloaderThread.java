@@ -9,7 +9,7 @@ import java.net.Socket;
 import java.util.*;
 import java.net.*;
 import java.io.*;
-import Global.Global;
+import main.java.com.example.SDProject.Global.Global;
 
 public class DownloaderThread extends Thread {
 

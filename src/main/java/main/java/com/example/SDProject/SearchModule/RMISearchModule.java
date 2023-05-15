@@ -4,7 +4,7 @@ import java.rmi.registry.LocateRegistry;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import Barrel.BarrelInterface;
+import main.java.com.example.SDProject.Barrel.BarrelInterface;
 
 import java.rmi.*;
 import java.rmi.server.*;
@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.HashMap;
-import Global.Global;
+import main.java.com.example.SDProject.Global.Global;
 
 // A comunicação com o IndexStorageBarrel é feita usando RMI
 // Visível para o utilizador através do RMIClient
@@ -44,7 +44,7 @@ public class RMISearchModule extends UnicastRemoteObject implements ServerInterf
     }
 
     public boolean opcaoUm(String s) throws RemoteException {
-        System.out.println("Enviar string para a qeue: " + s);
+        System.out.println("Enviar string para a queue: " + s);
 
         // check if the string is a URL
 

@@ -7,6 +7,7 @@ import java.util.List;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
@@ -20,8 +21,17 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import main.java.com.example.SDProject.SearchModule.ServerInterface;
+
 @Controller
 public class App_Controller {
+
+    private ServerInterface server;
+
+    @Autowired
+    public App_Controller(ServerInterface server) {
+        this.server = server;
+    }
 
     @GetMapping("/menu")
     public String greeting(@RequestParam(name = "name", required = false, defaultValue = "World") String name,
@@ -44,13 +54,27 @@ public class App_Controller {
         String link = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest()
                 .getParameter("link");
 
-        String result;
-
         if (link != null) {
 
-            result = link + " was indexed successfully!";
+            try {
+                boolean success = server.opcaoUm(link);
 
-            model.addAttribute("success", result);
+                String result;
+
+                if (success) {
+                    result = link + " was indexed successfully!";
+
+                    model.addAttribute("success", result);
+                } else {
+                    result = link + " couldn't be indexed!";
+
+                    model.addAttribute("success", result);
+
+                }
+
+            } catch (Exception e) {
+                System.out.println("Exception in App_Controller.index: " + e);
+            }
 
         }
 
