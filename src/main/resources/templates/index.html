@@ -1,25 +1,38 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>Link Indexing Page</title>
-  <link rel="stylesheet" type="text/css" href="\index.css">
-</head>
-<body>
-  <div class="container">
-    <button class="menu-button" onclick="goToMenu()">Menu</button>
-    <h1>Insert the link to be indexed</h1>
-    <form>
-      <div class="form-group">
-        <input type="text" id="link" name="link" placeholder="Enter the link" class="center-input">
-      </div>
-      <button type="submit" class="cool-button">Index Link</button>
-    </form>
-  </div>
+	<head>
+		<title>Link Indexing Page</title>
+		<link rel="stylesheet" type="text/css" href="\index.css" />
+	</head>
+	<body>
+		<div class="container">
+			<button class="menu-button" onclick="goToMenu()">Menu</button>
+			<h1>Insert the link to be indexed</h1>
+			<form>
+				<div class="form-group">
+					<input
+						type="text"
+						id="link"
+						name="link"
+						placeholder="Enter the link"
+						class="center-input"
+					/>
+				</div>
+				<button type="submit" class="cool-button">Submit</button>
+			</form>
+		</div>
 
-  <script>
-    function goToMenu() {
-      window.location.href = "menu";
-    }
-  </script>
-</body>
+		<div class="indexing-status">
+			<!-- Result of indexing in variable success, depending on value true of false changes -->
+			<p th:text="${success}" class="result"></p>
+		</div>
+
+		<script>
+			function goToMenu() {
+				window.location.href = "menu";
+			}
+		</script>
+
+		<!-- <script src="\index.js"></script> -->
+	</body>
 </html>

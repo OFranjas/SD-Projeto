@@ -40,6 +40,20 @@ public class App_Controller {
     @GetMapping("/index")
     public String index(Model model) {
 
+        // Get the URL from the link "?link=..."
+        String link = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest()
+                .getParameter("link");
+
+        String result;
+
+        if (link != null) {
+
+            result = link + " was indexed successfully!";
+
+            model.addAttribute("success", result);
+
+        }
+
         return "index";
     }
 
@@ -53,6 +67,12 @@ public class App_Controller {
     public String url(Model model) {
 
         return "url";
+    }
+
+    @GetMapping("/error")
+    public String error(Model model) {
+
+        return "error";
     }
 
 }

@@ -44,19 +44,28 @@ nav ul li a:hover {
 	text-align: center;
 }
 
-h1 {
-	font-size: 36px;
-	text-align: center;
-  /* Center of page */
-  margin: 40 auto;
+.content {
+	margin: 150px auto;
 
+	/* background-color: rgb(27, 3, 3); */
+	border-radius: 10px;
+	text-align: center;
+
+	width: 550px;
+}
+
+h1 {
+	font-size: 50px;
+	text-align: center;
+	/* Center of page */
+	margin: 40 auto;
 }
 
 p {
-	font-size: 18px;
+	font-size: 20px;
 	text-align: center;
-  /* Center of page */
-  margin: 20 auto;
+	/* Center of page */
+	margin: 30 auto;
 }
 
 .form-group {
