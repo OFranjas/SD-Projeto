@@ -22,6 +22,23 @@
 			</form>
 		</div>
 
+		<div class="result">
+			<!-- A list of 10 elements with a button for next page -->
+			<ol>
+				<li th:text="${element1}" class="result"></li>
+				<li th:text="${element2}" class="result"></li>
+				<li th:text="${element3}" class="result"></li>
+				<li th:text="${element4}" class="result"></li>
+				<li th:text="${element5}" class="result"></li>
+				<li th:text="${element6}" class="result"></li>
+				<li th:text="${element7}" class="result"></li>
+				<li th:text="${element8}" class="result"></li>
+				<li th:text="${element9}" class="result"></li>
+				<li th:text="${element10}" class="result"></li>
+			</ol>
+			<button class="next-button">Next</button>
+		</div>
+
 		<script>
 			function goToMenu() {
 				window.location.href = "menu";

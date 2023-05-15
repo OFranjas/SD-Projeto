@@ -107,7 +107,10 @@ public class IndexStorageBarrelThread extends Thread implements BarrelInterface,
         // Create a file named "IndexStorageBarrelid.txt"
 
         try {
-            File file = new File("src/Barrel/IndexStorageBarrel" + id + ".txt"); // bate ???
+
+            File file = new File(
+                    "src/main/java/main/java/com/example/SDProject/Barrel/IndexStorageBarrel" + id + ".txt"); // bate
+                                                                                                              // ???
 
             // check if file exist
 
@@ -125,7 +128,8 @@ public class IndexStorageBarrelThread extends Thread implements BarrelInterface,
                 // links references
 
                 // Open the file for reading
-                FileReader fr = new FileReader("src/Barrel/IndexStorageBarrel" + id + ".txt");
+                FileReader fr = new FileReader(
+                        "src/main/java/main/java/com/example/SDProject/Barrel/IndexStorageBarrel" + id + ".txt");
                 BufferedReader br = new BufferedReader(fr);
 
                 // Read the file line by line
@@ -215,7 +219,8 @@ public class IndexStorageBarrelThread extends Thread implements BarrelInterface,
         // Read the file
 
         try {
-            FileWriter myWriter = new FileWriter("src/Barrel/IndexStorageBarrel" + id + ".txt");
+            FileWriter myWriter = new FileWriter(
+                    "src/main/java/main/java/com/example/SDProject/Barrel/IndexStorageBarrel" + id + ".txt");
 
             // Go trough the index and write it to the file word url line by line
             for (String key : this.index.keySet()) {
