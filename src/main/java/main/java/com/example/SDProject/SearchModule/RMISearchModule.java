@@ -32,8 +32,6 @@ public class RMISearchModule extends UnicastRemoteObject implements ServerInterf
 
     private HashMap<String, Integer> words;
 
-    private String status;
-
     // constructor
 
     RMISearchModule() throws RemoteException {
@@ -76,12 +74,12 @@ public class RMISearchModule extends UnicastRemoteObject implements ServerInterf
 
     }
 
-    public ArrayList<String> opcaoDois(String s, int tentativas) throws RemoteException {
+    public ArrayList<String> opcaoDois(String s, int tentativas, Boolean First) throws RemoteException {
         // System.out.println("Opcao2, fazer coisinhas: " + s);
 
         try {
 
-            if (tentativas == 1)
+            if (First)
                 this.words = pagadmin.recebe_palavras(s);
 
             ArrayList<String> res1 = new ArrayList<String>();
@@ -98,7 +96,7 @@ public class RMISearchModule extends UnicastRemoteObject implements ServerInterf
                 if (palavra.toLowerCase().charAt(0) <= 'm') {
 
                     // Escolher um IndexStorageBarrel com id <= num_threads/2
-                    int num = (int) (Math.random() * (num_threads / 2));
+                    int num = (int) (Math.random() * ((Global.num_threads - 1) / 2));
 
                     // System.out.println("Barril: " + num);
 
@@ -116,7 +114,8 @@ public class RMISearchModule extends UnicastRemoteObject implements ServerInterf
                 } else {
 
                     // Escolher um IndexStorageBarrel com id > num_threads/2
-                    int num = (int) (Math.random() * (num_threads / 2)) + (num_threads / 2) + 1;
+                    int num = (int) (Math.random() * ((Global.num_threads - 1) / 2)) + ((Global.num_threads - 1) / 2)
+                            + 1;
 
                     // System.out.println("Barril: " + num);
 
@@ -193,7 +192,7 @@ public class RMISearchModule extends UnicastRemoteObject implements ServerInterf
     public ArrayList<String> opcaoTres(String s) throws RemoteException {
         // System.out.println("Opcao3, fazer coisinhas: " + s);
 
-        int num = (int) (Math.random() * num_threads);
+        int num = (int) (Math.random() * (Global.num_threads - 1));
 
         // System.out.println("NUM: " + num);
 
@@ -235,7 +234,8 @@ public class RMISearchModule extends UnicastRemoteObject implements ServerInterf
 
     }
 
-    public String opcaoQuatroAgain() throws RemoteException {
+    @Override
+    public String getStatus() throws RemoteException {
 
         return pagadmin.getStatus();
 
@@ -248,13 +248,14 @@ public class RMISearchModule extends UnicastRemoteObject implements ServerInterf
 
         try {
 
-            LocateRegistry.createRegistry(1099);
+            System.setProperty("java.rmi.server.hostname", "192.168.1.92");
+            Registry registry = LocateRegistry.createRegistry(1099);
+            searchModule = new RMISearchModule();
+            registry.rebind("searchmodule", searchModule);
 
             System.out.println("RMISearchModule is waiting for client to connect");
 
-            Naming.rebind("rmi://localhost/searchmodule", searchModule);
-
-            this.status = pagadmin.finalStatus();
+            this.pagadmin.finalStatus();
 
             // System.out.println("AQUIIII"+ this.status);
 
@@ -267,12 +268,17 @@ public class RMISearchModule extends UnicastRemoteObject implements ServerInterf
 
     public static void main(String[] args) throws MalformedURLException {
         try {
-
             RMISearchModule searchModule = new RMISearchModule();
-            searchModule.pagadmin = new PagAdministracao(searchModule.words);
 
-            searchModule.run(searchModule);
-            // pagina administracao
+            System.setProperty("java.rmi.server.hostname", "192.168.1.92");
+            Registry registry = LocateRegistry.createRegistry(1099);
+            searchModule = new RMISearchModule();
+            registry.rebind("searchmodule", searchModule);
+
+            // searchModule.run(searchModule);
+
+            searchModule.pagadmin = new PagAdministracao(searchModule.words);
+            searchModule.pagadmin.finalStatus();
         } catch (RemoteException re) {
             System.out.println("Exception in RMISearchModule.main: " + re);
         }

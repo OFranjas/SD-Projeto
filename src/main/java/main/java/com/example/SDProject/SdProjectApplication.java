@@ -11,6 +11,8 @@ import java.rmi.server.UnicastRemoteObject;
 
 import java.rmi.*;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 
 @SpringBootApplication
 public class SdProjectApplication {
@@ -21,9 +23,12 @@ public class SdProjectApplication {
 		ServerInterface server = null;
 
 		try {
+			Registry registry = LocateRegistry.getRegistry("192.168.1.68", 1099);
 
-			server = (ServerInterface) Naming
-					.lookup("rmi://localhost/searchmodule");
+			server = (ServerInterface) registry.lookup("searchmodule");
+
+			// server = (ServerInterface) Naming
+			// .lookup("searchmodule");
 
 		} catch (Exception e) {
 

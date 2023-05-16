@@ -16,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.WebApplicationContext;
@@ -39,6 +40,8 @@ import main.java.com.example.SDProject.Message;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+
 @Controller
 public class App_Controller {
 
@@ -52,6 +55,9 @@ public class App_Controller {
         this.server = server;
 
     }
+
+    @Autowired
+    private SimpMessagingTemplate Sender;
 
     @GetMapping("/menu")
     public String menu(Model model) {
@@ -284,16 +290,12 @@ public class App_Controller {
         String inputText = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest()
                 .getParameter("inputText");
 
-        // System.out.println("Input Text: " + inputText);
-
         if (inputText != null) {
-
-            int pagina = 1;
 
             int tentativas = 1;
 
             try {
-                ArrayList<String> lista = server.opcaoDois(inputText, pagina);
+                ArrayList<String> lista = server.opcaoDois(inputText, tentativas, true);
 
                 while (lista == null) {
 
@@ -312,8 +314,40 @@ public class App_Controller {
                     // "Erro na pesquisa, tentando novamente (tentativa "
                     // + tentativas + ")");
 
-                    lista = server.opcaoDois(inputText, pagina);
+                    lista = server.opcaoDois(inputText, tentativas, false);
 
+                }
+
+                // Send message to /app/messages with the text to be searched
+
+                try {
+
+                    HashMap<String, Integer> words = server.opcaoQuatro();
+
+                    // Sort the words by value
+                    List<String> sortedKeys = new ArrayList<String>(words.keySet());
+
+                    Collections.sort(sortedKeys, (o1, o2) -> words.get(o2).compareTo(words.get(o1)));
+
+                    String text = "";
+
+                    for (int i = 0; i < 10; i++) {
+
+                        if (i >= sortedKeys.size()) {
+                            break;
+                        }
+
+                        String word = sortedKeys.get(i);
+
+                        text += word + " " + words.get(word) + "\n";
+                    }
+
+                    Message message = new Message(text);
+
+                    Sender.convertAndSend("/topic/messages", message);
+
+                } catch (Exception e) {
+                    System.out.println("Exception in App_Controller.word: " + e);
                 }
 
                 if (lista.size() == 0) {
@@ -324,12 +358,65 @@ public class App_Controller {
 
                 }
 
-                model.addAttribute("lista", lista);
-
+                // Redirect to the page "/word/inputText/0"
+                return "redirect:/word/" + inputText + "?pagina=0";
             } catch (Exception e) {
                 System.out.println("Exception in App_Controller.word: " + e);
             }
 
+        }
+        return "word";
+    }
+
+    @GetMapping("/word/{elements}")
+    public String wordPage(Model model, @PathVariable String elements, @RequestParam(defaultValue = "0") int pagina) {
+
+        // System.out.println("Input Text: " + inputText);
+
+        try {
+
+            // System.out.println("Elements: " + elements);
+
+            // Get the page number from the link "?pagina=..."
+            int page = Integer
+                    .parseInt(((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
+                            .getRequest().getParameter("pagina"));
+
+            // Only show 10 results per page, change page with the buttons "Next" and
+            // "Previous"
+
+            int tentativas = 1;
+
+            ArrayList<String> lista = server.opcaoDois(elements, tentativas, false);
+
+            if (lista.size() > 10) {
+
+                int start = page * 10;
+
+                int end = start + 10;
+
+                if (end > lista.size()) {
+                    end = lista.size();
+                }
+
+                // Only show the elements from start to end
+
+                ArrayList<String> lista2 = new ArrayList<String>();
+
+                for (int i = start; i < end; i++) {
+
+                    lista2.add(lista.get(i));
+                }
+
+                model.addAttribute("lista", lista2);
+
+            } else {
+
+                model.addAttribute("lista", lista);
+            }
+
+        } catch (Exception e) {
+            System.out.println("Exception in App_Controller.word: " + e);
         }
 
         return "word";
@@ -475,7 +562,42 @@ public class App_Controller {
     @GetMapping("/adminpage")
     public String Adminpage(Model model) {
 
-        return "adminpage";
+        // Send message to /app/messages with the text to be searched
+
+        try {
+
+            HashMap<String, Integer> words = server.opcaoQuatro();
+
+            // Sort the words by value
+            List<String> sortedKeys = new ArrayList<String>(words.keySet());
+
+            Collections.sort(sortedKeys, (o1, o2) -> words.get(o2).compareTo(words.get(o1)));
+
+            String text = "";
+
+            for (int i = 0; i < 10; i++) {
+
+                if (i >= sortedKeys.size()) {
+                    break;
+                }
+
+                String word = sortedKeys.get(i);
+
+                text += word + " " + words.get(word) + "\n";
+            }
+
+            Message message = new Message(text);
+
+            Sender.convertAndSend("/topic/messages", message);
+
+            return "adminpage";
+
+        } catch (Exception e) {
+            System.out.println("Exception in App_Controller.word: " + e);
+
+            return "menu";
+        }
+
     }
 
     @GetMapping("/topstories")
@@ -531,13 +653,17 @@ public class App_Controller {
 
             Thread.sleep(1000);
 
-            Message res = new Message(server.opcaoQuatroAgain());
+            // Message res = new Message(server.getStatus());
 
             HashMap<String, Integer> words = server.opcaoQuatro();
 
             // Add the words in res text
 
-            String text = res.getText();
+            // String text = res.getText();
+
+            Message res = new Message();
+
+            String text = "";
 
             for (String word : words.keySet()) {
 
@@ -545,6 +671,8 @@ public class App_Controller {
             }
 
             res.setText(text);
+
+            // res.setText(text);
 
             // System.out.println("words: " + words);
 

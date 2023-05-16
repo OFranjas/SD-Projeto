@@ -22,6 +22,7 @@
 		</div>
 
 		<button class="menu-button" onclick="goToMenu()">Menu</button>
+		<button class="word-button" onclick="goToWord()">Search Again</button>
 
 		<div class="result">
 			<p th:text="${lista}" class="result"></p>
@@ -29,7 +30,10 @@
 
 		<script>
 			function goToMenu() {
-				window.location.href = "menu";
+				window.location.href = "http://localhost:8080/menu";
+			}
+			function goToWord() {
+				window.location.href = "http://localhost:8080/word";
 			}
 		</script>
 	</body>

@@ -1,19 +1,64 @@
 var stompClient = null;
 
+var count = 0;
+
 // Boolean connected = false;
 
-// On page load run connect()
+// On page load, run update()
 $(document).ready(function () {
-	update();
+	// updatePage();
+
+	connect();
 });
 
-function update() {
-	connect();
+// Update the page when a new message is received, using AJAX
+function updatePage() {
+	$.ajax({
+		url: "/topic/messages",
+		type: "GET",
+		success: function (result) {
+			$("#greetings").html(result);
+			// Only print the last received message
+		},
+		error: function (result) {
+			console.log("Error");
+		},
+	});
+}
 
-	while (!checkConnection()) {
-		console.log("Waiting for connection...");
-		connect();
-	}
+function connect() {
+	var socket = new SockJS("/my-websocket");
+	stompClient = Stomp.over(socket);
+	stompClient.connect({}, function (frame) {
+		setConnected(true);
+		console.log("Connected: " + frame);
+
+		// $.ajax({
+		// 	url: "/topic/messages",
+		// 	type: "GET",
+		// 	success: function (result) {
+		// 		$("#greetings").html(result);
+		// 		// Only print the last received message
+		// 	},
+		// 	error: function (result) {
+		// 		console.log("Error");
+		// 	},
+		// });
+
+
+		// Q: How to get the last message from the server?
+		// A: Use a counter to check if the page has been refreshed
+
+
+		stompClient.subscribe("/topic/messages", function (greeting) {
+			if (count != 0) {
+				$("#greetings").html("");
+			} else {
+				count++;
+			}
+			showGreeting(JSON.parse(greeting.body).text);
+		});
+	});
 }
 
 function checkConnection() {
@@ -34,18 +79,6 @@ function setConnected(connected) {
 	$("#greetings").html("");
 }
 
-function connect() {
-	var socket = new SockJS("/my-websocket");
-	stompClient = Stomp.over(socket);
-	stompClient.connect({}, function (frame) {
-		setConnected(true);
-		console.log("Connected: " + frame);
-		stompClient.subscribe("/topic/messages", function (greeting) {
-			showGreeting(JSON.parse(greeting.body).text);
-		});
-	});
-}
-
 function disconnect() {
 	if (stompClient !== null) {
 		stompClient.disconnect();
@@ -56,7 +89,7 @@ function disconnect() {
 
 function sendName() {
 	// Refreshes the page
-	location.reload();
+	// location.reload();
 
 	stompClient.send(
 		"/app/messages",
