@@ -417,6 +417,8 @@ public class App_Controller {
                     lista2.add(lista.get(i));
                 }
 
+                // separate the 
+
                 model.addAttribute("lista", lista2);
 
             } else {

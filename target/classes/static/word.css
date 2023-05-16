@@ -57,33 +57,33 @@ h1 {
 	transition: transform 0.3s ease-in-out;
 }
 
-.dec-button{
+.dec-button {
 	/* show below cool-button */
 	position: absolute;
 	top: 200px;
 	left: 45px;
-	background-color:  #ffcc00;
+	background-color: #ffcc00;
 	color: #000000;
 
 }
 
-.dec-button:hover{
+.dec-button:hover {
 	background-color: #ffc107;
 	transform: scale(1.1);
 	transition: transform 0.3s ease-in-out;
 }
 
-.inc-button{
+.inc-button {
 	/* show below cool-button */
 	position: absolute;
 	top: 200px;
 	right: 50px;
-	background-color:  #ffcc00;
+	background-color: #ffcc00;
 	color: #0b0000;
 
 }
 
-.inc-button:hover{
+.inc-button:hover {
 	background-color: #ffc107;
 	transform: scale(1.1);
 	transition: transform 0.3s ease-in-out;
@@ -116,12 +116,16 @@ button {
 }
 
 .result {
-	font-size: 18px;
-	color: #fff;
-	text-transform: uppercase;
-	transition: color 0.3s ease;
-	text-align: center;
-}
+    padding: 20px;
+
+  }
+  
+  .result-item {
+    margin-bottom: 10px;
+    font-family: "Lucida Console", "Courier New", monospace;
+    font-size: 14px;
+  }
+
 
 .result:hover {
 	color: #ffcc00;
