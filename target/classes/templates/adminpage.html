@@ -1,47 +1,50 @@
 <!DOCTYPE html>
 <html>
+	<head>
+		<title>Admin Page</title>
+		<script src="/webjars/jquery/jquery.min.js"></script>
+		<script src="/webjars/sockjs-client/sockjs.min.js"></script>
+		<script src="/webjars/stomp-websocket/stomp.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="\adminpage.css" />
+	</head>
 
-<head>
-    <title>Admin Page</title>
-    <link rel="stylesheet" type="text/css" href="\adminpage.css">
-</head>
+	<body>
+		<div class="container">
+			<h1>Admin Page</h1>
 
-<body>
-    <div class="container">
-        <h1>Admin Page</h1>
+			<div class="info">
+				<div class="form-group">
+					<label>Number of Downloaders:</label>
+					<span id="downloaders">100</span>
+				</div>
 
-        <div class="info">
-            <div class="form-group">
-                <label>Number of Downloaders:</label>
-                <span id="downloaders">100</span>
-            </div>
+				<div class="form-group">
+					<label>Top 10 Searches:</label>
+					<ul id="searches">
+						<li>Search 1</li>
+						<li>Search 2</li>
+						<li>Search 3</li>
+						<!-- Add more list items here -->
+					</ul>
+				</div>
 
-            <div class="form-group">
-                <label>Top 10 Searches:</label>
-                <ul id="searches">
-                    <li>Search 1</li>
-                    <li>Search 2</li>
-                    <li>Search 3</li>
-                    <!-- Add more list items here -->
-                </ul>
-            </div>
+				<div class="form-group">
+					<label>Number of Barrels:</label>
+					<span id="barrels">50</span>
+				</div>
+			</div>
 
-            <div class="form-group">
-                <label>Number of Barrels:</label>
-                <span id="barrels">50</span>
-            </div>
-        </div>
+			<button class="menu-button" onclick="goToMenu()">Menu</button>
+		</div>
 
-		<button class="menu-button" onclick="goToMenu()">Menu</button>
-    </div>
+		<p th:text="${message}"></p>
 
-    <script>
-        function goToMenu() {
-            window.location.href = "menu";
-        }
-    </script>
+		<script>
+			function goToMenu() {
+				window.location.href = "menu";
+			}
+		</script>
 
-    <script src="\adminpage.js"> <script>
-</body>
-
+		<script src="\adminpage.js"></script>
+	</body>
 </html>

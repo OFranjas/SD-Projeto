@@ -32,7 +32,11 @@ import java.io.FileReader;
 import java.io.File;
 
 import org.springframework.web.util.HtmlUtils;
-import javax.jms.Message;
+
+import main.java.com.example.SDProject.Message;
+
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 
 @Controller
 public class App_Controller {
@@ -469,14 +473,27 @@ public class App_Controller {
     @GetMapping("/adminpage")
     public String Adminpage(Model model) {
 
-        return "adminpage";
+        return "admin2";
     }
 
-    @MessageMapping("/message")
+    @MessageMapping("/messages")
     @SendTo("/topic/messages")
     public Message onMessage(Message message) {
-        Thread.sleep(1000);
-        System.out.println("Message received " + message);
+
+        try {
+
+            Thread.sleep(1000);
+
+            Message res = new Message(server.opcaoQuatroAgain());
+
+            // System.out.println(res.getText());
+
+            return res;
+
+        } catch (Exception e) {
+            System.out.println("Exception in App_Controller.onMessage: " + e);
+            return null;
+        }
 
     }
 
