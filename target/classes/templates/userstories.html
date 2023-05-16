@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>UserStories Indexing</title>
+    <link rel="stylesheet" type="text/css" href="\userstories.css" />
+</head>
+
+<body>
+    <div class="container">
+        <h1>Insert the User to be indexed</h1>
+        <form>
+            <div class="form-group">
+                <input type="text" id="id" name="id" placeholder="Enter the User" class="center-input" />
+            </div>
+            <button type="submit" class="cool-button">Submit</button>
+        </form>
+    </div>
+    <button class="menu-button" onclick="goToMenu()">Menu</button>
+
+    <div class="indexing-status">
+        <!-- Result of indexing in variable success, depending on value true of false changes -->
+        <p th:text="${success}" class="result"></p>
+    </div>
+
+    <script>
+        function goToMenu() {
+            window.location.href = "menu";
+        }
+    </script>
+
+    <!-- <script src="\index.js"></script> -->
+</body>
+
+</html>

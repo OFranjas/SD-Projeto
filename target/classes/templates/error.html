@@ -1,20 +1,23 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<title>Error Page</title>
-		<link rel="stylesheet" type="text/css" href="\error.css" />
-	</head>
-	<body>
-		<div class="container">
-			<h1>Error Occurred</h1>
-			<p>An error occurred while processing your request.</p>
-			<button class="cool-button" onclick="goToMenu()">Return to Menu</button>
-		</div>
 
-		<script>
-			function goToMenu() {
-				window.location.href = "menu";
-			}
-		</script>
-	</body>
+<head>
+	<title>Error Page</title>
+	<link rel="stylesheet" type="text/css" href="\error.css" />
+</head>
+
+<body>
+	<div class="container">
+		<h1>Error Occurred</h1>
+		<p th:text="${error}"></p>
+		<button class="cool-button" onclick="goToMenu()">Return to Menu</button>
+	</div>
+
+	<script>
+		function goToMenu() {
+			window.location.href = "menu";
+		}
+	</script>
+</body>
+
 </html>

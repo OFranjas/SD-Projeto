@@ -31,6 +31,9 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.File;
 
+import org.springframework.web.util.HtmlUtils;
+import javax.jms.Message;
+
 @Controller
 public class App_Controller {
 
@@ -53,6 +56,9 @@ public class App_Controller {
             System.out.println(aux);
 
             model.addAttribute("user", aux);
+        } else {
+
+            model.addAttribute("user", "Not logged in");
         }
 
         return "menu";
@@ -132,7 +138,7 @@ public class App_Controller {
 
                 writer.write(username + ";" + password + "\n"); // write the username and password to the file
 
-                model.addAttribute("User Registed", "User Registed");
+                model.addAttribute("user", "Not logged in");
 
                 writer.close(); // close the FileWriter
 
@@ -288,8 +294,8 @@ public class App_Controller {
                     Thread.sleep(1000);
 
                     if (tentativas == 10) {
-                        System.out.println(
-                                "Erro na pesquisa, tentativas esgotadas");
+
+                        model.addAttribute("error", "Erro na pesquisa, tentativas esgotadas");
 
                         return "error";
                     }
@@ -305,8 +311,8 @@ public class App_Controller {
                 }
 
                 if (lista.size() == 0) {
-                    System.out.println(
-                            "Erro na pesquisa, lista vazia");
+
+                    model.addAttribute("error", "Erro na pesquisa, lista vazia");
 
                     return "error";
 
@@ -327,6 +333,9 @@ public class App_Controller {
     public String url(Model model) {
 
         if (!this.logged_in) {
+
+            model.addAttribute("error", "You must be logged in to access this page!");
+
             return "error";
         }
 
@@ -350,8 +359,8 @@ public class App_Controller {
                     tentativas++;
 
                     if (tentativas > 10) {
-                        System.out.println(
-                                "Erro na pesquisa, tentativas esgotadas");
+
+                        model.addAttribute("error", "Erro na pesquisa, tentativas esgotadas");
 
                         return "error";
                     }
@@ -365,7 +374,9 @@ public class App_Controller {
                 }
 
                 if (lista.size() == 0) {
-                    System.out.println("Não foram encontrados resultados");
+
+                    model.addAttribute("error", "Não foram encontrados resultados");
+
                     return "error";
                 }
 
@@ -398,7 +409,75 @@ public class App_Controller {
 
         this.logged_in = false;
 
+        model.addAttribute("user", "Not logged in");
+
         return "menu";
+    }
+
+    @GetMapping("/userstories")
+    public String UserStories(Model model) {
+
+        if (!this.logged_in) {
+
+            model.addAttribute("error", "You must be logged in to access this page!");
+
+            return "error";
+        }
+
+        try {
+
+            String id = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest()
+                    .getParameter("id");
+
+            if (id != null) {
+
+                System.out.println("ID: " + id);
+
+                String[] urls = apirest.userStories(id);
+
+                if (urls == null) {
+
+                    model.addAttribute("error", "User doesn't exist!");
+                    return "error";
+                }
+
+                for (int i = 0; i < urls.length; i++) {
+
+                    if (urls[i] == null) {
+                        continue;
+                    }
+
+                    boolean success = server.opcaoUm(urls[i]);
+
+                    if (!success) {
+
+                        model.addAttribute("error", urls[i] + " couldn't be indexed!");
+
+                        return "error";
+                    }
+                }
+
+            }
+
+        } catch (Exception e) {
+            System.out.println("Exception in App_Controller.userstories: " + e);
+        }
+
+        return "userstories";
+    }
+
+    @GetMapping("/adminpage")
+    public String Adminpage(Model model) {
+
+        return "adminpage";
+    }
+
+    @MessageMapping("/message")
+    @SendTo("/topic/messages")
+    public Message onMessage(Message message) {
+        Thread.sleep(1000);
+        System.out.println("Message received " + message);
+
     }
 
 }
