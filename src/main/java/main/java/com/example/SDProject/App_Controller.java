@@ -2,6 +2,7 @@ package main.java.com.example.SDProject;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -49,6 +50,7 @@ public class App_Controller {
     @Autowired
     public App_Controller(ServerInterface server) {
         this.server = server;
+
     }
 
     @GetMapping("/menu")
@@ -57,7 +59,7 @@ public class App_Controller {
         if (this.logged_in) {
             String aux = "Logged in as " + this.username;
 
-            System.out.println(aux);
+            // System.out.println(aux);
 
             model.addAttribute("user", aux);
         } else {
@@ -79,8 +81,8 @@ public class App_Controller {
                     .getParameter("password");
 
             // print the username and password
-            System.out.println("Username: " + username);
-            System.out.println("Password: " + password);
+            // System.out.println("Username: " + username);
+            // System.out.println("Password: " + password);
 
             if (username == null || password == null) {
                 return "register";
@@ -125,7 +127,7 @@ public class App_Controller {
 
                 if (user[0].equals(username)) { // check if the first word is the username
 
-                    System.out.println("User already exists!");
+                    // System.out.println("User already exists!");
                     model.addAttribute("User already exists!", "User already exists!");
                     userExists = true;
                     break;
@@ -208,29 +210,29 @@ public class App_Controller {
                 String[] user = lines[i].split(";"); // split the line into an array of Strings, one for each word
 
                 if (user[0].equals(username)) { // check if the first word is the username
-                    System.out.println("User exists!");
+                    // System.out.println("User exists!");
                     userExists = true;
 
                     if (user[1].equals(password)) { // check if the second word is the password
-                        System.out.println("Password is correct!");
+                        // System.out.println("Password is correct!");
                         this.logged_in = true;
                         this.username = username;
 
                         String aux = "Logged in as " + this.username;
 
-                        System.out.println(aux);
+                        // System.out.println(aux);
 
                         model.addAttribute("user", aux);
                         return "menu";
                     } else {
-                        System.out.println("Password is incorrect!");
+                        // System.out.println("Password is incorrect!");
                         return "login";
                     }
                 }
             }
 
             if (!userExists) {
-                System.out.println("User doesn't exist!");
+                // System.out.println("User doesn't exist!");
                 model.addAttribute("error", "User doesn't exist!");
             }
 
@@ -282,7 +284,7 @@ public class App_Controller {
         String inputText = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest()
                 .getParameter("inputText");
 
-        System.out.println("Input Text: " + inputText);
+        // System.out.println("Input Text: " + inputText);
 
         if (inputText != null) {
 
@@ -306,9 +308,9 @@ public class App_Controller {
 
                     tentativas++;
 
-                    System.out.println(
-                            "Erro na pesquisa, tentando novamente (tentativa "
-                                    + tentativas + ")");
+                    // System.out.println(
+                    // "Erro na pesquisa, tentando novamente (tentativa "
+                    // + tentativas + ")");
 
                     lista = server.opcaoDois(inputText, pagina);
 
@@ -348,7 +350,7 @@ public class App_Controller {
             String link = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest()
                     .getParameter("link");
 
-            System.out.println("Link: " + link);
+            // System.out.println("Link: " + link);
 
             if (link != null) {
 
@@ -369,9 +371,9 @@ public class App_Controller {
                         return "error";
                     }
 
-                    System.out.println(
-                            "Erro na pesquisa, tentando novamente (tentativa "
-                                    + tentativas + ")");
+                    // System.out.println(
+                    // "Erro na pesquisa, tentando novamente (tentativa "
+                    // + tentativas + ")");
 
                     lista = server.opcaoTres(link);
 
@@ -384,12 +386,12 @@ public class App_Controller {
                     return "error";
                 }
 
-                for (int i = 0; i < lista.size(); i++) {
+                // for (int i = 0; i < lista.size(); i++) {
 
-                    String element = lista.get(i);
+                // String element = lista.get(i);
 
-                    System.out.println(element);
-                }
+                // // System.out.println(element);
+                // }
 
                 model.addAttribute("lista", lista);
 
@@ -435,7 +437,7 @@ public class App_Controller {
 
             if (id != null) {
 
-                System.out.println("ID: " + id);
+                // System.out.println("ID: " + id);
 
                 String[] urls = apirest.userStories(id);
 
@@ -473,7 +475,52 @@ public class App_Controller {
     @GetMapping("/adminpage")
     public String Adminpage(Model model) {
 
-        return "admin2";
+        return "adminpage";
+    }
+
+    @GetMapping("/topstories")
+    public String TopStories(Model model) {
+
+        if (!this.logged_in) {
+
+            model.addAttribute("error", "You must be logged in to access this page!");
+
+            return "error";
+        }
+
+        try {
+
+            String[] urls = apirest.topStories();
+
+            if (urls == null) {
+
+                model.addAttribute("error", "Error getting top stories!");
+
+                return "error";
+            }
+
+            for (int i = 0; i < urls.length; i++) {
+
+                if (urls[i] == null) {
+                    continue;
+                }
+
+                boolean success = server.opcaoUm(urls[i]);
+
+                if (!success) {
+
+                    model.addAttribute("error", urls[i] + " couldn't be indexed!");
+
+                    return "error";
+                }
+            }
+
+        } catch (Exception e) {
+            System.out.println("Exception in App_Controller.topstories: " + e);
+        }
+
+        return "menu";
+
     }
 
     @MessageMapping("/messages")
@@ -485,6 +532,23 @@ public class App_Controller {
             Thread.sleep(1000);
 
             Message res = new Message(server.opcaoQuatroAgain());
+
+            HashMap<String, Integer> words = server.opcaoQuatro();
+
+            // Add the words in res text
+
+            String text = res.getText();
+
+            for (String word : words.keySet()) {
+
+                text += word + " " + words.get(word) + "\n";
+            }
+
+            res.setText(text);
+
+            // System.out.println("words: " + words);
+
+            // model.addAttribute("words", words);
 
             // System.out.println(res.getText());
 

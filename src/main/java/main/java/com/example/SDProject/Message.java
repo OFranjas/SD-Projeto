@@ -15,4 +15,8 @@ public class Message {
         return this.text;
     }
 
+    public void setText(String message) {
+        this.text = message;
+    }
+
 }

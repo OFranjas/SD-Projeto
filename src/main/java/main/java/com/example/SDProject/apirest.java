@@ -12,7 +12,7 @@ public class apirest {
 
     }
 
-    private String[] topStories() {
+    public static String[] topStories() {
 
         try {
 
@@ -40,7 +40,7 @@ public class apirest {
             con.disconnect();
 
             // printing result from response
-            System.out.println(response.toString());
+            // System.out.println(response.toString());
 
             // Remove [ and ] from response
             response.deleteCharAt(0);
@@ -103,7 +103,7 @@ public class apirest {
                 con.disconnect();
 
                 // print the url
-                System.out.println(url_story);
+                // System.out.println(url_story);
 
                 // Add the url to the array
                 urls[i] = url_story;

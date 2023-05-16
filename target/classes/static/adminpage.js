@@ -1,5 +1,28 @@
 var stompClient = null;
 
+// Boolean connected = false;
+
+// On page load run connect()
+$(document).ready(function () {
+	update();
+});
+
+function update() {
+	connect();
+
+	while (!checkConnection()) {
+		console.log("Waiting for connection...");
+		connect();
+	}
+}
+
+function checkConnection() {
+	if (stompClient !== null) {
+		return true;
+	}
+	return false;
+}
+
 function setConnected(connected) {
 	$("#connect").prop("disabled", connected);
 	$("#disconnect").prop("disabled", !connected);
@@ -32,6 +55,9 @@ function disconnect() {
 }
 
 function sendName() {
+	// Refreshes the page
+	location.reload();
+
 	stompClient.send(
 		"/app/messages",
 		{},

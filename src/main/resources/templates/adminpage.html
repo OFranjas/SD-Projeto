@@ -1,50 +1,80 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Admin Page</title>
+		<title>Hello WebSocket</title>
 		<script src="/webjars/jquery/jquery.min.js"></script>
 		<script src="/webjars/sockjs-client/sockjs.min.js"></script>
 		<script src="/webjars/stomp-websocket/stomp.min.js"></script>
+		<script src="\adminpage.js"></script>
 		<link rel="stylesheet" type="text/css" href="\adminpage.css" />
 	</head>
-
 	<body>
-		<div class="container">
-			<h1>Admin Page</h1>
-
-			<div class="info">
-				<div class="form-group">
-					<label>Number of Downloaders:</label>
-					<span id="downloaders">100</span>
+		<noscript
+			><h2 style="color: #ff0000">
+				Seems your browser doesn't support Javascript! Websocket relies on
+				Javascript being enabled. Please enable Javascript and reload this page!
+			</h2></noscript
+		>
+		<div id="main-content" class="container">
+			<div class="row">
+				<div class="col-md-6">
+					<form class="form-inline">
+						<!-- <div class="form-group">
+							<label for="connect">WebSocket connection:</label>
+							<button id="connect" class="btn btn-default" type="submit">
+								Connect
+							</button>
+							<button
+								id="disconnect"
+								class="btn btn-default"
+								type="submit"
+								disabled="disabled"
+							>
+								Disconnect
+							</button>
+						</div> -->
+					</form>
 				</div>
-
-				<div class="form-group">
-					<label>Top 10 Searches:</label>
-					<ul id="searches">
-						<li>Search 1</li>
-						<li>Search 2</li>
-						<li>Search 3</li>
-						<!-- Add more list items here -->
-					</ul>
-				</div>
-
-				<div class="form-group">
-					<label>Number of Barrels:</label>
-					<span id="barrels">50</span>
+				<div class="col-md-6">
+					<form class="form-inline">
+						<!-- <div class="form-group">
+							<label for="name">What is your name?</label>
+							<input
+								type="text"
+								id="name"
+								class="form-control"
+								placeholder="Your name here..."
+							/>
+						</div> -->
+						<button id="send" class="btn btn-default" type="submit">
+							Update
+						</button>
+					</form>
 				</div>
 			</div>
-
-			<button class="menu-button" onclick="goToMenu()">Menu</button>
+			<div class="row">
+				<div class="col-md-12">
+					<table id="conversation" class="table table-striped">
+						<thead>
+							<!-- <tr>
+								<th>Greetings</th>
+							</tr> -->
+						</thead>
+						<tbody id="greetings"></tbody>
+					</table>
+				</div>
+			</div>
 		</div>
 
+		<p th:text="${words}"></p>
 		<p th:text="${message}"></p>
+
+		<button class="menu-button" onclick="goToMenu()">Menu</button>
 
 		<script>
 			function goToMenu() {
 				window.location.href = "menu";
 			}
 		</script>
-
-		<script src="\adminpage.js"></script>
 	</body>
 </html>
