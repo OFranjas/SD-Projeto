@@ -1,4 +1,4 @@
-package main;
+package main.java.com.example.SDProject;
 
 import java.net.HttpURLConnection;
 import java.net.URL;

@@ -31,7 +31,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.File;
 
-import main.apirest;
+import org.springframework.web.util.HtmlUtils;
+import javax.jms.Message;
 
 @Controller
 public class App_Controller {
@@ -137,7 +138,7 @@ public class App_Controller {
 
                 writer.write(username + ";" + password + "\n"); // write the username and password to the file
 
-                model.addAttribute("User Registed", "User Registed");
+                model.addAttribute("user", "Not logged in");
 
                 writer.close(); // close the FileWriter
 
@@ -463,6 +464,20 @@ public class App_Controller {
         }
 
         return "userstories";
+    }
+
+    @GetMapping("/adminpage")
+    public String Adminpage(Model model) {
+
+        return "adminpage";
+    }
+
+    @MessageMapping("/message")
+    @SendTo("/topic/messages")
+    public Message onMessage(Message message) {
+        Thread.sleep(1000);
+        System.out.println("Message received " + message);
+
     }
 
 }
