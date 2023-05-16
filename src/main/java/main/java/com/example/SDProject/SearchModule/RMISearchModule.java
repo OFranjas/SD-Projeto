@@ -270,7 +270,7 @@ public class RMISearchModule extends UnicastRemoteObject implements ServerInterf
         try {
             RMISearchModule searchModule = new RMISearchModule();
 
-            System.setProperty("java.rmi.server.hostname", "192.168.1.92");
+            System.setProperty("java.rmi.server.hostname", "192.168.1.68");
             Registry registry = LocateRegistry.createRegistry(1099);
             searchModule = new RMISearchModule();
             registry.rebind("searchmodule", searchModule);

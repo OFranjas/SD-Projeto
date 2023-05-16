@@ -1,40 +1,82 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<title>Word/Phrase Search Page</title>
-		<link rel="stylesheet" type="text/css" href="\word.css" />
-	</head>
-	<body>
-		<div class="container">
-			<h1>Enter a Word or Phrase</h1>
-			<form>
-				<div class="form-group">
-					<input
-						type="text"
-						id="inputText"
-						name="inputText"
-						placeholder="Enter a word or phrase"
-						class="center-input"
-					/>
-				</div>
-				<button type="submit" class="cool-button">Search</button>
-			</form>
-		</div>
 
-		<button class="menu-button" onclick="goToMenu()">Menu</button>
-		<button class="word-button" onclick="goToWord()">Search Again</button>
+<head>
+	<title>Word/Phrase Search Page</title>
+	<link rel="stylesheet" type="text/css" href="\word.css" />
+</head>
 
-		<div class="result">
-			<p th:text="${lista}" class="result"></p>
-		</div>
+<body>
+	<div class="container">
+		<h1>Enter a Word or Phrase</h1>
+		<form>
+			<div class="form-group">
+				<input type="text" id="inputText" name="inputText" placeholder="Enter a word or phrase"
+					class="center-input" />
+			</div>
+			<button type="submit" class="cool-button">Search</button>
 
-		<script>
-			function goToMenu() {
-				window.location.href = "http://localhost:8080/menu";
-			}
-			function goToWord() {
-				window.location.href = "http://localhost:8080/word";
-			}
-		</script>
-	</body>
+		</form>
+	</div>
+
+	<button class="menu-button" onclick="goToMenu()">Menu</button>
+	<button class="word-button" onclick="goToWord()">Search Again</button>
+	<button class = "dec-button" onclick="decrementPagina()">Previous Page</button>
+	<button class = "inc-button" onclick="incrementPagina()">Next Page</button>
+
+
+
+
+
+	<div class="result">
+		<p th:text="${lista}" class="result"></p>
+	</div>
+
+	<script>
+		function goToMenu() {
+			window.location.href = "http://localhost:8080/menu";
+		}
+		function goToWord() {
+			window.location.href = "http://localhost:8080/word";
+		}
+		function incrementPagina() {
+			// Get the current URL
+			var currentURL = window.location.href;
+
+			// Extract the value of the 'pagina' parameter
+			var regex = /pagina=(\d+)/;
+			var match = currentURL.match(regex);
+			var currentPage = match ? parseInt(match[1]) : 0;
+
+			// Increment the 'pagina' parameter value
+			var newPage = currentPage + 1;
+
+			// Construct the new URL with the updated 'pagina' parameter
+			var newURL = currentURL.replace(regex, "pagina=" + newPage);
+
+			// Navigate to the new URL
+			window.location.href = newURL;
+		}
+
+		function decrementPagina() {
+			// Get the current URL
+			var currentURL = window.location.href;
+
+			// Extract the value of the 'pagina' parameter
+			var regex = /pagina=(\d+)/;
+			var match = currentURL.match(regex);
+			var currentPage = match ? parseInt(match[1]) : 0;
+
+			// Decrement the 'pagina' parameter value
+			var newPage = Math.max(currentPage - 1, 0);
+
+			// Construct the new URL with the updated 'pagina' parameter
+			var newURL = currentURL.replace(regex, "pagina=" + newPage);
+
+			// Navigate to the new URL
+			window.location.href = newURL;
+		}
+	</script>
+</body>
+
 </html>

@@ -288,10 +288,11 @@ public class App_Controller {
 
         // Get the word or phrase from the link "?inputText=...+..."
         String inputText = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest()
-                .getParameter("inputText");
+                .getParameter("inputText"); 
+        
+        System.out.println("Input Text: " + inputText);
 
         if (inputText != null) {
-
             int tentativas = 1;
 
             try {
@@ -357,11 +358,16 @@ public class App_Controller {
                     return "error";
 
                 }
+                // if url is http://localhost:8080/word then redirect to "redirect:/word/" +
+                // inputText + "?pagina=0"
+                // else redirect to "redirect:/word/" + inputText + "?pagina=" + page
 
-                // Redirect to the page "/word/inputText/0"
                 return "redirect:/word/" + inputText + "?pagina=0";
+
             } catch (Exception e) {
-                System.out.println("Exception in App_Controller.word: " + e);
+                // System.out.println("Exception in App_Controller.word: " + e);
+                // Ignore exception
+
             }
 
         }
@@ -381,6 +387,9 @@ public class App_Controller {
             int page = Integer
                     .parseInt(((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
                             .getRequest().getParameter("pagina"));
+
+
+        
 
             // Only show 10 results per page, change page with the buttons "Next" and
             // "Previous"
@@ -416,7 +425,7 @@ public class App_Controller {
             }
 
         } catch (Exception e) {
-            System.out.println("Exception in App_Controller.word: " + e);
+            // System.out.println("Exception in App_Controller.word: " + e);
         }
 
         return "word";
