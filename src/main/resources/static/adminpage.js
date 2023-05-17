@@ -45,10 +45,8 @@ function connect() {
 		// 	},
 		// });
 
-
 		// Q: How to get the last message from the server?
 		// A: Use a counter to check if the page has been refreshed
-
 
 		stompClient.subscribe("/topic/messages", function (greeting) {
 			if (count != 0) {

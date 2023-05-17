@@ -41,14 +41,62 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 
 @Controller
+@EnableScheduling
 public class App_Controller {
 
     private ServerInterface server;
 
     private boolean logged_in = false;
     private String username;
+
+    @Scheduled(fixedRate = 1000)
+    public void scheduleFixedRateTask() {
+
+        try {
+
+            // System.out.println("HEHYEHYE");
+
+            String status = server.getStatus();
+
+            // System.out.println("Status: " + status);
+
+            HashMap<String, Integer> words = server.opcaoQuatro();
+
+            // Sort the words by value
+            List<String> sortedKeys = new ArrayList<String>(words.keySet());
+
+            Collections.sort(sortedKeys, (o1, o2) -> words.get(o2).compareTo(words.get(o1)));
+
+            String text = "";
+
+            text += status + "\n";
+
+            for (int i = 0; i < 10; i++) {
+
+                if (i >= sortedKeys.size()) {
+                    break;
+                }
+
+                String word = sortedKeys.get(i);
+
+                text += word + " " + words.get(word) + "\n";
+            }
+
+            Message message = new Message(text);
+
+            Sender.convertAndSend("/topic/messages", message);
+
+            // System.out.println("Message sent: " + message.getText());
+
+        } catch (Exception e) {
+            System.out.println("Exception in App_Controller.scheduleFixedRateTask: " + e);
+        }
+
+    }
 
     @Autowired
     public App_Controller(ServerInterface server) {
@@ -288,9 +336,9 @@ public class App_Controller {
 
         // Get the word or phrase from the link "?inputText=...+..."
         String inputText = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest()
-                .getParameter("inputText"); 
-        
-        System.out.println("Input Text: " + inputText);
+                .getParameter("inputText");
+
+        // System.out.println("Input Text: " + inputText);
 
         if (inputText != null) {
             int tentativas = 1;
@@ -317,38 +365,6 @@ public class App_Controller {
 
                     lista = server.opcaoDois(inputText, tentativas, false);
 
-                }
-
-                // Send message to /app/messages with the text to be searched
-
-                try {
-
-                    HashMap<String, Integer> words = server.opcaoQuatro();
-
-                    // Sort the words by value
-                    List<String> sortedKeys = new ArrayList<String>(words.keySet());
-
-                    Collections.sort(sortedKeys, (o1, o2) -> words.get(o2).compareTo(words.get(o1)));
-
-                    String text = "";
-
-                    for (int i = 0; i < 10; i++) {
-
-                        if (i >= sortedKeys.size()) {
-                            break;
-                        }
-
-                        String word = sortedKeys.get(i);
-
-                        text += word + " " + words.get(word) + "\n";
-                    }
-
-                    Message message = new Message(text);
-
-                    Sender.convertAndSend("/topic/messages", message);
-
-                } catch (Exception e) {
-                    System.out.println("Exception in App_Controller.word: " + e);
                 }
 
                 if (lista.size() == 0) {
@@ -388,9 +404,6 @@ public class App_Controller {
                     .parseInt(((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
                             .getRequest().getParameter("pagina"));
 
-
-        
-
             // Only show 10 results per page, change page with the buttons "Next" and
             // "Previous"
 
@@ -417,7 +430,7 @@ public class App_Controller {
                     lista2.add(lista.get(i));
                 }
 
-                // separate the 
+                // separate the
 
                 model.addAttribute("lista", lista2);
 
@@ -573,41 +586,9 @@ public class App_Controller {
     @GetMapping("/adminpage")
     public String Adminpage(Model model) {
 
-        // Send message to /app/messages with the text to be searched
+        // scheduleFixedRateTask();
 
-        try {
-
-            HashMap<String, Integer> words = server.opcaoQuatro();
-
-            // Sort the words by value
-            List<String> sortedKeys = new ArrayList<String>(words.keySet());
-
-            Collections.sort(sortedKeys, (o1, o2) -> words.get(o2).compareTo(words.get(o1)));
-
-            String text = "";
-
-            for (int i = 0; i < 10; i++) {
-
-                if (i >= sortedKeys.size()) {
-                    break;
-                }
-
-                String word = sortedKeys.get(i);
-
-                text += word + " " + words.get(word) + "\n";
-            }
-
-            Message message = new Message(text);
-
-            Sender.convertAndSend("/topic/messages", message);
-
-            return "adminpage";
-
-        } catch (Exception e) {
-            System.out.println("Exception in App_Controller.word: " + e);
-
-            return "menu";
-        }
+        return "adminpage";
 
     }
 
@@ -662,36 +643,7 @@ public class App_Controller {
 
         try {
 
-            Thread.sleep(1000);
-
-            // Message res = new Message(server.getStatus());
-
-            HashMap<String, Integer> words = server.opcaoQuatro();
-
-            // Add the words in res text
-
-            // String text = res.getText();
-
-            Message res = new Message();
-
-            String text = "";
-
-            for (String word : words.keySet()) {
-
-                text += word + " " + words.get(word) + "\n";
-            }
-
-            res.setText(text);
-
-            // res.setText(text);
-
-            // System.out.println("words: " + words);
-
-            // model.addAttribute("words", words);
-
-            // System.out.println(res.getText());
-
-            return res;
+            return message;
 
         } catch (Exception e) {
             System.out.println("Exception in App_Controller.onMessage: " + e);

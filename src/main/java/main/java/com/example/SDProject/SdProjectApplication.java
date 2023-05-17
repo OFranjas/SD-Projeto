@@ -23,7 +23,7 @@ public class SdProjectApplication {
 		ServerInterface server = null;
 
 		try {
-			Registry registry = LocateRegistry.getRegistry("192.168.1.68", 1099);
+			Registry registry = LocateRegistry.getRegistry("194.210.35.150", 1099);
 
 			server = (ServerInterface) registry.lookup("searchmodule");
 

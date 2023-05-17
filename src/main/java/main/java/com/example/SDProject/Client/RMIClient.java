@@ -118,7 +118,7 @@ public class RMIClient extends UnicastRemoteObject {
                                         }
 
                                         try {
-                                                ArrayList<String> lista = server.opcaoDois(word, pagina);
+                                                ArrayList<String> lista = server.opcaoDois(word, pagina, true);
 
                                                 while (lista == null) {
 
@@ -136,7 +136,7 @@ public class RMIClient extends UnicastRemoteObject {
                                                                         "Erro na pesquisa, tentando novamente (tentativa "
                                                                                         + tentativas + ")");
 
-                                                        lista = server.opcaoDois(words[1], tentativas);
+                                                        lista = server.opcaoDois(words[1], tentativas, false);
 
                                                 }
 
