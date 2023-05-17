@@ -14,6 +14,8 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
+import main.java.com.example.SDProject.Global.Global;
+
 @SpringBootApplication
 public class SdProjectApplication {
 
@@ -23,9 +25,9 @@ public class SdProjectApplication {
 		ServerInterface server = null;
 
 		try {
-			Registry registry = LocateRegistry.getRegistry("192.168.1.68", 1099);
+			Registry registry = LocateRegistry.getRegistry(Global.RMI_IP, Global.RMI_PORT);
 
-			server = (ServerInterface) registry.lookup("searchmodule");
+			server = (ServerInterface) registry.lookup(Global.RMI_NAME);
 
 			// server = (ServerInterface) Naming
 			// .lookup("searchmodule");

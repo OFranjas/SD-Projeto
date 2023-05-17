@@ -306,7 +306,7 @@ public class RMIClient extends UnicastRemoteObject {
 
                                 if (string.equals("4")) {
 
-                                        String status = server.opcaoQuatroAgain();
+                                        String status = server.getStatus();
 
                                         if (status == null) {
                                                 System.out.println("Erro ao obter status");
