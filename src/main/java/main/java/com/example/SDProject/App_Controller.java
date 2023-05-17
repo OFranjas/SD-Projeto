@@ -44,6 +44,8 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
+import org.springframework.web.util.HtmlUtils;
+
 @Controller
 @EnableScheduling
 public class App_Controller {
@@ -71,9 +73,15 @@ public class App_Controller {
 
             Collections.sort(sortedKeys, (o1, o2) -> words.get(o2).compareTo(words.get(o1)));
 
+            // add \n to the end of status
+
+            status += "\n";
+
             String text = "";
 
             text += status + "\n";
+
+            text += " \nTOP SEARCHED WORDS \n \n";
 
             for (int i = 0; i < 10; i++) {
 
@@ -83,10 +91,12 @@ public class App_Controller {
 
                 String word = sortedKeys.get(i);
 
-                text += word + " " + words.get(word) + "\n";
+                text += i+1 + "º " +  word + " " + words.get(word) + "\n";
             }
 
-            Message message = new Message(text);
+            String modifiedText = text.replace("\n", "<br>");
+
+            Message message = new Message(modifiedText);
 
             Sender.convertAndSend("/topic/messages", message);
 

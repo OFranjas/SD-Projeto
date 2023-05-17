@@ -1,29 +1,31 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<title>Hello WebSocket</title>
-		<script src="/webjars/jquery/jquery.min.js"></script>
-		<script src="/webjars/sockjs-client/sockjs.min.js"></script>
-		<script src="/webjars/stomp-websocket/stomp.min.js"></script>
-		<script src="\adminpage.js"></script>
-		<link rel="stylesheet" type="text/css" href="\adminpage.css" />
-	</head>
-	<body>
-		<noscript
-			><h2 style="color: #ff0000">
-				Seems your browser doesn't support Javascript! Websocket relies on
-				Javascript being enabled. Please enable Javascript and reload this page!
-			</h2></noscript
-		>
 
-		<header>
-			<h1>Admin Page</h1>
-		</header>
+<head>
+	<title>Hello WebSocket</title>
+	<script src="/webjars/jquery/jquery.min.js"></script>
+	<script src="/webjars/sockjs-client/sockjs.min.js"></script>
+	<script src="/webjars/stomp-websocket/stomp.min.js"></script>
+	<script src="\adminpage.js"></script>
+	<link rel="stylesheet" type="text/css" href="\adminpage.css" />
+</head>
 
-		<div id="main-content" class="container">
-			<div class="row">
-				<div class="col-md-6">
-					<!-- <form class="form-inline">
+<body>
+	<noscript>
+		<h2 style="color: #ff0000">
+			Seems your browser doesn't support Javascript! Websocket relies on
+			Javascript being enabled. Please enable Javascript and reload this page!
+		</h2>
+	</noscript>
+
+	<header>
+		<h1>Admin Page</h1>
+	</header>
+
+	<div id="main-content" class="container">
+		<div class="row">
+			<div class="col-md-6">
+				<!-- <form class="form-inline">
 						<div class="form-group">
 							<label for="connect">WebSocket connection:</label>
 							<button id="connect" class="btn btn-default" type="submit">
@@ -39,10 +41,10 @@
 							</button>
 						</div>
 					</form> -->
-				</div>
-				<div class="col-md-6">
-					<form class="form-inline">
-						<!-- <div class="form-group">
+			</div>
+			<div class="col-md-6">
+				<form class="form-inline">
+					<!-- <div class="form-group">
 							<label for="name">What is your name?</label>
 							<input
 								type="text"
@@ -51,35 +53,37 @@
 								placeholder="Your name here..."
 							/>
 						</div> -->
-						<!-- <button id="send" class="btn btn-default" type="submit">
+					<!-- <button id="send" class="btn btn-default" type="submit">
 							Update
 						</button> -->
-					</form>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-md-12">
-					<table id="conversation" class="table table-striped">
-						<thead>
-							<!-- <tr>
-								<th>Greetings</th>
-							</tr> -->
-						</thead>
-						<tbody id="greetings"></tbody>
-					</table>
-				</div>
+				</form>
 			</div>
 		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<table id="conversation" class="table table-striped">
+					<thead>
+						<!-- <tr>
+								<th>Greetings</th>
+							</tr> -->
+					</thead>
+					<tbody id="greetings"></tbody>
+				</table>
+			</div>
+		</div>
+	</div>
 
-		<p th:text="${words}"></p>
-		<p th:text="${message}"></p>
+	<div class="message-container">
+		<p th:utext="${message}" class="message"></p>
+	</div>
 
-		<button class="menu-button" onclick="goToMenu()">Menu</button>
+	<button class="menu-button" onclick="goToMenu()">Menu</button>
 
-		<script>
-			function goToMenu() {
-				window.location.href = "menu";
-			}
-		</script>
-	</body>
+	<script>
+		function goToMenu() {
+			window.location.href = "menu";
+		}
+	</script>
+</body>
+
 </html>

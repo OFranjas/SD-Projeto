@@ -84,9 +84,9 @@ public class PagAdministracao {
         for (int i = 0; i < Global.num_threads; i++) {
             // System.out.println("Barrel " + i + " " + this.barrel.get(i));
             if (this.barrel.get(i).equals("1")) {
-                s.append("| Barrel " + i + " is active\n");
+                s.append("| Barrel " + i + " is active |\n");
             } else if (this.barrel.get(i).equals("0")) {
-                s.append("| Barrel " + i + " is not active\n");
+                s.append("| Barrel " + i + " is not active |\n");
             }
         }
 
@@ -94,11 +94,15 @@ public class PagAdministracao {
         for (int i = 0; i < Global.num_threads; i++) {
             // System.out.println("Downloader " + i + " " + this.donwloader.get(i));
             if (this.donwloader.get(i).equals("1")) {
-                s.append("| Downloader " + i + " is active\n");
+                s.append("| Downloader " + i + " is active|\n");
             } else if (this.donwloader.get(i).equals("0")) {
-                s.append("| Downloader " + i + " is not active\n");
+                s.append("| Downloader " + i + " is not active|\n");
             }
         }
+
+        //add \n to the end of the string
+        s.append("\n");
+
 
         return s.toString();
     }
